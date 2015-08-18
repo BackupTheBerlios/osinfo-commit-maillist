@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r681 - trunk/osinfo/lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r681%20-%20trunk/osinfo/lib&In-Reply-To=%3C200703061318.l26DIsoO010858%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000068.html">
+   <LINK REL="Next"  HREF="000070.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r681 - trunk/osinfo/lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r681%20-%20trunk/osinfo/lib&In-Reply-To=%3C200703061318.l26DIsoO010858%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r681 - trunk/osinfo/lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar  6 14:18:54 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000068.html">[Osinfo-commit] r680 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000070.html">[Osinfo-commit] r682 - in trunk/osinfo: docs lib modules	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-06 14:18:53 +0100 (Tue, 06 Mar 2007)
+New Revision: 681
+
+Modified:
+   trunk/osinfo/lib/print.functions
+Log:
+cleaned out some nuisances from XML
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2007-03-06 13:06:37 UTC (rev 680)
++++ trunk/osinfo/lib/print.functions	2007-03-06 13:18:53 UTC (rev 681)
+@@ -233,7 +233,7 @@
+ 		# case by the &quot;%identifier%&quot; tag
+ 		case $idtag in
+ 
+-			# adds the footer (value dimension)
++			# adds the value footer (value dimension)
+ 			'value_footer')
+ 				add_indentation
+ 
+@@ -313,6 +313,8 @@
+ 
+ 							# strip tag
+ 							item=&quot;$(sed s/%footer%// &lt;&lt;&lt; &quot;${item}&quot;)&quot;
++							item=&quot;$(awk -F\; {'print $1'} &lt;&lt;&lt; &quot;${item}&quot;)&quot;
++							
+ 							item=&quot;$(validate_xml_item &quot;${item}&quot;)&quot;
+ 							xml_tag_stop &quot;${item}&quot;
+ 							;;
+@@ -349,8 +351,9 @@
+ 		code=$(awk -F\; {'print $2'} &lt;&lt;&lt; &quot;${item}&quot;)
+ 
+ 		# item validation strips away the code
+-		item=&quot;$(validate_xml_item &quot;${item}&quot;)&quot;
+ 		local tag=&quot;$(awk -F\; {'print $1'} &lt;&lt;&lt; &quot;${item}&quot;)&quot;
++		tag=&quot;$(validate_xml_item &quot;${tag}&quot;)&quot;
++		code=&quot;$(validate_xml_item &quot;${code}&quot;)&quot;
+ 
+ 		xml_attribute_start &quot;${tag}&quot; &quot;${code}&quot;
+ 		((XML_INDENT++))
+@@ -360,7 +363,7 @@
+ 	validate_xml_item() {
+ 		# trim all leading spaces ; trim all non-alphabetical characters ;
+ 		# spaces to downscores ; uppercase to lowercase
+-		sed 's/^\ *// ; s/\\[a-z]//g; s/\ \|\//_/g ' &lt;&lt;&lt; &quot;${@}&quot;| tr 'A-Z' 'a-z'
++		sed 's/^\ *// ; s/^([a-z]*)//g; s/\ \|\//_/g ' &lt;&lt;&lt; &quot;${@}&quot;| tr 'A-Z' 'a-z'
+ 	}
+ #######
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000068.html">[Osinfo-commit] r680 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000070.html">[Osinfo-commit] r682 - in trunk/osinfo: docs lib modules	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

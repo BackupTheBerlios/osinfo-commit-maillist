@@ -1,0 +1,876 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r672 - trunk/osinfo/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r672%20-%20trunk/osinfo/html&In-Reply-To=%3C200703050757.l257vo77011742%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000059.html">
+   <LINK REL="Next"  HREF="000061.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r672 - trunk/osinfo/html</H1>
+    <B>lamikae at mail.berlios.de</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r672%20-%20trunk/osinfo/html&In-Reply-To=%3C200703050757.l257vo77011742%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r672 - trunk/osinfo/html">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar  5 08:57:50 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000059.html">[Osinfo-commit] r671 - trunk/osinfo
+</A></li>
+        <LI>Next message: <A HREF="000061.html">[Osinfo-commit] r673 - in trunk/osinfo: . lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#60">[ date ]</a>
+              <a href="thread.html#60">[ thread ]</a>
+              <a href="subject.html#60">[ subject ]</a>
+              <a href="author.html#60">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-05 08:57:48 +0100 (Mon, 05 Mar 2007)
+New Revision: 672
+
+Added:
+   trunk/osinfo/html/fade.php
+   trunk/osinfo/html/index3.php
+   trunk/osinfo/html/xml-parseri.php
+   trunk/osinfo/html/xmltyyli.css
+Log:
+php
+
+Added: trunk/osinfo/html/fade.php
+===================================================================
+--- trunk/osinfo/html/fade.php	2007-03-05 07:49:53 UTC (rev 671)
++++ trunk/osinfo/html/fade.php	2007-03-05 07:57:48 UTC (rev 672)
+@@ -0,0 +1,32 @@
++&lt;?php
++
++$uusi_kuva = new Haivytyskuva();
++
++class Haivytyskuva
++{
++	public function __construct()
++    	{
++		$this-&gt;nayta_haivytyskuva($_GET['w'], $_GET['h'], $_GET['r'], $_GET['g'], $_GET['b']);
++	}
++
++	private function nayta_haivytyskuva($leveys, $korkeus, $r, $g, $b)
++	{
++		if($leveys &gt; 10) $leveys = 10;
++		if($korkeus &gt; 300) $korkeus = 300;
++
++		//header(&quot;Content-type: image/png&quot;);
++		$kuva = @imagecreate($leveys, $korkeus);
++		
++		for ($i = 0; $i &lt; 255; $i++) 
++			$vari[$i] = @imagecolorallocatealpha($kuva, $r, $g, $b, $i);
++		
++		for ($i = 0; $i &lt; $leveys; $i++)
++			for ($j = 0; $j &lt; $korkeus; $j++)
++				@imagesetpixel($kuva, $i, $j, $vari[(255/$korkeus) * $j/2]);
++		
++		@imagepng($kuva);
++		@imagedestroy($kuva);
++	}
++}
++
++?&gt;
+\ No newline at end of file
+
+Added: trunk/osinfo/html/index3.php
+===================================================================
+--- trunk/osinfo/html/index3.php	2007-03-05 07:49:53 UTC (rev 671)
++++ trunk/osinfo/html/index3.php	2007-03-05 07:57:48 UTC (rev 672)
+@@ -0,0 +1,234 @@
++&lt;?php
++
++$index = new Index();
++
++$index-&gt;tulosta_alkukoodi(true);
++$index-&gt;nayta_sivuframe();
++$index-&gt;nayta_paaframe($_GET['target']);
++$index-&gt;tulosta_loppukoodi();
++
++class Index
++{
++	private $_DivResoluutiot = array(&quot;SivuFrame&quot; =&gt; array('10px', '10px', '20%', '500'),
++					&quot;P&#228;&#228;Frame&quot; =&gt; array('10px', '10px', '70%', '500'));
++	private $_xmlkansio = &quot;hosts&quot;;
++	private $_xmlparseri = &quot;xml-parseri.php&quot;;
++	private $_index_view = &quot;index_view.html&quot;;
++
++	public function __construct()
++    	{
++
++	}
++
++	public function tulosta_alkukoodi($tyylit = true)
++	{
++		//print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
++
++		print &quot;&lt;html&gt;\n&quot;;	
++		print &quot;&lt;head&gt;\n&quot;;	
++		print &quot;&lt;title&gt;Osinfo&lt;/title&gt;\n\n&quot;;
++
++		if($tyylit) $this-&gt;tulosta_tyyli();
++
++		print &quot;\n\n&lt;/head&gt;\n\n&quot;;
++		print &quot;&lt;body&gt;\n\n&quot;;
++	}
++
++	public function tulosta_loppukoodi()
++	{
++		print &quot;&lt;/body&gt;\n&quot;;
++		print &quot;&lt;/html&gt;&quot;;
++	}
++	
++	private function tulosta_tyyli()
++	{
++		$varit = array(222, 197, 148);
++		$varisyote = &quot;r=&quot; . $varit[0] . &quot;&amp;g=&quot; . $varit[1] . &quot;&amp;b=&quot; . $varit[2];
++
++		print &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;xmltyyli.css\&quot; /&gt;&quot;;
++		print &quot;&lt;style type=\&quot;text/css\&quot;&gt;
++
++		body
++		{
++			background-color: #eddcbc;
++		}
++		
++		div.SivuFrame, div.PaaFrame
++		{ 
++			float: left;
++		}
++		
++		div.SivuFrameSisalto, div.PaaFrame
++		{
++			background-color: rgb(&quot; . $varit[0] . &quot;, &quot; . $varit[1] . &quot;, &quot; . $varit[2] . &quot;);
++		}
++
++		div.SivuFrame
++		{
++			margin-left: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][0] . &quot;;
++			margin-top: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][1] . &quot;;
++			margin-bottom: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][1] . &quot;;
++			width: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][2] . &quot;;
++			min-height: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][3] . &quot;;
++			min-width: 200;
++			height: auto;
++		}
++
++		div.SivuFrameSisalto
++		{
++			padding: 5px;
++			padding: 10px;
++		}
++
++		div.SivuFrameFade
++		{
++			background-image: url('fade.php?w=1&amp;h=150&amp;&quot; . $varisyote . &quot;');
++			background-repeat: repeat-x;
++			background-position: top;
++			height: 150px;
++		}
++
++		div.PaaFrame
++		{
++			border: 1px solid black;
++			padding: 5px;
++			padding: 10px;
++			margin-left: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][0] . &quot;;
++			margin-top: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
++			margin-bottom: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
++			width: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][2] . &quot;;
++			min-height: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][3] . &quot;;
++			min-width: 600;
++			height: auto;
++			clear: none;
++		}
++
++		p.valitus
++		{
++			color: red;
++		}
++
++		&lt;/style&gt;&quot;;
++	}
++	
++	private function listaa_tiedostot()
++	{
++		if(file_exists($this-&gt;_xmlkansio))
++		{
++			$kansio = opendir($this-&gt;_xmlkansio);
++		
++			for($i=0; $tiedosto = readdir($kansio); $i++)
++			{
++				$p_array = explode(&quot;.&quot;, $tiedosto);
++				$paate = $p_array[sizeof($p_array)-1];
++		
++				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
++				{
++					print &quot;&lt;a href=\&quot;?target=&quot;. $tiedosto . &quot;\&quot;&gt;&quot; .
++						$tiedosto . &quot;&lt;/a&gt;&lt;br /&gt;&quot;;
++				}
++			}
++		}
++		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Directory \&quot;&quot; . $this-&gt;_xmlkansio . &quot;\&quot; does not exist&lt;/p&gt;&quot;;
++	}
++
++	private function hae_viimeksi_paivitetty()
++	{
++		if(file_exists($this-&gt;_xmlkansio))
++		{
++			$kansio = opendir($this-&gt;_xmlkansio);
++	
++			$suurin = 0;
++		
++			for($i=0; $tiedosto = readdir($kansio); $i++)
++			{
++				$p_array = explode(&quot;.&quot;, $tiedosto);
++				$paate = $p_array[sizeof($p_array)-1];
++		
++				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
++				{
++					$aika = filemtime($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
++	
++					if($aika &gt; $suurin)
++						$suurin = $aika;
++				}
++			}
++			
++			return $suurin;
++		}
++	}
++	
++	public function nayta_sivuframe()
++	{
++		print &quot;&lt;div class=\&quot;SivuFrame\&quot;&gt;&quot;;
++		print &quot;&lt;div class=\&quot;SivuFrameSisalto\&quot;&gt;&quot;;
++
++		print &quot;&lt;h3&gt;Osinfo&lt;/h3&gt;
++			&lt;p&gt;&lt;a href=\&quot;&quot; . $_SERVER[&quot;SCRIPT_NAME&quot;] . &quot;\&quot;&gt;index view&lt;/a&gt;&lt;/p&gt;
++			&lt;hr /&gt;&quot;;
++
++		$this-&gt;listaa_tiedostot();
++	
++		print &quot;&lt;hr /&gt;&quot;;
++
++		print &quot;&lt;p&gt;Last updated:&lt;/p&gt;&quot;;
++
++		$viimeksi_paivitetty = $this-&gt;hae_viimeksi_paivitetty();
++
++		if($viimeksi_paivitetty &gt; 0)
++			print &quot;&lt;p&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/p&gt;&quot;;
++
++		//include(&quot;sidebar.html&quot;);
++	
++		print &quot;&lt;/div&gt;&quot;;
++
++		print &quot;&lt;div class=\&quot;SivuFrameFade\&quot;&gt;&lt;/div&gt;&quot;;
++
++		print &quot;&lt;/div&gt;&quot;;
++	}
++	
++	public function nayta_paaframe($sivu = &quot;&quot;)
++	{
++		print &quot;&lt;div class=\&quot;PaaFrame\&quot;&gt;&quot;;
++		
++		if($sivu != &quot;&quot;)
++		{
++			if(file_exists($this-&gt;_xmlparseri))
++			{
++				include($this-&gt;_xmlparseri);
++	
++				if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
++				{					
++					$parametrit = $_POST['osinfo'];
++				
++					print &quot;&lt;p&gt;
++						&lt;form action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
++						Parameters: &lt;input type=\&quot;text\&quot; name=\&quot;osinfo\&quot; value=\&quot;&quot; . $parametrit . &quot;\&quot; /&gt;
++							&lt;input type=\&quot;submit\&quot; value=\&quot;ok\&quot; /&gt;
++						&lt;/form&gt;
++						&lt;/p&gt;&quot;;
++
++					$parseri = new xmlparseri($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
++		
++					print &quot;&lt;pre&gt;&quot;;
++
++					//$parseri-&gt;nayta_tietotaulu();
++					$parseri-&gt;hae_arvot(&quot;osinfo&quot;, $parametrit);
++
++					print &quot;&lt;/pre&gt;&quot;;
++				}
++				else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
++			}
++			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Cannot find file \&quot;&quot; . $this-&gt;_xmlparseri . &quot;\&quot;&lt;/p&gt;&quot;;
++		}
++		else
++		{
++			if(file_exists($this-&gt;_index_view))
++				include($this-&gt;_index_view);
++		}
++
++		print &quot;&lt;/div&gt;&quot;;
++	}
++}
++
++?&gt; 
+\ No newline at end of file
+
+Added: trunk/osinfo/html/xml-parseri.php
+===================================================================
+--- trunk/osinfo/html/xml-parseri.php	2007-03-05 07:49:53 UTC (rev 671)
++++ trunk/osinfo/html/xml-parseri.php	2007-03-05 07:57:48 UTC (rev 672)
+@@ -0,0 +1,484 @@
++&lt;?php
++
++class xmlparseri
++{
++    private $_parsittava_tiedosto;
++    private $_tiedoston_sisalto;
++    private $_tietotaulu = array();
++    private $_attribuutteja_rivilla = 3;
++
++    // &quot;koodit&quot;
++    private $_nimi = &quot;--nimi--&quot;;
++    private $_parametrit = &quot;--parametrit--&quot;;
++    private $_tyyppi = &quot;--tyyppi--&quot;;
++    private $_sisalto = &quot;--sisalto--&quot;;
++
++    // listan tunnistin
++    private $_lista = &quot;lista&quot;;
++
++    public function __construct($tiedoston_nimi)
++    {
++	if(file_exists($tiedoston_nimi))
++	{
++		$this-&gt;_parsittava_tiedosto = $tiedoston_nimi;
++		$this-&gt;lue_tiedoston_sisalto();
++	
++		$this-&gt;_tietotaulu = $this-&gt;etsi_tagi(&quot;&quot;, 0);
++	}
++	else
++	{
++		print &quot;&lt;p&gt;File &quot; . $tiedoston_nimi . &quot; not found&lt;/p&gt;&quot;;
++	}
++    }
++
++    private function lue_tiedoston_sisalto()
++    {
++	$fp = fopen($this-&gt;_parsittava_tiedosto, &quot;r&quot;);
++	$this-&gt;_tiedoston_sisalto = &quot;&quot;;
++
++	while(false !== ($char = fgetc($fp))) 
++		$this-&gt;_tiedoston_sisalto .= $char;
++    }
++
++    public function nayta_tietotaulu()
++    {
++	print &quot;&lt;p&gt;--------- KOKO TIETOTAULU:---------&lt;/p&gt;&quot;;
++	print &quot;&lt;pre&gt;&quot;;
++	print_r($this-&gt;_tietotaulu);
++	print &quot;&lt;/pre&gt;&quot;;
++    }
++
++    private function etsi_tagi($etsittava, $indeksi, $taso = -1)
++    {	
++	$taulu = array();	
++	$taso++;
++
++	for($i=$indeksi; $i &lt; strlen($this-&gt;_tiedoston_sisalto); $i++)
++	{
++	     if($this-&gt;_tiedoston_sisalto[$i] == &quot;&lt;&quot;)
++	     {		  
++		  $tagi = &quot;&quot;;
++	          
++		  for($j=$i+1; $j &lt; strlen($this-&gt;_tiedoston_sisalto); $j++)
++		  {
++			if($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
++			if($this-&gt;_tiedoston_sisalto[$j] != &quot;&gt;&quot;)
++				$tagi .= $this-&gt;_tiedoston_sisalto[$j];
++			else break;
++		  }
++	
++		  $tietue = $this-&gt;tarkista_tagi($tagi);
++
++		  switch($tietue[$this-&gt;_tyyppi])
++		  {
++		       case 1:
++			    array_push($taulu, $tietue);
++		            break;
++		       case 2:
++			    $paluuarvot = $this-&gt;etsi_tagi($tietue[$this-&gt;_nimi], $j+1, $taso);
++			    $i = $paluuarvot['indeksi'];
++
++			    $this-&gt;array_lisaa_samaan($tietue, $paluuarvot['taulu']);
++			    $sisalto = &quot;&quot;;
++	
++			    for($j += 1; $j &lt; strlen($this-&gt;_tiedoston_sisalto); $j++)
++			    {
++				$char = ord($this-&gt;_tiedoston_sisalto[$j]);
++
++				if($char != 10 &amp;&amp; $char != 13 &amp;&amp; $char != 9 &amp;&amp; 				$this-&gt;_tiedoston_sisalto[$j] != &quot;&lt;&quot;)
++				   $sisalto .= $this-&gt;_tiedoston_sisalto[$j];
++				elseif($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
++			    }
++				
++			    if(!empty($sisalto))
++			    {
++				$temp_array = array($this-&gt;_sisalto =&gt; $sisalto);
++				$this-&gt;array_lisaa_samaan($tietue, $temp_array);
++	 		    }
++
++			    array_push($taulu, $tietue);
++		            break;
++		       case 3:
++			    if($etsittava != &quot;&quot;)
++			    {
++			    	if($tietue[$this-&gt;_nimi] == $etsittava)
++				     return array(&quot;taulu&quot; =&gt; $taulu, &quot;indeksi&quot; =&gt; $i);
++			    }
++				
++		            break;
++		       case 4:
++			    array_push($taulu, $tietue);
++		            break;
++		       default:
++			    break;
++		  }
++	     }
++	}
++	return $taulu;
++    }
++
++    private function tarkista_tagi($tagi)
++    {    
++	$tyyppi = 0;
++	$nimi = &quot;&quot;;
++	$parametrit = array();
++	$parametritagi = false;
++	
++	// tyypit: 1 = tiedoston tyyppitagi
++	//	   2 = aloitustagi
++	//	   3 = lopetustagi
++	//	   4 = yksin&#228;inen tagi
++
++	for($i=strlen($tagi)-1; $i&gt;0; $i--)
++	{
++	     if($tagi[$i] == &quot;/&quot; &amp;&amp; $i &gt; 0) 
++		$parametritagi = true;
++	}
++
++	if($tagi[0] == &quot;!&quot; || $tagi[0] == &quot;?&quot;)
++ 	     $tyyppi = 1;
++	else 
++	{
++	     if($tagi[0] == &quot;/&quot;) 
++	     {
++  		  $tyyppi = 3;
++
++		  for($i=0; $i &lt; strlen($tagi); $i++)
++		     if($tagi[$i] != &quot;/&quot;) $nimi .= $tagi[$i];
++	     }
++	     else
++	     {
++	          if($parametritagi) $tyyppi = 4;
++	          else $tyyppi = 2;
++
++		     for($i=0; $i &lt; strlen($tagi); $i++)
++		     {
++		          if($i == 0)
++			  {
++				for($j=$i; $j &lt; strlen($tagi); $j++)
++				{	
++				     if($tagi[$j] != &quot; &quot; &amp;&amp;
++				   	ord($tagi[$j]) != 9 &amp;&amp; ord($tagi[$j]) != 10 &amp;&amp;
++				   	ord($tagi[$j]) != 13) $nimi .= $tagi[$j];
++				     else break;
++
++				     $i = $j;
++				}
++			  }
++
++			  $temp_atrb_nimi = &quot;&quot;;
++			  $temp_atrb_arvo = &quot;&quot;;
++			
++			  for($j=$i+2; $j &lt; strlen($tagi); $j++)
++			  {	
++				if($j &gt;= strlen($tagi)-1) break;
++				
++			        if($tagi[$j] != &quot;=&quot; &amp;&amp; $tagi[$j] != &quot; &quot; &amp;&amp;
++				   	ord($tagi[$j]) != 9 &amp;&amp; ord($tagi[$j]) != 10 &amp;&amp;
++				   	ord($tagi[$j]) != 13)
++			             $temp_atrb_nimi .= $tagi[$j];
++			        elseif($tagi[$j] == &quot;=&quot;)
++				{
++				     if($tagi[$j+1] == &quot;\&quot;&quot;) $indeksi = $j+2;
++				     else $indeksi = $j+1;
++
++				     for($k=$indeksi; $k &lt; strlen($tagi); $k++)
++				     {
++					if($tagi[$k] != &quot;\&quot;&quot;)
++					     $temp_atrb_arvo .= $tagi[$k];
++					else
++					{
++				     	     $j = $k - 1;
++					     break;
++					}
++				     }
++
++			             $i = $j;
++				     break;
++				}
++			        $i = $j;
++			  }
++
++			  if($temp_atrb_nimi != &quot;&quot;) 
++			  {
++				$temp_array = array($temp_atrb_nimi =&gt; $temp_atrb_arvo);
++				$this-&gt;array_lisaa_samaan($parametrit, $temp_array);
++			  }
++		     }
++	     }
++	}
++	
++	if(empty($parametrit))
++		return array($this-&gt;_tyyppi =&gt; $tyyppi, $this-&gt;_nimi =&gt; $nimi);
++	else
++		return array($this-&gt;_tyyppi =&gt; $tyyppi, $this-&gt;_nimi =&gt; $nimi, 
++				$this-&gt;_parametrit =&gt; $parametrit);
++    }
++
++    private function array_lisaa_samaan(&amp;$array) 
++    {
++	$argumentit = func_get_args();
++
++	foreach($argumentit as $argumentti) 
++	{
++		if(is_array($argumentti)) 
++		{
++			foreach($argumentti as $avain =&gt; $arvo) 
++			{
++				$array[$avain] = $arvo;
++				$paluuarvo++;
++			}
++		}
++	        else $array[$argumentti] = &quot;&quot;;
++	}
++
++	return $paluuarvo;
++    }
++
++    public function hae_arvot($kanta, $attribuutit)
++    {
++	  $this-&gt;hae_array($this-&gt;_tietotaulu, $kanta, $esitettava_array);
++	  $this-&gt;esita_tiedot($esitettava_array, $attribuutit);
++    }
++
++    private function esita_tiedot($array, $tarkenne = &quot;&quot;)
++    {
++	print &quot;&lt;h1&gt;&quot; . $array[$this-&gt;_nimi] . &quot;&lt;/h1&gt;&quot;;
++
++	$this-&gt;_attribuutti_avattu = false;
++	$this-&gt;_attribuutti_laskuri = 0;
++
++	if(is_array($array))
++	{
++		if($array[$this-&gt;_lista] == &quot;true&quot;) $listatyyppi = true;
++		else $listatyyppi = false;
++
++		// k&#228;y l&#228;pi p&#228;&#228;taulun kannasta l&#228;htien
++		foreach($array as $avain =&gt; $arvo)
++		{
++			if(is_array($arvo)) 
++			{
++				if($tarkenne != &quot;&quot;) $this-&gt;esita_alitiedot($arvo, $listatyyppi, false, $tarkenne);
++				else $this-&gt;esita_alitiedot($arvo, $listatyyppi, false);
++			}
++		}
++	}
++    }
++
++    private function esita_alitiedot($array, $listatyyppi = false, $attribuutti_avattu = false, $tarkenne = &quot;&quot;, $paasy_alitauluihin = false, $attribuuttilaskuri = 0)
++    {
++	$div_avattu = false;
++	$attribuutti_suljettu = false;
++	$atrb = false;
++
++	if(is_array($array[$this-&gt;_parametrit]))
++	{
++		$temp_array = $array[$this-&gt;_parametrit];
++		if($temp_array[$this-&gt;_lista] == &quot;true&quot;)
++			$listatyyppi = true;
++	}
++
++	//$listatyyppi = true;
++
++	foreach($array as $avain =&gt; $arvo)
++	{	
++		if($tarkenne != &quot;&quot; &amp;&amp; $avain != $this-&gt;_tyyppi &amp;&amp; $arvo == $tarkenne)
++			$paasy_alitauluihin = true;
++		elseif($tarkenne != &quot;&quot; &amp;&amp; is_array($arvo)) 
++			$div = $this-&gt;esita_alitiedot($arvo, $listatyyppi, $attribuutti_avattu, $tarkenne);
++
++		if($paasy_alitauluihin || $tarkenne == &quot;&quot;)
++		{	
++			if($arvo == &quot;attribute&quot;)
++			{
++				if(is_array($array))
++				{
++					if(!$listatyyppi)
++					{
++						if(!$attribuutti_avattu) 
++						{
++							print &quot;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&lt;tr&gt;&quot;;
++							$attribuutti_avattu = true;
++						}
++				
++						if($attribuuttilaskuri &gt; 0 &amp;&amp; 
++						$attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla == 0) 
++							print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
++						
++						print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . 100 / $this-&gt;_attribuutteja_rivilla . &quot;%\&quot;&gt;&quot;;
++		
++						$this-&gt;esita_attribuutit($array, $array);
++
++						$attribuuttilaskuri++;
++		
++						print &quot;&lt;/td&gt;&quot;;
++		
++						break;
++					}
++					else
++					{
++						if(!$attribuutti_avattu) 
++						{
++							print &quot;&lt;table style=\&quot;width: 100%\&quot; border=\&quot;1\&quot;&gt;&quot;;
++							$attribuutti_avattu = true;
++						}
++
++						print &quot;&lt;tr&gt;&quot;;
++		
++						$this-&gt;esita_attribuutit($array, $array, $listatyyppi);
++		
++						print &quot;&lt;/tr&gt;&quot;;
++		
++						break;
++					}
++				}
++			}
++			else
++			{	
++				if($avain != $this-&gt;_tyyppi &amp;&amp; !is_array($avain) &amp;&amp; !is_array($arvo) &amp;&amp; $avain!= $this-&gt;_lista)
++				{	
++					if($avain == $this-&gt;_nimi)
++					{	
++						if($attribuutti_avattu) 
++						{
++							$attribuutti_avattu = false;
++							$attribuutti_suljettu = true;
++							$this-&gt;sulje_attribuutti($listatyyppi, $attribuuttilaskuri);
++							$attribuuttilaskuri = 0;
++						}
++
++						print &quot;&lt;div class=\&quot;kentta\&quot;&gt;&quot;;
++						print &quot;&lt;h2&gt;&quot; . $arvo . &quot;&lt;/h2&gt;&quot;;
++
++						$div_avattu = true;
++					}
++					else
++					{
++						print &quot;&lt;b&gt;&quot; . $avain . &quot;:&lt;/b&gt; &quot; . $arvo . &quot;&lt;br /&gt;&quot;;
++					}
++				}
++
++				$this-&gt;esita_sisatiedot($arvo, $avain);	
++				
++				if(is_array($arvo) &amp;&amp; $arvo[$this-&gt;_nimi] != &quot;value&quot;)
++				{
++					if($tarkenne != &quot;&quot;) 
++						$atrb = $this-&gt;esita_alitiedot($arvo, $listatyyppi, $attribuutti_avattu, $tarkenne, true, $attribuuttilaskuri);
++					else 
++						$atrb = $this-&gt;esita_alitiedot($arvo, $listatyyppi, $attribuutti_avattu, &quot;&quot;, false, $attribuuttilaskuri);
++							
++					if($atrb) $attribuuttilaskuri++;
++				}
++			}
++			if($atrb) { $attribuutti_avattu = true; $attribuutti_suljettu = true; }
++		}
++	}
++
++	if($atrb &amp;&amp; $attribuutti_suljettu) 
++	{ 
++		$this-&gt;sulje_attribuutti($listatyyppi, $attribuuttilaskuri);
++		$attribuutti_avattu = false;
++	}
++
++	if($div_avattu) print &quot;&lt;/div&gt;&quot;;
++
++	if($attribuutti_avattu &amp;&amp; !$attribuutti_suljettu) return true;
++	else return false;
++    }
++
++    private function esita_attribuutit(&amp;$palautus_array, $array, $listatyyppi = false)
++    {
++	foreach($array as $avain =&gt; $arvo)
++	{
++		if($avain === $this-&gt;_parametrit)
++			if(!$listatyyppi)
++				print &quot;&lt;h3&gt;&quot; . $arvo['name'] . &quot;&lt;/h3&gt;&quot;;
++			else 
++				print &quot;&lt;td&gt;&lt;b&gt;&quot; . $arvo['name'] . &quot;&lt;/b&gt;&lt;/td&gt;&quot;;
++
++		$this-&gt;esita_sisatiedot($arvo, $avain, $listatyyppi);		
++	}
++    }
++
++    private function sulje_attribuutti($listatyyppi = false, $attribuuttilaskuri = 0)
++    {
++	if(!$listatyyppi)
++	{
++		for(; $attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla != 0; $attribuuttilaskuri++)
++			print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
++
++		print &quot;&lt;/tr&gt;&lt;/table&gt;&quot;;
++	}
++	else
++	{		
++		print &quot;&lt;/table&gt;&quot;;
++	}
++    }
++
++    private function esita_sisatiedot($array, $avain, $listatyyppi = false)
++    {
++	$sisalto = 0;
++	$desc = false;
++
++	if(is_array($array) &amp;&amp; $avain !== $this-&gt;_parametrit)
++	{
++		$edellinen_arvo = &quot;&quot;;
++
++		foreach($array as $avain2 =&gt; $arvo2)
++		{
++			if(!is_array($arvo2))
++			{
++				if($sisalto == 0) $sisalto = 1;
++
++				if(!$listatyyppi)
++				{
++					if($edellinen_arvo == &quot;description&quot;)
++					{
++						$desc = true;
++						print &quot;&lt;p&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
++					}
++					else
++						if($avain2 == $this-&gt;_sisalto)
++						{
++							print &quot;&lt;p&gt;&quot; . $arvo2 . &quot;&lt;/p&gt;&quot;;
++							$sisalto = 2;
++						}
++				}
++				else
++				{
++					if($edellinen_arvo == &quot;description&quot;)
++					{
++						$desc = true;
++						print &quot;&lt;td&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/td&gt;&quot;;
++					}
++					else
++						if($avain2 == $this-&gt;_sisalto)
++						{
++							$sisalto = 2;
++							print &quot;&lt;td&gt;&quot; . $arvo2 . &quot;&lt;/td&gt;&quot;;
++						}
++				}
++				if($listatyyppi) print $sisalto;
++				$edellinen_arvo = $arvo2;
++			}
++		}
++	}
++	//if($listatyyppi) print &quot;loppu&quot;;
++	if($desc &amp;&amp; $sisalto == 1 &amp;&amp; $listatyyppi)
++		print &quot;jep&quot;;		
++//print &quot;&lt;td&gt;tyhj&#228;&lt;/td&gt;&quot;;
++    }
++
++    private function hae_array($array, $etsittava, &amp;$pal_array)
++    {
++   	foreach($array as $avain =&gt; $arvo)
++	{
++		if($avain === $this-&gt;_nimi &amp;&amp; ($avain == $etsittava || $arvo == $etsittava))
++			$pal_array = $array;
++		else
++			if(is_array($arvo)) $this-&gt;hae_array($arvo, $etsittava, $pal_array);
++	}
++    }
++}
++
++?&gt;
+
+Added: trunk/osinfo/html/xmltyyli.css
+===================================================================
+--- trunk/osinfo/html/xmltyyli.css	2007-03-05 07:49:53 UTC (rev 671)
++++ trunk/osinfo/html/xmltyyli.css	2007-03-05 07:57:48 UTC (rev 672)
+@@ -0,0 +1,27 @@
++div.kentta
++{
++	border: 1px dashed black;
++	margin-top: 10px;
++	padding: 0px 10px 10px 10px;
++
++	background-color: #e9fbf7;
++}
++
++table.attribuutti
++{
++	width: 100%;	
++}
++
++tr.jepaa
++{
++	border: 1px dashed black;
++	width: 100%;	
++}
++
++td.attribuutti_td
++{
++	margin: 5px 5px 5px 5px;
++	border: 1px dotted black;
++	padding: 7px;
++	background-color: #8db7ae;
++}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000059.html">[Osinfo-commit] r671 - trunk/osinfo
+</A></li>
+	<LI>Next message: <A HREF="000061.html">[Osinfo-commit] r673 - in trunk/osinfo: . lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#60">[ date ]</a>
+              <a href="thread.html#60">[ thread ]</a>
+              <a href="subject.html#60">[ subject ]</a>
+              <a href="author.html#60">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

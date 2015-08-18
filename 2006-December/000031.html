@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r643 - in trunk/osinfo: lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r643%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200612051533.kB5FXq2A014650%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000030.html">
+   <LINK REL="Next"  HREF="000032.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r643 - in trunk/osinfo: lib modules</H1>
+    <B>anmaster at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r643%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200612051533.kB5FXq2A014650%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r643 - in trunk/osinfo: lib modules">anmaster at mail.berlios.de
+       </A><BR>
+    <I>Tue Dec  5 16:33:52 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000030.html">[Osinfo-commit] r642 - trunk/osinfo/lib
+</A></li>
+        <LI>Next message: <A HREF="000032.html">[Osinfo-commit] r644 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: anmaster
+Date: 2006-12-05 16:33:52 +0100 (Tue, 05 Dec 2006)
+New Revision: 643
+
+Modified:
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/modules/network
+Log:
+Fixed modules/network when ifconfig isn't excutable to normal users
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-05 15:25:01 UTC (rev 642)
++++ trunk/osinfo/lib/check.functions	2006-12-05 15:33:52 UTC (rev 643)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ######
+ ## Check_logfile
+ #
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:25:01 UTC (rev 642)
++++ trunk/osinfo/modules/network	2006-12-05 15:33:52 UTC (rev 643)
+@@ -30,14 +30,20 @@
+ 	# more of less similarity, but the one on FreeBSD 6.0 is different.
+ 	if [ &quot;$(type -p ifconfig)&quot; ]; then
+ 		nw_src=&quot;ifconfig&quot;
++		
++		# Can we run ifconfig?
++		if [ -x &quot;$(type -p ifconfig)&quot; ]; then
++		
++			if [ &quot;$SYSTEM&quot; == &quot;linux&quot; ] ; then
++				ETH_DEVICES=&quot;$(ifconfig -a | grep BROADCAST -B 3 | \
++				grep -Ev '(^ )|(^--)|LOOPBACK' | awk  {'print $1'})&quot;
+ 
+-		if [ &quot;$SYSTEM&quot; == &quot;linux&quot; ] ; then
+-			ETH_DEVICES=&quot;$(ifconfig -a | grep BROADCAST -B 3 | \
+-			grep -Ev '(^ )|(^--)|LOOPBACK' | awk  {'print $1'})&quot;
+-
+-		else # *BSD ifconfig
+-			ETH_DEVICES=&quot;$(ifconfig -a | grep BROADCAST | grep -v LOOPBACK | \
+-			awk -F': ' {'print $1'})&quot;
++			else # *BSD ifconfig
++				ETH_DEVICES=&quot;$(ifconfig -a | grep BROADCAST | grep -v LOOPBACK | \
++				awk -F': ' {'print $1'})&quot;
++			fi
++		else
++			CheckReq_root
+ 		fi
+ 	fi
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000030.html">[Osinfo-commit] r642 - trunk/osinfo/lib
+</A></li>
+	<LI>Next message: <A HREF="000032.html">[Osinfo-commit] r644 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

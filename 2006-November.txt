@@ -1,0 +1,1505 @@
+From lamikae at mail.berlios.de  Sat Nov 25 20:52:34 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sat, 25 Nov 2006 20:52:34 +0100
+Subject: [Osinfo-commit] r612 - in trunk/osinfo: lib modules
+Message-ID: <200611251952.kAPJqYDs024667@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-25 20:52:34 +0100 (Sat, 25 Nov 2006)
+New Revision: 612
+
+Modified:
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/modules/memory
+Log:
+memory: some preliminary work to tell memory usage
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-11-20 18:59:24 UTC (rev 611)
++++ trunk/osinfo/lib/check.functions	2006-11-25 19:52:34 UTC (rev 612)
+@@ -27,6 +27,13 @@
+ #  1  application
+ CheckReq() {
+ 	if [ "$(type -p ${1})" ]; then
++		case ${1} in
++			'lshw')
++				# run lshw, since if the requirement is asked, it is going
++				# to be run anyway.
++				lshw_xml
++				;;
++		esac
+ 		return 0
+ 	else
+ 		info    "Please install ${1} to collect this information"
+@@ -45,6 +52,9 @@
+ 		flush_values
+ 		return 1
+ 	else
++		# run lshw, since if the requirement is asked, it is going
++		# to be run anyway.
++		lshw_xml
+ 		return 0
+ 	fi
+ }
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-20 18:59:24 UTC (rev 611)
++++ trunk/osinfo/modules/memory	2006-11-25 19:52:34 UTC (rev 612)
+@@ -2,30 +2,31 @@
+ # MEMORY
+ #
+ # this module tells complete information of the memory
+-# installed on the system.
++# installed and used on the system.
++# THE MODULE IS STILL VERY INCOMPLETE!
+ #
+-# only RAM at the moment and the solution is really dirty because
+-# it uses lshw. 'free' and '/proc/meminfo' would also report
+-# free RAM, but slightly incorrect number because it's the total
+-# ram after kernel has allocated some for system services.
++# lshw is used for RAM size evaluation. the size is reported by BIOS
++# and is the most accurate way to detect the physical system memory.
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# incorrectly, since they only detect total ram after kernel allocation.
+ #
+-# requires root access
+-#
+ # TODO: add support for memory type/speed detection thru lshw
++# TODO: memory usage
+ Module_memory() {
+ 	local moduleName="System memory"
+ 	module_header "${moduleName}"
++
+ 	local ram_size
+ 
+ 	if CheckReq lshw; then
+ 
++		# reserve a temp file
+ 		mem_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+ 		TempFiles=("${TempFiles[@]}" "$mem_tmp" )
+ 
+ 		# meminfo or free don't give a proper value, so we use lshw
+ 		# meminfo="/proc/meminfo"
+ 
+-		lshw_xml
+ 		extr_lshw_node memory > $mem_tmp
+ 
+ 		ram_size="$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')"
+@@ -35,8 +36,17 @@
+ 		add_values        "$ram_size"
+ 		add_value_footer  "MB"
+ 
++		if [ $isdebug -ge 1 ]; then
++			print_total_usage
++		fi
++
+ 	fi
+ 
+ 	flush_values
+ }
+ 
++	function print_total_usage() {
++		add_nc_header "Process%col%PID%col%usage MB%col%usage %%col%forks"
++	}
++
++
+
+
+
+From lamikae at mail.berlios.de  Mon Nov 27 11:58:09 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 27 Nov 2006 11:58:09 +0100
+Subject: [Osinfo-commit] r613 - in trunk/osinfo: ebuild modules
+Message-ID: <200611271058.kARAw9jY009658@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-27 11:58:08 +0100 (Mon, 27 Nov 2006)
+New Revision: 613
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/modules/memory
+   trunk/osinfo/modules/network
+   trunk/osinfo/modules/processor
+Log:
+some fixes to cpu and memory
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-27 10:58:08 UTC (rev 613)
+@@ -28,6 +28,7 @@
+ 		sys-apps/coreutils
+ 		sys-apps/grep
+ 		sys-apps/sed
++		sys-devel/bc
+ 		|| (sys-apps/gawk sys-apps/mawk)"
+ 
+ RDEPEND="${DEPEND}"
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/memory	2006-11-27 10:58:08 UTC (rev 613)
+@@ -16,37 +16,66 @@
+ 	local moduleName="System memory"
+ 	module_header "${moduleName}"
+ 
+-	local ram_size
++	print_physical_ram_info
+ 
+-	if CheckReq lshw; then
++	# meminfo="/proc/meminfo"
+ 
+-		# reserve a temp file
+-		mem_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+-		TempFiles=("${TempFiles[@]}" "$mem_tmp" )
++	add_attribute     'Available RAM'
++	add_values        "$(get_available_ram)"
+ 
+-		# meminfo or free don't give a proper value, so we use lshw
+-		# meminfo="/proc/meminfo"
++	if [ $isdebug -ge 1 ]; then
++		print_total_usage
++	fi
+ 
+-		extr_lshw_node memory > $mem_tmp
+ 
+-		ram_size="$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')"
+-		ram_size="$(bc -l <<< scale=1\;$ram_size/1024/1024)"
++	flush_values
++}
+ 
+-		add_attribute     'Total RAM'	'ram'
+-		add_values        "$ram_size"
+-		add_value_footer  "MB"
++	function print_physical_ram_info() {
+ 
+-		if [ $isdebug -ge 1 ]; then
+-			print_total_usage
++		if CheckReq lshw; then
++
++			# reserve a temp file
++			mem_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
++			TempFiles=("${TempFiles[@]}" "$mem_tmp" )
++
++			extr_lshw_node memory > $mem_tmp
++
++
++			# PRINT
++
++			add_attribute     'Physical RAM'	'ram'
++			add_values        "$(get_physical_ram_size ${mem_tmp})"
++			add_value_footer  "MB"
++
++			add_attribute     'RAM description'
++			add_attribute     'RAM vendor'
++			add_attribute     'RAM serial'
++			add_attribute     'RAM slot'
++			add_attribute     'RAM bits'
++			add_attribute     'RAM speed'
++			
++			flush_values
+ 		fi
+ 
+-	fi
++	}
+ 
+-	flush_values
+-}
+-
+ 	function print_total_usage() {
+ 		add_nc_header "Process%col%PID%col%usage MB%col%usage %%col%forks"
+ 	}
+ 
++	function get_physical_ram_size() {
++	# Parameters:
++	#  1  lshw xml memory node file 
++	#     (output from `extr_lshw_node memory`)
+ 
++		mem_tmp="${1}"
++		local ram_size
++
++		ram_size="$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')"
++		bc -l <<< scale=1\;$ram_size/1024/1024
++	}
++
++	function get_available_ram() {
++		free | grep ^Mem | awk {'print $2'}
++	}
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/network	2006-11-27 10:58:08 UTC (rev 613)
+@@ -166,7 +166,7 @@
+ 	function get_device_name() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+-		#  1  output of iwconfig (file)
++		#  2  output of iwconfig (file)
+ 
+ 		# detect IRQ from ifconfig and compare it to lspci
+ 		local irq="$(grep -o 'Interrupt[[:punct:]][0-9]*' "${1}" | \
+
+Modified: trunk/osinfo/modules/processor
+===================================================================
+--- trunk/osinfo/modules/processor	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/processor	2006-11-27 10:58:08 UTC (rev 613)
+@@ -32,22 +32,19 @@
+ 		for cpunr in $(seq 1 1 $cpu_count); do
+ 			[ $cpu_count -gt 1 ] && add_header	"CPU  $cpunr"
+ 
+-			add_attribute "CPU Vendor"      "processor_vendor"
++			add_attribute     "CPU Vendor"      "processor_vendor"
+ 			add_values        "$(grep 'vendor' ${cpuinfo} | sed -n "$cpunr{p;q;}" | \
+ 			                     awk -F': ' {'print $2'})"
+ 
+-			add_attribute "CPU Model"       "processor_model"
++			add_attribute     "CPU Model"       "processor_model"
+ 			add_values        "$(get_cpu_model)"
+ 
+-			add_attribute "CPU Frequency"   "processor_speed"
++			add_attribute     "CPU Frequency"   "processor_speed"
+ 			add_values        "$(grep 'cpu MHz' ${cpuinfo} | sed -n "$cpunr{p;q;}" | \
+ 			                     awk -F': ' {'print $2'})"
+ 			add_value_footer  "MHz"
+ 
+-			add_attribute     "Virtualization"   "vmx"
+-			add_values        "$(get_cpu_vmx)"
+ 
+-
+ 			if [ $isverbose -ge 1 ]; then
+ 
+ 				add_attribute "CPU Architecture"	"system_type"
+@@ -60,7 +57,7 @@
+ 					scan_cpu_voltage
+ 				fi
+ 
+-				add_attribute "CPU Cache"
++				add_attribute "CPU L2 Cache"
+ 						local cache_size="$(grep 'cache' ${cpuinfo} | sed -n "$cpunr{p;q;}" )"
+ 						add_values       "$(grep -Eo '[0-9]+' <<< $cache_size)"
+ 						add_value_footer "$(awk {'print $NF'} <<< $cache_size)"
+@@ -74,6 +71,11 @@
+ 					                     awk -F': ' {'print $2'})"
+ 				fi
+ 
++				add_attribute     "Virtualization"   "vmx"
++				add_values        "$(get_cpu_vmx)"
++
++				flush_values
++
+ 				if	CheckReq_lshw && CheckReq_root "more information" ; then
+ 
+ 					local cpu_width
+
+
+
+From lamikae at mail.berlios.de  Mon Nov 27 16:51:25 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 27 Nov 2006 16:51:25 +0100
+Subject: [Osinfo-commit] r614 - in trunk/osinfo: lib modules
+Message-ID: <200611271551.kARFpPgM004163@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-27 16:51:25 +0100 (Mon, 27 Nov 2006)
+New Revision: 614
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/memory
+Log:
+very small changes to memory debug
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-11-27 10:58:08 UTC (rev 613)
++++ trunk/osinfo/lib/helper.functions	2006-11-27 15:51:25 UTC (rev 614)
+@@ -192,7 +192,6 @@
+ 			# is echoed to whichever function called this
+ 			echo "%node $nr%"
+ 			sed -n "$begin,$nigeb{p;}" "${lshw_xml_file}"
+-
+ 		done
+ 	fi
+ }
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-27 10:58:08 UTC (rev 613)
++++ trunk/osinfo/modules/memory	2006-11-27 15:51:25 UTC (rev 614)
+@@ -32,7 +32,6 @@
+ }
+ 
+ 	function print_physical_ram_info() {
+-
+ 		if CheckReq lshw; then
+ 
+ 			# reserve a temp file
+@@ -40,6 +39,7 @@
+ 			TempFiles=("${TempFiles[@]}" "$mem_tmp" )
+ 
+ 			extr_lshw_node memory > $mem_tmp
++			#cat "$mem_tmp"
+ 
+ 
+ 			# PRINT
+@@ -57,7 +57,6 @@
+ 			
+ 			flush_values
+ 		fi
+-
+ 	}
+ 
+ 	function print_total_usage() {
+
+
+
+From lamikae at mail.berlios.de  Tue Nov 28 07:17:04 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 28 Nov 2006 07:17:04 +0100
+Subject: [Osinfo-commit] r615 - trunk/osinfo/lib
+Message-ID: <200611280617.kAS6H4jd015364@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-28 07:17:04 +0100 (Tue, 28 Nov 2006)
+New Revision: 615
+
+Modified:
+   trunk/osinfo/lib/cmdline
+   trunk/osinfo/lib/helper.functions
+Log:
+checkdeps option
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2006-11-27 15:51:25 UTC (rev 614)
++++ trunk/osinfo/lib/cmdline	2006-11-28 06:17:04 UTC (rev 615)
+@@ -177,6 +177,12 @@
+ 					PRINT_Version
+ 					exit 0;
+ 					;;
++
++				'--checkdeps')
++					check_dependencies
++					exit 0
++					;;
++
+ 				'--htmldebug')
+ 					hostdir="html/hosts"
+ 					usexml=1
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-11-27 15:51:25 UTC (rev 614)
++++ trunk/osinfo/lib/helper.functions	2006-11-28 06:17:04 UTC (rev 615)
+@@ -181,7 +181,6 @@
+ 					break;
+ 
+ 				fi
+-
+ 			done
+ 
+ 			# if the closing node wasn't found, read to EOF
+@@ -215,6 +214,44 @@
+ 	fi
+ }
+ 
++
++function check_dependencies() {
++	local deps=0 # 0 is ok
++
++	DEPENDENCIES="netcat lshw bc foobar" # add more
++	info "Checking dependencies..."
++	flush_values
++
++	for dep in $DEPENDENCIES; do
++		case $dep in
++			'netcat')
++				set -x
++				if ! isinstalled netcat || ! isinstalled nc; then
++					info "netcat not found"
++					info "  netcat is required to send/receive data to/from osinfo daemon"
++				fi
++				set +x
++			;;
++			*)
++				if ! isinstalled $dep; then
++					info "$dep not found"
++				fi
++			;;
++			
++		esac
++
++		flush_values
++	done
++}
++
++function isinstalled() {
++	if [ "$(type -p ${1})" ]; then
++		return 0
++	else
++		return 1
++	fi
++}
++
+ wrong_module() {
+ 	do_abort "${1} is not a valid module!" 1
+ }
+
+
+
+From lamikae at mail.berlios.de  Tue Nov 28 17:28:05 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 28 Nov 2006 17:28:05 +0100
+Subject: [Osinfo-commit] r616 - in trunk/osinfo: docs lib modules
+Message-ID: <200611281628.kASGS5a8027284@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-28 17:27:59 +0100 (Tue, 28 Nov 2006)
+New Revision: 616
+
+Modified:
+   trunk/osinfo/docs/TODO
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/lib/infostring.functions
+   trunk/osinfo/modules/memory
+Log:
+RAM memory bank info added
+
+Modified: trunk/osinfo/docs/TODO
+===================================================================
+--- trunk/osinfo/docs/TODO	2006-11-28 06:17:04 UTC (rev 615)
++++ trunk/osinfo/docs/TODO	2006-11-28 16:27:59 UTC (rev 616)
+@@ -46,7 +46,6 @@
+ *	general usb device detection: cameras etc
+ *	hal/dbus stuff
+ *	window manager version
+-*	--checkdep switch
+ 
+ 
+ BUGS:
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-11-28 06:17:04 UTC (rev 615)
++++ trunk/osinfo/lib/check.functions	2006-11-28 16:27:59 UTC (rev 616)
+@@ -92,17 +92,22 @@
+ ##
+ # Checks if we are run as root and print a message if we are not.
+ # Returns 0 if we are root and 1 if we are not.
++#  Parameters:
++#   The parameters given to this function generate the info message.
++#   If the parameter is 'silent', nothing will be printed.
+ CheckReq_root() {
+-	# give a parameter is the standard output info is not describable enough
+-	if [ ! "$@" ]; then
++	# give a parameter if the standard message is too ambiguent
++	if [ ${#@} -eq 0 ]; then
+ 		local msg="this information"
+ 	else
+ 		local msg="$@"
+ 	fi
+ 
+ 	if [ "$EUID" != 0 ]; then
+-		info    "Please run $appname as super-user to collect $msg"
+-		flush_values
++		if [ "$1" != "silent" ]; then
++			info    "Please run $appname as super-user to collect $msg"
++			flush_values
++		fi
+ 		return 1
+ 	else
+ 		return 0
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-11-28 06:17:04 UTC (rev 615)
++++ trunk/osinfo/lib/helper.functions	2006-11-28 16:27:59 UTC (rev 616)
+@@ -131,15 +131,16 @@
+ extr_lshw_node() {
+ 	local node_id="${1}"
+ 	local node_closer="${2}"
+-	local nr node
++	local nr node begin_indent
+ 	local all_nodes=""
+ 	local node_count=0
+ 
++	# generate the temp files
+ 	input_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+-	TempFiles=("${TempFiles[@]}" "$input_tmp" )
++	TempFiles=("${TempFiles[@]}" "${input_tmp}" )
+ 
+-	# add line numbers
+-	grep -n . "${lshw_xml_file}" > "$input_tmp"
++	# add line numbers (the lshw_xml_file is global)
++	grep -n . "${lshw_xml_file}" > "${input_tmp}"
+ 
+ 	# if a special node closer is not defined, use the node_id
+ 	[ ! "$node_closer" ] && node_closer="node"
+@@ -151,7 +152,7 @@
+ 	node_count="$(grep -i "${node_id}" <<< "${all_nodes}" | wc -l)"
+ 
+ 	# this loop extracts the information between the node begin
+-	# and end lines, based on indentation level (xml), echoing
++	# and end lines, based on indentation level (spaces), echoing
+ 	# the results out
+ 	if [ $node_count -ge 1 ]; then
+ 		for nr in $(seq 1 1 $node_count); do
+@@ -159,9 +160,12 @@
+ 
+ 			# this gets the line number of the wanted node from lshw
+ 			local begin="$(awk -F: {'print $1'} <<< ${this_node})"
+-			local node_indent="$(awk -F: {'print $2'} <<< "${this_node}" | \
+-					     grep -Eo '^[ ]*' | wc -m)"
+ 
++			# count the node indentation (spaces)
++			local begin_indent="$(awk -F: {'print $2'} <<< "${this_node}" | \
++					     grep -Eo '\ *' | wc -m)"
++					     #grep -Eo '^[ ]*' | wc -m)"
++
+ 			# this loop takes care that all subnodes are included, by comparing
+ 			# the indentation level. not very elegant..
+ 			# basically it just searches for $node_closer and gets the line#
+@@ -169,9 +173,9 @@
+ 			for node in $(sed -n "$(($begin+1)),\${p;}" "${input_tmp}" | \
+ 			              grep ${node_closer}); do
+ 
+-				# if the indentation matches...
++				# if the indentation matches (counting spaces)
+ 				if [ "$(awk -F: {'print $2'} <<< ${node} | grep -Eo '\ *' | \
+-					wc -m)" == "$node_indent" ]; then
++					wc -m)" == "$begin_indent" ]; then
+ 
+ 					# read the line# to $nigeb (begin backwards)
+ 					# the line number of the closing node
+@@ -197,9 +201,11 @@
+ 
+ 
+ # extracts value from <xml>value</xml>
++# Parameters: 
++#  1 stdin xml string (variable)
+ extr_xml_value() {
+-	#sed 's/[^>]*>\([^<]*\)<[^.]*/\1/' <<< "${1}"
+-	sed 's/[^>]*>\([^<]*\)\(<[^.]*\)*/\1/' <<< "${1}"
++	#sed 's/[^>]*>\([^<]*\)<[^.]*/\1/' <<< "${@}"
++	sed 's/[^>]*>\([^<]*\)\(<[^.]*\)*/\1/' <<< "${@}"
+ }
+ 
+ 
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2006-11-28 06:17:04 UTC (rev 615)
++++ trunk/osinfo/lib/infostring.functions	2006-11-28 16:27:59 UTC (rev 616)
+@@ -94,7 +94,6 @@
+ function add_footer() {
+ 	if [ "$1" ]; then
+ 		infostring[${#infostring[@]}]="%footer%${@}"
+-		# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ 	else
+ 		close_last_header
+ 	fi
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-28 06:17:04 UTC (rev 615)
++++ trunk/osinfo/modules/memory	2006-11-28 16:27:59 UTC (rev 616)
+@@ -18,12 +18,12 @@
+ 
+ 	print_physical_ram_info
+ 
+-	# meminfo="/proc/meminfo"
++	if [ $isdebug -ge 1 ]; then
++		# meminfo="/proc/meminfo"
+ 
+-	add_attribute     'Available RAM'
+-	add_values        "$(get_available_ram)"
++		add_attribute     'Available RAM'
++		add_values        "$(get_available_ram)"
+ 
+-	if [ $isdebug -ge 1 ]; then
+ 		print_total_usage
+ 	fi
+ 
+@@ -35,26 +35,74 @@
+ 		if CheckReq lshw; then
+ 
+ 			# reserve a temp file
+-			mem_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+-			TempFiles=("${TempFiles[@]}" "$mem_tmp" )
++			ramnode="$(mktemp /tmp/osinfo.XXXXXX)"
++			banknode="$(mktemp /tmp/osinfo.XXXXXX)"
++			TempFiles=("${TempFiles[@]}" "$ramnode" "$banknode" )
+ 
+-			extr_lshw_node memory > $mem_tmp
+-			#cat "$mem_tmp"
++			extr_lshw_node memory > $ramnode
+ 
+-
+-			# PRINT
+-
++			# print
++			add_header        'RAM'
+ 			add_attribute     'Physical RAM'	'ram'
+-			add_values        "$(get_physical_ram_size ${mem_tmp})"
++			add_values        "$(get_physical_ram_size ${ramnode})"
+ 			add_value_footer  "MB"
+ 
+-			add_attribute     'RAM description'
+-			add_attribute     'RAM vendor'
+-			add_attribute     'RAM serial'
+-			add_attribute     'RAM slot'
+-			add_attribute     'RAM bits'
+-			add_attribute     'RAM speed'
++			[ $usexml -ne 1 ] && flush_values 
++			# xml cannot flush here, as add_footer is defined below
++
++			# get specific membank info
++			#if CheckReq_root more specific RAM information; then
++			if CheckReq_root silent; then
++
++				# get the number of memory banks installed
++				local membank_nr="$(grep bank ${ramnode} | wc -l)"
++
++				# correct the offset
++				((membank_nr--))
++
++				# extract information of each bank
++				for bank in $(seq 0 1 $membank_nr); do
++
++					# extract the corresponding bank node
++					extr_lshw_node "bank:$bank"	> ${banknode}
++					#cat $banknode
++
++					add_header        "Bank $bank"
++
++					add_attribute     'RAM description'
++					add_values        "$(extr_xml_value \
++					                  $(grep description $banknode))"
++
++					add_attribute     'RAM vendor'
++					add_values        "$(extr_xml_value \
++					                  $(grep vendor $banknode))"
++
++					add_attribute     'RAM serial'
++					add_values        "$(extr_xml_value \
++					                  $(grep serial $banknode))"
++
++					add_attribute     'RAM slot'
++					add_values        "$(extr_xml_value \
++					                  $(grep slot $banknode))"
++
++					add_attribute     'RAM bits'
++					add_values        "$(extr_xml_value \
++					                  $(grep bits $banknode))"
++
++					add_attribute     'RAM speed'
++					add_values        "$(extr_xml_value \
++					                  $(grep speed $banknode))"
++
++					add_footer        "Bank"
++
++					[ $usexml -ne 1 ] && flush_values 
++					# xml cannot flush here, as add_footer is defined below
++
++				done
++
++			fi
+ 			
++			[ $usexml -eq 1 ] && add_footer # RAM
+ 			flush_values
+ 		fi
+ 	}
+@@ -68,10 +116,10 @@
+ 	#  1  lshw xml memory node file 
+ 	#     (output from `extr_lshw_node memory`)
+ 
+-		mem_tmp="${1}"
++		ramnode="${1}"
+ 		local ram_size
+ 
+-		ram_size="$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')"
++		ram_size="$(grep size ${ramnode} | head -n 1 | grep -Eo '[0-9]+')"
+ 		bc -l <<< scale=1\;$ram_size/1024/1024
+ 	}
+ 
+
+
+
+From lamikae at mail.berlios.de  Tue Nov 28 22:58:22 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 28 Nov 2006 22:58:22 +0100
+Subject: [Osinfo-commit] r617 - trunk/osinfo/modules
+Message-ID: <200611282158.kASLwMNB006582@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-28 22:58:21 +0100 (Tue, 28 Nov 2006)
+New Revision: 617
+
+Added:
+   trunk/osinfo/modules/ram
+Log:
+separeted memory to ram; some additional features
+
+Copied: trunk/osinfo/modules/ram (from rev 616, trunk/osinfo/modules/memory)
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-28 16:27:59 UTC (rev 616)
++++ trunk/osinfo/modules/ram	2006-11-28 21:58:21 UTC (rev 617)
+@@ -0,0 +1,116 @@
++#######################
++# MEMORY
++#
++# This module tells complete information of the RAM memory installed on the system.
++#
++# lshw is used for RAM size evaluation. the size is reported by BIOS
++# and is the most accurate way to detect the physical system memory.
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# incorrectly, since they only detect total ram after kernel allocation.
++#
++Module_memory() {
++	local moduleName="System memory"
++	module_header "${moduleName}"
++
++	print_physical_ram_info
++
++	flush_values
++}
++
++	function print_physical_ram_info() {
++		if CheckReq lshw; then
++
++			# reserve temp file
++			ramnode="$(mktemp /tmp/osinfo.XXXXXX)"
++			TempFiles=("${TempFiles[@]}" "$ramnode" "$banknode" )
++
++			extr_lshw_node memory > $ramnode
++
++			# print
++			add_header        'RAM'
++			add_attribute     'Physical RAM'	'ram'
++			add_values        "$(get_physical_ram_size ${ramnode})"
++			add_value_footer  "MB"
++
++			# xml cannot flush here, as add_footer is defined below
++			[ $usexml -ne 1 ] && flush_values 
++
++			# get specific membank info
++			#if CheckReq_root more specific RAM information; then
++			if CheckReq_root silent; then
++
++				# reserve another temp file
++				banknode="$(mktemp /tmp/osinfo.XXXXXX)"
++				TempFiles=("${TempFiles[@]}" "$banknode" )
++
++				# get the number of memory banks installed
++				local membank_nr="$(grep bank ${ramnode} | wc -l)"
++
++				# correct the offset
++				((membank_nr--))
++
++				# extract information of each bank
++				for bank in $(seq 0 1 $membank_nr); do
++
++					# extract the corresponding bank node
++					extr_lshw_node "bank:$bank"	> ${banknode}
++
++					# debug
++					[ $isdebug -ge 1 ] && cat $banknode
++
++					add_header        "Bank $bank"
++
++					add_attribute     "RAM bank$bank description"
++					add_values        "$(extr_xml_value \
++					                  $(grep description $banknode))"
++
++					add_attribute     "RAM bank$bank size"
++					add_values        "$(extr_xml_value \
++					                  $(grep size $banknode))"
++
++					add_attribute     "RAM bank$bank vendor"
++					add_values        "$(extr_xml_value \
++					                  $(grep vendor $banknode))"
++
++					add_attribute     "RAM bank$bank serial"
++					add_values        "$(extr_xml_value \
++					                  $(grep serial $banknode))"
++
++					add_attribute     "RAM bank$bank slot"
++					add_values        "$(extr_xml_value \
++					                  $(grep slot $banknode))"
++
++					add_attribute     "RAM bank$bank width"
++					add_values        "$(extr_xml_value \
++					                  $(grep width $banknode))"
++
++					add_attribute     "RAM bank$bank speed"
++					add_values        "$(extr_xml_value \
++					                  $(grep speed $banknode))"
++
++					add_footer        "Bank"
++
++					[ $usexml -ne 1 ] && flush_values 
++					# xml cannot flush here, as add_footer is defined below
++
++				done
++
++			fi
++			
++			[ $usexml -eq 1 ] && add_footer # RAM
++			flush_values
++		fi
++	}
++
++	function get_physical_ram_size() {
++	# Parameters:
++	#  1  lshw xml memory node file 
++	#     (output from `extr_lshw_node memory`)
++
++		ramnode="${1}"
++		local ram_size
++
++		ram_size="$(grep size ${ramnode} | head -n 1 | grep -Eo '[0-9]+')"
++		bc -l <<< scale=1\;$ram_size/1024/1024
++	}
++
+
+
+
+From lamikae at mail.berlios.de  Tue Nov 28 23:02:43 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 28 Nov 2006 23:02:43 +0100
+Subject: [Osinfo-commit] r618 - in trunk/osinfo: modules profiles
+Message-ID: <200611282202.kASM2hCP007133@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-28 23:02:42 +0100 (Tue, 28 Nov 2006)
+New Revision: 618
+
+Modified:
+   trunk/osinfo/modules/aa_INDEX
+   trunk/osinfo/modules/ram
+   trunk/osinfo/profiles/default
+Log:
+enabled RAM module as stable
+
+Modified: trunk/osinfo/modules/aa_INDEX
+===================================================================
+--- trunk/osinfo/modules/aa_INDEX	2006-11-28 21:58:21 UTC (rev 617)
++++ trunk/osinfo/modules/aa_INDEX	2006-11-28 22:02:42 UTC (rev 618)
+@@ -7,13 +7,13 @@
+ 
+ # these are used to control run access and validify against
+ 
+-MODULES_LINUX='system distro kernel processor memory hdd network wlan dmi applications terminal devices cdrom users services battery oem'
++MODULES_LINUX='system distro kernel processor ram memory hdd network wlan dmi applications terminal devices cdrom users services battery oem'
+ MODULES_BSD='system kernel applications terminal network devices dmi'
+ MODULES_BROKEN='printers lvm bus sensors nagios'
+-MODULES_REAL_ROOT_ONLY='system memory cdrom processor terminal applications network wlan devices services hdd printers dmi services bus battery oem'
+-MODULES_SU_ONLY='cdrom hdd dmi memory oem'
++MODULES_REAL_ROOT_ONLY='system memory cdrom processor terminal applications network wlan devices services hdd printers dmi services bus battery oem ram'
++MODULES_SU_ONLY='cdrom hdd dmi oem'
+ # MUST contain a list of all modules. This is used to find any invalid modules.
+-MODULES_ALL='applications cdrom devices distro dmi env hdd kernel memory network oem printers processor services system terminal users wlan lvm bus sensors nagios battery video'
++MODULES_ALL='applications cdrom devices distro dmi env hdd kernel memory network oem printers processor services system terminal users wlan lvm bus sensors nagios battery video ram'
+ 
+ 
+ ## META-MODULES
+
+Modified: trunk/osinfo/modules/ram
+===================================================================
+--- trunk/osinfo/modules/ram	2006-11-28 21:58:21 UTC (rev 617)
++++ trunk/osinfo/modules/ram	2006-11-28 22:02:42 UTC (rev 618)
+@@ -1,5 +1,5 @@
+ #######################
+-# MEMORY
++# RAM
+ #
+ # This module tells complete information of the RAM memory installed on the system.
+ #
+@@ -8,8 +8,8 @@
+ # 'free' and '/proc/meminfo' would also report free RAM, but slightly 
+ # incorrectly, since they only detect total ram after kernel allocation.
+ #
+-Module_memory() {
+-	local moduleName="System memory"
++Module_ram() {
++	local moduleName="System RAM memory"
+ 	module_header "${moduleName}"
+ 
+ 	print_physical_ram_info
+
+Modified: trunk/osinfo/profiles/default
+===================================================================
+--- trunk/osinfo/profiles/default	2006-11-28 21:58:21 UTC (rev 617)
++++ trunk/osinfo/profiles/default	2006-11-28 22:02:42 UTC (rev 618)
+@@ -66,6 +66,7 @@
+ 				distro|\
+ 				kernel|\
+ 				processor|\
++				ram|\
+ 				memory|\
+ 				hdd|\
+ 				network|\
+
+
+
+From lamikae at mail.berlios.de  Thu Nov 30 11:37:23 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 30 Nov 2006 11:37:23 +0100
+Subject: [Osinfo-commit] r619 - in trunk/osinfo: . modules
+	modules/experimental profiles
+Message-ID: <200611301037.kAUAbNbe005125@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-30 11:37:23 +0100 (Thu, 30 Nov 2006)
+New Revision: 619
+
+Added:
+   trunk/osinfo/include/
+   trunk/osinfo/modules/experimental/nfs
+   trunk/osinfo/modules/experimental/samba
+   trunk/osinfo/modules/experimental/shares
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/modules/aa_INDEX
+   trunk/osinfo/profiles/default
+Log:
+changed module evaluation; added three network share modules (empty)
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-11-28 22:02:42 UTC (rev 618)
++++ trunk/osinfo/Makefile	2006-11-30 10:37:23 UTC (rev 619)
+@@ -7,7 +7,7 @@
+ #helpers+=lib/check.functions
+ #helpers+=modules/osinfo.modules
+ mainapp=osinfo
+-subdirs=docs conf man init.d lib modules modules/experimental xslt profiles
++subdirs=docs conf man init.d lib modules modules/experimental xslt profiles include
+ 
+ #helpers=lib/*
+ #helpers+=modules/*
+
+Modified: trunk/osinfo/modules/aa_INDEX
+===================================================================
+--- trunk/osinfo/modules/aa_INDEX	2006-11-28 22:02:42 UTC (rev 618)
++++ trunk/osinfo/modules/aa_INDEX	2006-11-30 10:37:23 UTC (rev 619)
+@@ -9,11 +9,11 @@
+ 
+ MODULES_LINUX='system distro kernel processor ram memory hdd network wlan dmi applications terminal devices cdrom users services battery oem'
+ MODULES_BSD='system kernel applications terminal network devices dmi'
+-MODULES_BROKEN='printers lvm bus sensors nagios'
++MODULES_BROKEN='printers lvm bus sensors nagios samba nfs shares'
+ MODULES_REAL_ROOT_ONLY='system memory cdrom processor terminal applications network wlan devices services hdd printers dmi services bus battery oem ram'
+ MODULES_SU_ONLY='cdrom hdd dmi oem'
+ # MUST contain a list of all modules. This is used to find any invalid modules.
+-MODULES_ALL='applications cdrom devices distro dmi env hdd kernel memory network oem printers processor services system terminal users wlan lvm bus sensors nagios battery video ram'
++MODULES_ALL='applications cdrom devices distro dmi env hdd kernel memory network oem printers processor services system terminal users wlan lvm bus sensors nagios battery video ram samba nfs shares'
+ 
+ 
+ ## META-MODULES
+
+Added: trunk/osinfo/modules/experimental/nfs
+===================================================================
+
+Added: trunk/osinfo/modules/experimental/samba
+===================================================================
+
+Added: trunk/osinfo/modules/experimental/shares
+===================================================================
+
+Modified: trunk/osinfo/profiles/default
+===================================================================
+--- trunk/osinfo/profiles/default	2006-11-28 22:02:42 UTC (rev 618)
++++ trunk/osinfo/profiles/default	2006-11-30 10:37:23 UTC (rev 619)
+@@ -1,5 +1,14 @@
++#################################
++## Default profile
++#
++# The profile defines what kind of output osinfo gives in standard mode.
++# Add stable modules to all profiles where applicaple.
++
++# The profile section of osinfo requires still much work.
+ default_profile() {
+  	for module in $module_cmds; do
++
++		local GOOD_MODULES
+ 	
+ 		# TODO: check that the module being called is supported on the running OS
+ 
+@@ -11,19 +20,21 @@
+ 		#	allowed_modules=$MODULES_ALL-$MODULES_SU_ONLY
+ 		#fi
+ 
+-		if [ $module = 'all' ]; then
+-			if [ "$SYSTEM" == "linux" ] ; then
+-				#module_cmds="$MODULES_LINUX"
+-				break
+-			# TODO: please check if this works on bsd and old bash
+-			elif [ "$(grep -i bsd <<< "$SYSTEM")" ]; then
+-				#module_cmds="$MODULES_BSD"
+-				break
+-			fi
+-		elif [ $module = 'lanforce' ]; then
++		# check OS modules
++		if [ "$SYSTEM" == "linux" ] ; then
++			GOOD_MODULES="$MODULES_LINUX"
++			break
++		# TODO: please check if this works on bsd and old bash
++		elif [ "$(grep -i bsd <<< "$SYSTEM")" ]; then
++			GOOD_MODULES="$MODULES_BSD"
++			break
++		fi
++
++		# check LanForce output
++		if [ $module = 'lanforce' ]; then
+ 			lanforce=1
+ 			usexml=1
+-			#module_cmds="$MODULES_LANFORCE"
++			GOOD_MODULES="$MODULES_LANFORCE"
+ 			break
+ 		fi
+ 
+@@ -38,6 +49,7 @@
+ 
+ 	done
+ 
++	# real root stuff here, this doesn't work right yet
+ 	if [ "$prefix" != '/' ] ; then
+ 		tmp_module_cmds="$module_cmds"
+ 		module_cmds=""
+@@ -57,31 +69,18 @@
+ 	# and the actual modules, we first check if there's a Meta-module
+ 	# of that name. in that case, it is used.
+ 	# NOTE: FreeBSD runs all modules
+-
+  	for module in $module_cmds; do
+-
+ 		case $module in
+-
+-				system|\
+-				distro|\
+-				kernel|\
+-				processor|\
+-				ram|\
+-				memory|\
+-				hdd|\
+-				network|\
+-				wlan|\
+-				dmi|\
+-				battery|\
+-				applications|\
+-				terminal|\
+-				devices|\
+-				cdrom|\
+-				users|\
+-				services) \
++			$(grep -o $module <<< $GOOD_MODULES) )
+ 				Module_${module}
+ 				;;
+ 
++			'all')
++				for _module in $GOOD_MODULES; do
++					Module_${_module}
++				done
++				;;
++
+ 			*)
+ 				if [ $isdebug -eq 1 ]; then
+ 					info "You are running an experimental module $module - beware"
+@@ -108,7 +107,6 @@
+ 				fi
+ 
+ 				;;
+-
+ 		esac
+ 	done
+ 
+
+
+
+From lamikae at mail.berlios.de  Thu Nov 30 11:40:25 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 30 Nov 2006 11:40:25 +0100
+Subject: [Osinfo-commit] r620 - trunk/osinfo/modules/experimental
+Message-ID: <200611301040.kAUAePqW005482@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-30 11:40:25 +0100 (Thu, 30 Nov 2006)
+New Revision: 620
+
+Modified:
+   trunk/osinfo/modules/experimental/samba
+Log:
+small smbstatus template
+
+Modified: trunk/osinfo/modules/experimental/samba
+===================================================================
+--- trunk/osinfo/modules/experimental/samba	2006-11-30 10:37:23 UTC (rev 619)
++++ trunk/osinfo/modules/experimental/samba	2006-11-30 10:40:25 UTC (rev 620)
+@@ -0,0 +1,16 @@
++Module_samba() {
++	local moduleName="Samba share status"
++	module_header   "${moduleName}"
++
++	if isinstalled smbstatus; then
++
++		smbstatus
++
++	else
++
++		info "smbstatus binary not found"
++		flush_values
++
++	fi
++
++}
+
+
+
+From lamikae at mail.berlios.de  Thu Nov 30 12:52:29 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 30 Nov 2006 12:52:29 +0100
+Subject: [Osinfo-commit] r621 - in trunk/osinfo: . ebuild lib man
+	modules/experimental
+Message-ID: <200611301152.kAUBqTtg017344@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-11-30 12:52:22 +0100 (Thu, 30 Nov 2006)
+New Revision: 621
+
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/lib/version
+   trunk/osinfo/man/osinfo.1
+   trunk/osinfo/modules/experimental/samba
+Log:
+Makefile and the ebuild: it should now build on Gentoo :)
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/Makefile	2006-11-30 11:52:22 UTC (rev 621)
+@@ -30,7 +30,7 @@
+ 	@echo "  clean           - remove *~"
+ 	@echo "  dist-all-in-one - makes a huge all in one script. (replaces source foo with foo)"
+ 
+-dist: distclean
++dist: distclean man
+ 	mkdir -p dist/$(appname)/src
+ 	for dir in $(subdirs); do \
+ 		mkdir -p dist/$(appname)/src/$$dir ; \
+@@ -51,6 +51,9 @@
+ 		cat $$sources >> osinfo 2>/dev/null ; \
+ 	done
+ 
++	# manual
++	cp man/osinfo.1 dist/osinfo
++
+ 	# finally the mainfile
+ 	# clear out sourcing external files, since it's now all-in-one
+ 	cd dist/$(appname) && \
+@@ -67,11 +70,16 @@
+ # And then include the output in the paramerter of tar.
+ # Bad that it doesn't work in a variable.
+ dist-tarbz2: dist
+-	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../osinfo | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}-$${patch_version}).tar.bz2" $(appname)
++	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}-$${patch_version}).tar.bz2" $(appname)
+ 
+ distclean: clean
+ 	-rm -rf dist
+ 
++man: 
++	cd man
++	cat osinfo.man.txt |  txt2man -t osinfo -s 1 -r "OSinfo manual" > osinfo.1
++	cd ..
++
+ clean:
+ 	-rm -f *~ *.tmp
+ 	-rm -f docs/*~ docs/*.tmp
+@@ -79,4 +87,6 @@
+ checkxml:
+ 	xmllint --valid osinfo.xml
+ 
++tarbz2: dist-tarbz2
++
+ .PHONY : all clean dist distclean checkxml
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-30 11:52:22 UTC (rev 621)
+@@ -50,12 +50,28 @@
+ src_install() {
+ 	
+ 	mkdir -p ${D}/usr/sbin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
+-	cp osinfo ${D}/usr/sbin
++	cp osinfo/osinfo ${D}/usr/sbin
+ 
++	doman osinfo/osinfo.1
++
+ 	#if use doc; then
+ 	#	mkdir -p ${D}/usr/share/doc/${P}
+ 	#	cp ${FILESDIR}/readme.gz ${D}/usr/share/doc/${P}/
+ 	#fi
++}
+ 
++pkg_postinst() {
++	einfo
++	einfo "Osinfo is still beta; you can help be addressing bugs at"
++	einfo "the osinfo mailinglist: osinfo at lists.berlios.de"
++	einfo
++	einfo "Osinfo has many nice features that are not obvious at first."
++	einfo "You can create an HTML document of the computers in your"
++	einfo "LAN, run osinfo in daemon mode on a box with Apache server."
++	einfo "Send the xml sheet to the daemon with the --tcpsend option."
++	einfo
++	einfo "You can freely add more modules to osinfo. Check the source"
++	einfo "code inside the tarball. Thank you for interest."
++	einfo 
+ }
+ 
+
+Modified: trunk/osinfo/lib/version
+===================================================================
+--- trunk/osinfo/lib/version	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/lib/version	2006-11-30 11:52:22 UTC (rev 621)
+@@ -12,8 +12,8 @@
+ appname='osinfo'
+ major_version=0
+ minor_version=2
+-micro_version=11
+-patch_version=1
++micro_version=12
++patch_version=0
+ dev_status=beta
+ release_date='2006-11-xx'
+ 
+
+Modified: trunk/osinfo/man/osinfo.1
+===================================================================
+--- trunk/osinfo/man/osinfo.1	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/man/osinfo.1	2006-11-30 11:52:22 UTC (rev 621)
+@@ -1,5 +1,5 @@
+ ." Text automatically generated by txt2man-1.4.7
+-.TH osinfo 1 "elokuu 12, 2006" "OSinfo manual" ""
++.TH osinfo 1 "marraskuu 30, 2006" "OSinfo manual" ""
+ .SH NAME  
+ osinfo
+ .SH SYNOPSIS
+@@ -9,9 +9,83 @@
+ .fam T
+ .fi
+ .SH DESCRIPTION
+-description
++Arguments are names of modules \fIto\fP get info from. If arguments is "all"
++then list \fIinformation\fP from all modules.
++.PP
++Syntax:
++\fBosinfo\fP [Options] arguments
++\fBosinfo\fP [\\fB--usage\fP|\fB--help\fP]
++.SH OPTIONS
++.TP
++.B
++\\fB--xml\fP
++Printout in xml format \fIto\fP osinfo.xml
++.TP
++.B
++\\fB--lanforce\fP
++Makes \fIthe\fP output \fIto\fP osinfo.xml according \fIto\fP a special DTD
++.RE
++.TP
++.B
++\\fB-o\fP
++\fB--output\fP [file]     Use this file for xml output
++.RS
++.TP
++.B
++\\fB-v\fP
++\fB--verbose\fP           Show more \fIinformation\fP
++.TP
++.B
++\\fB-vv\fP
++\fB--veryverbose\fP       Show even more \fIinformation\fP
++.TP
++.B
++\\fB-V\fP
++\fB--version\fP           Shows \fIthe\fP version of \fBosinfo\fP
++.RS
++.TP
++.B
++\\fB--netcat\fP [port]
++Sends \fIthe\fP output in xml \fIto\fP \fIthe\fP tcp port via netcat
++.TP
++.B
++\\fB--no-color\fP
++Disables color output (testing)
++.TP
++.B
++\\fB--debug\fP
++For testing
++.RE
++.TP
++.B
++\\fB-D\fP
++\fB--fulldebug\fP         Print full debugging info, clutters output!
++.TP
++.B
++\\fB-P\fP
++\fB--prefix\fP [dir]      Use this dir as root
++This disables some modules
++and exits
+ .SH MODULES
+-list of modules and a description
++.SS        SYSTEM
++.SS        DISTRO
++.SS    KERNEL
++.SS        PROCESSOR
++.SS        HDD
++.SS        NETWORK
++.SS        WLAN
++.SS        APPLICATIONS
++.SS        TERMINAL
++.SS        DEVICES
++.SS        DMI
++.SS        MEMORY
++.SS        USERS
++.SS        SERVICES
++
++.SS        CDROM
++The cdrom module detects all optical (cd/dvd etc) drives in \fIthe\fP \fIsystem\fP seen by lshw. The burning / read capabilites are reported only on \fIthe\fP default verbosity level; increase verbosity \fIto\fP see all capabilities.
++.PP
++This module is not 100% proof; there are known unresolved issue when lshw cannot see a drive.
+ .SH COMPATIBILITY
+ everything is collected honoring maximum portability and minimum dependency requirements; ie. using standard *nix tools. 
+ .PP
+@@ -32,14 +106,6 @@
+ SlackWare
+ .IP \(bu 3
+ FreeBSD 6.0 has been tested as well.
+-.RE
+-.PP
+-
+-.SH OPTIONS
+-options
+-.RE
+-.PP
+-
+ .SH DEPENDENCIES
+ Some \fIinformation\fP is unavailable without special (but quite common) packages, but \fIthe\fP availability of these is tested, and no error messages are produced if these rarer tools are missing. See info below for a list of dependencies.
+ .PP
+@@ -49,51 +115,51 @@
+ .IP \(bu 3
+ awk, sed, seq, tr, bc, uniq, sort, GNU grep with support for extended regexps
+ .IP \(bu 3
+-util\-linux (fdisk, column)
++util\\fB-linux\fP (fdisk, column)
+ .IP \(bu 3
+ netcat (for sending \fIthe\fP xml output over tcp)
+ .PP
+ MODULE DEPENDENCIES:
+ .PP
+-cpu:
+-.IP \(bu 3
+-/proc/cpuinfo, x86info (optional)
+-.PP
+-users:
+-.IP \(bu 3
+-last, file:/var/log/wtmp
+-.PP
+-dmi:
+-.IP \(bu 3
+-dmidecode
+-.PP
+-memory:
+-.IP \(bu 3
+-lshw
+-.TP
+-.B
+-cdrom:
+-.IP \(bu 3
+-lshw
+-.PP
+-hdd:
+-.IP \(bu 3
+-util\-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
+-.PP
+-devices: 
+-.IP \(bu 3
+-lspci
+-.PP
+-network: 
+-.IP \(bu 3
+-net\-tools (hostname, ifconfig, route)
+-.PP
+-wlan:
+-.IP \(bu 3
+-wireless\-tools (iwconfig, iwlist)
++.nf
++.fam C
++         cpu:
++         o /proc/cpuinfo, x86info (optional)
++
++         users:
++         o last, file:/var/log/wtmp
++
++         dmi:
++         o dmidecode
++
++         memory:
++         o lshw
++
++         cdrom:   
++         o lshw
++
++         hdd:
++         o util\-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
++
++         lvm:
++         o device\-mapper lvm2 
++
++         devices: 
++         o lspci
++
++         network: 
++         o net\-tools (hostname, ifconfig, route)
++
++         wlan:
++         o wireless\-tools (iwconfig, iwlist)
++
++.fam T
++.fi
+ .SH BUGS
+ See docs/TODO in \fIthe\fP source code.
+ Hopefully most bugs are fixed in 0.3.
++.IP \(bu 3
++Module LVM contains some known bugs.
+ .SH AUTHORS
+ Written by Arvid Norlander and Mikael Lammentausta
+ .TP
+
+Modified: trunk/osinfo/modules/experimental/samba
+===================================================================
+--- trunk/osinfo/modules/experimental/samba	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/modules/experimental/samba	2006-11-30 11:52:22 UTC (rev 621)
+@@ -7,10 +7,8 @@
+ 		smbstatus
+ 
+ 	else
+-
+ 		info "smbstatus binary not found"
+-		flush_values
+-
+ 	fi
+ 
++	flush_values
+ }
+
+
+

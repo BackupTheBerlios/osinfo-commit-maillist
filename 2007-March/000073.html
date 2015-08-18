@@ -1,0 +1,879 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r685 - in trunk/osinfo: docs html lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r685%20-%20in%20trunk/osinfo%3A%20docs%20html%20lib&In-Reply-To=%3C200703070742.l277gFEl008264%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000072.html">
+   <LINK REL="Next"  HREF="000074.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r685 - in trunk/osinfo: docs html lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r685%20-%20in%20trunk/osinfo%3A%20docs%20html%20lib&In-Reply-To=%3C200703070742.l277gFEl008264%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r685 - in trunk/osinfo: docs html lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar  7 08:42:15 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000072.html">[Osinfo-commit] r684 - trunk/osinfo/modules
+</A></li>
+        <LI>Next message: <A HREF="000074.html">[Osinfo-commit] r686 - in trunk/osinfo: html lib	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-07 08:42:15 +0100 (Wed, 07 Mar 2007)
+New Revision: 685
+
+Modified:
+   trunk/osinfo/docs/README
+   trunk/osinfo/html/index3.php
+   trunk/osinfo/html/xml-parseri.php
+   trunk/osinfo/lib/infostring.functions
+Log:
+fixed a stupid mistake that made empty values to print out
+
+Modified: trunk/osinfo/docs/README
+===================================================================
+--- trunk/osinfo/docs/README	2007-03-07 07:34:47 UTC (rev 684)
++++ trunk/osinfo/docs/README	2007-03-07 07:42:15 UTC (rev 685)
+@@ -0,0 +1,5 @@
++Random tidbits for developers:
++
++Q: how can I control whether attributes with no values show up in the list?
++A: check out add_values()
++
+
+Modified: trunk/osinfo/html/index3.php
+===================================================================
+--- trunk/osinfo/html/index3.php	2007-03-07 07:34:47 UTC (rev 684)
++++ trunk/osinfo/html/index3.php	2007-03-07 07:42:15 UTC (rev 685)
+@@ -13,20 +13,27 @@
+ 					&quot;P&#228;&#228;Frame&quot; =&gt; array('10px', '10px', '70%', '500'));
+ 	private $_xmlkansio = &quot;hosts&quot;;
+ 	private $_xmlparseri = &quot;xml-parseri.php&quot;;
+-	private $_index_view = &quot;index_view.html&quot;;
++	private $_parseri;
++	private $_clientteja_rivilla = 3;
+ 
+ 	public function __construct()
+     	{
++		if(file_exists($this-&gt;_xmlparseri))
++		{
++			include($this-&gt;_xmlparseri);
+ 
++			$this-&gt;_parseri = new xmlparseri();
++		}
++		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Cannot find file \&quot;&quot; . $this-&gt;_xmlparseri . &quot;\&quot;&lt;/p&gt;&quot;;
+ 	}
+ 
+ 	public function tulosta_alkukoodi($tyylit = true)
+ 	{
+-		//print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
++		print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
+ 
+ 		print &quot;&lt;html&gt;\n&quot;;	
+ 		print &quot;&lt;head&gt;\n&quot;;	
+-		print &quot;&lt;title&gt;Osinfo&lt;/title&gt;\n\n&quot;;
++		print &quot;&lt;title&gt;OS info&lt;/title&gt;\n\n&quot;;
+ 
+ 		if($tyylit) $this-&gt;tulosta_tyyli();
+ 
+@@ -76,7 +83,6 @@
+ 
+ 		div.SivuFrameSisalto
+ 		{
+-			padding: 5px;
+ 			padding: 10px;
+ 		}
+ 
+@@ -108,14 +114,39 @@
+ 			color: red;
+ 		}
+ 
++		ul.hostit
++		{
++			padding: 0px;
++			padding-left: 10px;
++		}
++
++		li.kuvaus
++		{
++			font-size: 12px;
++		}
++
++		a:link
++		{
++			color: rgb(0,0,255);
++		}
++
++		a:visited
++		{
++			color: rgb(0,0,200);
++		}
++
+ 		&lt;/style&gt;&quot;;
+ 	}
+ 	
+-	private function listaa_tiedostot()
++	private function listaa_tiedostot($valikko = false)
+ 	{
+ 		if(file_exists($this-&gt;_xmlkansio))
+ 		{
+ 			$kansio = opendir($this-&gt;_xmlkansio);
++
++			$ul_avattu = false;
++
++			$xml_array = array();
+ 		
+ 			for($i=0; $tiedosto = readdir($kansio); $i++)
+ 			{
+@@ -124,14 +155,183 @@
+ 		
+ 				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
+ 				{
+-					print &quot;&lt;a href=\&quot;?target=&quot;. $tiedosto . &quot;\&quot;&gt;&quot; .
+-						$tiedosto . &quot;&lt;/a&gt;&lt;br /&gt;&quot;;
++					$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
++
++					if($valikko)
++					{
++					$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
++						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
++						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
++						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
++						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
++						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;));
++					}
++					else
++					{
++					$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
++						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
++						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
++						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
++						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
++						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;),
++						&quot;script_version&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;),
++						&quot;ram&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;ram&quot;, &quot;Physical RAM&quot;),
++						&quot;drive&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;drive&quot;, &quot;SATA/SCSI drive&quot;)
++						);
++					}
++
++					array_push($xml_array, $temp_array);
++
+ 				}
+ 			}
++
++			$domainit = $this-&gt;lajittele_array($xml_array, &quot;domain&quot;);
++			$profilet = array();
++
++			foreach($domainit as $domain =&gt; $arvo)
++			{
++				$temp_array = array($domain =&gt; $this-&gt;lajittele_array($arvo, &quot;profile&quot;));
++				$this-&gt;array_lisaa_samaan($profilet, $temp_array);
++			}
++
++			ksort($profilet);
++
++			//print &quot;&lt;pre&gt;&quot;;
++			//print_r($domainit);
++			//print_r($profilet);
++			//print &quot;&lt;/pre&gt;&quot;;
++			
++			if($valikko)
++			{
++				foreach($profilet as $domain =&gt; $profiles)
++				{
++					ksort($profiles);
++					print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
++	
++					foreach($profiles as $profile =&gt; $hostnames)
++					{
++						print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Profile: &lt;i&gt;&quot; . $profile . 
++							&quot;&lt;/i&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
++	
++						foreach($hostnames as $hostname =&gt; $arvot)
++						{
++							print &quot;&lt;li&gt;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
++								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;
++								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;os&quot;] . &quot;&lt;/li&gt;
++								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;cpu&quot;] . &quot;&lt;/li&gt;
++								&lt;/ul&gt;&lt;/li&gt;&quot;;
++	
++						}
++	
++						print &quot;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&quot;;
++					}
++	
++					print &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
++				}
++			}
++			else
++			{
++				foreach($profilet as $domain =&gt; $profiles)
++				{
++					ksort($profiles);
++					print &quot;&lt;div class=\&quot;kentta\&quot;&gt;&lt;h3&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
++	
++					foreach($profiles as $profile =&gt; $hostnames)
++					{
++						print &quot;&lt;div class=\&quot;kentta\&quot;&gt;&lt;h3&gt;Profile: &lt;i&gt;&quot; . $profile . 
++							&quot;&lt;/i&gt;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&quot;;
++
++						$laskuri = 0;
++	
++						foreach($hostnames as $hostname =&gt; $arvot)
++						{
++							if($laskuri == 0) 
++								print &quot;&lt;tr&gt;&quot;;
++							elseif($laskuri % $this-&gt;_clientteja_rivilla == 0)
++ 								print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
++
++							print &quot;&lt;td class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_clientteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
++
++							print &quot;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
++								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
++
++							foreach($arvot as $tyyppi =&gt; $arvo)
++							{
++								if($tyyppi != &quot;hostname&quot; &amp;&amp; $tyyppi != &quot;domain&quot; &amp;&amp; $tyyppi != &quot;profile&quot; &amp;&amp; $tyyppi != &quot;tiedosto&quot; &amp;&amp; $arvo != &quot;&quot;)
++								{
++									print &quot;&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvo . &quot;&lt;/li&gt;&quot;;
++								}
++							}
++
++							print &quot;&lt;/ul&gt;&lt;/td&gt;&quot;;
++
++							$laskuri++;
++						}
++
++						while($laskuri % $this-&gt;_clientteja_rivilla != 0)
++						{
++							print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
++							$laskuri++;
++						}
++	
++						print &quot;&lt;/table&gt;&lt;/h3&gt;&lt;/div&gt;&quot;;
++					}
++	
++					print &quot;&lt;/h3&gt;&lt;/div&gt;&quot;;
++				}
++			}
+ 		}
+ 		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Directory \&quot;&quot; . $this-&gt;_xmlkansio . &quot;\&quot; does not exist&lt;/p&gt;&quot;;
+ 	}
+ 
++	private function lajittele_array($array, $nimi)
++	{
++		$nimet = array(&quot; &quot;);
++		$nimet_lajiteltuna = array();
++
++		foreach($array as $avain =&gt; $arvo)
++		{
++			if(is_array($arvo))
++			{
++				$loytyi = false;
++
++				for($i=0; $i &lt; sizeof($nimet); $i++)
++					if($arvo[$nimi] == $nimet[$i]) $loytyi = true;
++
++				if(!$loytyi)
++				{
++					$temp_array = array($arvo[$nimi] =&gt; array());
++					$this-&gt;array_lisaa_samaan($nimet_lajiteltuna, $temp_array);
++					array_push($nimet, $arvo[$nimi]);
++				}
++				
++				array_push($nimet_lajiteltuna[$arvo[$nimi]], $arvo);
++			}
++		}
++
++		return $nimet_lajiteltuna;
++	}
++
++	private function array_lisaa_samaan(&amp;$array) 
++	{
++		$argumentit = func_get_args();
++	
++		foreach($argumentit as $argumentti) 
++		{
++			if(is_array($argumentti)) 
++			{
++				foreach($argumentti as $avain =&gt; $arvo) 
++				{
++					$array[$avain] = $arvo;
++					$paluuarvo++;
++				}
++			}
++			else $array[$argumentti] = &quot;&quot;;
++		}
++	
++		return $paluuarvo;
++	}
++
+ 	private function hae_viimeksi_paivitetty()
+ 	{
+ 		if(file_exists($this-&gt;_xmlkansio))
+@@ -163,20 +363,20 @@
+ 		print &quot;&lt;div class=\&quot;SivuFrame\&quot;&gt;&quot;;
+ 		print &quot;&lt;div class=\&quot;SivuFrameSisalto\&quot;&gt;&quot;;
+ 
+-		print &quot;&lt;h3&gt;Osinfo&lt;/h3&gt;
++		print &quot;&lt;h3&gt;OS info&lt;/h3&gt;
+ 			&lt;p&gt;&lt;a href=\&quot;&quot; . $_SERVER[&quot;SCRIPT_NAME&quot;] . &quot;\&quot;&gt;index view&lt;/a&gt;&lt;/p&gt;
+ 			&lt;hr /&gt;&quot;;
+ 
+-		$this-&gt;listaa_tiedostot();
++		$this-&gt;listaa_tiedostot(true);
+ 	
+ 		print &quot;&lt;hr /&gt;&quot;;
+ 
+-		print &quot;&lt;p&gt;Last updated:&lt;/p&gt;&quot;;
++		print &quot;&lt;p&gt;Last update:&lt;/p&gt;&quot;;
+ 
+ 		$viimeksi_paivitetty = $this-&gt;hae_viimeksi_paivitetty();
+ 
+ 		if($viimeksi_paivitetty &gt; 0)
+-			print &quot;&lt;p&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/p&gt;&quot;;
++			print &quot;&lt;p&gt;&lt;i&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
+ 
+ 		//include(&quot;sidebar.html&quot;);
+ 	
+@@ -193,42 +393,47 @@
+ 		
+ 		if($sivu != &quot;&quot;)
+ 		{
+-			if(file_exists($this-&gt;_xmlparseri))
++			if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
+ 			{
+-				include($this-&gt;_xmlparseri);
++				/*
++				$parametrit = $_POST['osinfo'];
++			
++				print &quot;&lt;p&gt;
++					&lt;form action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
++					Parameters: &lt;input type=\&quot;text\&quot; name=\&quot;osinfo\&quot; value=\&quot;&quot; . $parametrit . &quot;\&quot; /&gt;
++						&lt;input type=\&quot;submit\&quot; value=\&quot;ok\&quot; /&gt;
++					&lt;/form&gt;
++					&lt;/p&gt;&quot;;
++				*/
+ 	
+-				if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
+-				{					
+-					$parametrit = $_POST['osinfo'];
++				//print &quot;&lt;pre&gt;&quot;;
++
++				$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
+ 				
+-					print &quot;&lt;p&gt;
+-						&lt;form action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
+-						Parameters: &lt;input type=\&quot;text\&quot; name=\&quot;osinfo\&quot; value=\&quot;&quot; . $parametrit . &quot;\&quot; /&gt;
+-							&lt;input type=\&quot;submit\&quot; value=\&quot;ok\&quot; /&gt;
+-						&lt;/form&gt;
+-						&lt;/p&gt;&quot;;
++				//$this-&gt;_parseri-&gt;nayta_tietotaulu();
++				$this-&gt;_parseri-&gt;hae_arvot(&quot;osinfo&quot;);
+ 
+-					$parseri = new xmlparseri($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
+-		
+-					print &quot;&lt;pre&gt;&quot;;
++				//print &quot;&lt;/pre&gt;&quot;;
++			}
++			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
+ 
+-					//$parseri-&gt;nayta_tietotaulu();
+-					$parseri-&gt;hae_arvot(&quot;osinfo&quot;, $parametrit);
+-
+-					print &quot;&lt;/pre&gt;&quot;;
+-				}
+-				else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
+-			}
+-			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Cannot find file \&quot;&quot; . $this-&gt;_xmlparseri . &quot;\&quot;&lt;/p&gt;&quot;;
+ 		}
+ 		else
+ 		{
+-			if(file_exists($this-&gt;_index_view))
+-				include($this-&gt;_index_view);
++			//if(file_exists($this-&gt;_index_view))
++			//	include($this-&gt;_index_view);
++			$this-&gt;nayta_index_view();
+ 		}
+ 
+ 		print &quot;&lt;/div&gt;&quot;;
+ 	}
++
++	private function nayta_index_view()
++	{
++		print &quot;index view&quot;;
++
++		$this-&gt;listaa_tiedostot(false);
++	}
+ }
+ 
+ ?&gt; 
+\ No newline at end of file
+
+Modified: trunk/osinfo/html/xml-parseri.php
+===================================================================
+--- trunk/osinfo/html/xml-parseri.php	2007-03-07 07:34:47 UTC (rev 684)
++++ trunk/osinfo/html/xml-parseri.php	2007-03-07 07:42:15 UTC (rev 685)
+@@ -16,8 +16,9 @@
+     // listan tunnistin
+     private $_lista = &quot;lista&quot;;
+ 
+-    public function __construct($tiedoston_nimi)
++    public function __construct()
+     {
++/*
+ 	if(file_exists($tiedoston_nimi))
+ 	{
+ 		$this-&gt;_parsittava_tiedosto = $tiedoston_nimi;
+@@ -29,14 +30,30 @@
+ 	{
+ 		print &quot;&lt;p&gt;File &quot; . $tiedoston_nimi . &quot; not found&lt;/p&gt;&quot;;
+ 	}
++*/
+     }
+ 
++    public function parsi_tiedosto($tiedoston_nimi)
++    {
++	if(file_exists($tiedoston_nimi))
++	{
++		$this-&gt;_parsittava_tiedosto = $tiedoston_nimi;
++		$this-&gt;lue_tiedoston_sisalto();
++	
++		$this-&gt;_tietotaulu = $this-&gt;etsi_tagi(&quot;&quot;, 0);
++	}
++	else
++	{
++		print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File &quot; . $tiedoston_nimi . &quot; not found&lt;/p&gt;&quot;;
++	}
++    }
++
+     private function lue_tiedoston_sisalto()
+     {
+ 	$fp = fopen($this-&gt;_parsittava_tiedosto, &quot;r&quot;);
+ 	$this-&gt;_tiedoston_sisalto = &quot;&quot;;
+ 
+-	while(false !== ($char = fgetc($fp))) 
++	while(false !== ($char = fgetc($fp)))
+ 		$this-&gt;_tiedoston_sisalto .= $char;
+     }
+ 
+@@ -50,15 +67,15 @@
+ 
+     private function etsi_tagi($etsittava, $indeksi, $taso = -1)
+     {	
+-	$taulu = array();	
++	$taulu = array();
+ 	$taso++;
+ 
+ 	for($i=$indeksi; $i &lt; strlen($this-&gt;_tiedoston_sisalto); $i++)
+ 	{
+ 	     if($this-&gt;_tiedoston_sisalto[$i] == &quot;&lt;&quot;)
+-	     {		  
++	     {
+ 		  $tagi = &quot;&quot;;
+-	          
++
+ 		  for($j=$i+1; $j &lt; strlen($this-&gt;_tiedoston_sisalto); $j++)
+ 		  {
+ 			if($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
+@@ -89,7 +106,7 @@
+ 				   $sisalto .= $this-&gt;_tiedoston_sisalto[$j];
+ 				elseif($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
+ 			    }
+-				
++
+ 			    if(!empty($sisalto))
+ 			    {
+ 				$temp_array = array($this-&gt;_sisalto =&gt; $sisalto);
+@@ -104,7 +121,7 @@
+ 			    	if($tietue[$this-&gt;_nimi] == $etsittava)
+ 				     return array(&quot;taulu&quot; =&gt; $taulu, &quot;indeksi&quot; =&gt; $i);
+ 			    }
+-				
++
+ 		            break;
+ 		       case 4:
+ 			    array_push($taulu, $tietue);
+@@ -235,7 +252,7 @@
+ 	return $paluuarvo;
+     }
+ 
+-    public function hae_arvot($kanta, $attribuutit)
++    public function hae_arvot($kanta, $attribuutit = &quot;&quot;)
+     {
+ 	  $this-&gt;hae_array($this-&gt;_tietotaulu, $kanta, $esitettava_array);
+ 	  $this-&gt;esita_tiedot($esitettava_array, $attribuutit);
+@@ -243,8 +260,18 @@
+ 
+     private function esita_tiedot($array, $tarkenne = &quot;&quot;)
+     {
+-	print &quot;&lt;h1&gt;&quot; . $array[$this-&gt;_nimi] . &quot;&lt;/h1&gt;&quot;;
++	print &quot;&lt;table style=\&quot;width: 100%\&quot;&gt;
++		&lt;tr&gt;
++		&lt;td&gt;&lt;h2&gt;&quot; . $this-&gt;parsi_nimi($this-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;)) . &quot;&lt;/h2&gt;&lt;/td&gt;
++		&lt;td&gt;Quick jump: &quot;;
+ 
++	$this-&gt;nayta_quick_jump_valikko();
++
++	print &quot;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Script version: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;) . &quot;&lt;/i&gt;&lt;br /&gt;&quot; .
++		&quot;Scanning date: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;scanning&quot;, &quot;date&quot;) . &quot;&lt;/i&gt;&lt;/p&gt;&lt;/td&gt;&quot;;
++
++	print &quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;;
++
+ 	$this-&gt;_attribuutti_avattu = false;
+ 	$this-&gt;_attribuutti_laskuri = 0;
+ 
+@@ -278,7 +305,7 @@
+ 			$listatyyppi = true;
+ 	}
+ 
+-	//$listatyyppi = true;
++	$listatyyppi = true;
+ 
+ 	foreach($array as $avain =&gt; $arvo)
+ 	{	
+@@ -305,7 +332,7 @@
+ 						$attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla == 0) 
+ 							print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
+ 						
+-						print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . 100 / $this-&gt;_attribuutteja_rivilla . &quot;%\&quot;&gt;&quot;;
++						print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_attribuutteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
+ 		
+ 						$this-&gt;esita_attribuutit($array, $array);
+ 
+@@ -319,7 +346,7 @@
+ 					{
+ 						if(!$attribuutti_avattu) 
+ 						{
+-							print &quot;&lt;table style=\&quot;width: 100%\&quot; border=\&quot;1\&quot;&gt;&quot;;
++							print &quot;&lt;table class=\&quot;lista_attribuutti\&quot;&gt;&quot;;
+ 							$attribuutti_avattu = true;
+ 						}
+ 
+@@ -335,7 +362,7 @@
+ 			}
+ 			else
+ 			{	
+-				if($avain != $this-&gt;_tyyppi &amp;&amp; !is_array($avain) &amp;&amp; !is_array($arvo) &amp;&amp; $avain!= $this-&gt;_lista)
++				if($avain != $this-&gt;_tyyppi &amp;&amp; !is_array($avain) &amp;&amp; !is_array($arvo) &amp;&amp; $avain!= $this-&gt;_lista &amp;&amp; $arvo != &quot;scanning&quot; &amp;&amp; $arvo != &quot;script&quot;)
+ 				{	
+ 					if($avain == $this-&gt;_nimi)
+ 					{	
+@@ -347,8 +374,8 @@
+ 							$attribuuttilaskuri = 0;
+ 						}
+ 
+-						print &quot;&lt;div class=\&quot;kentta\&quot;&gt;&quot;;
+-						print &quot;&lt;h2&gt;&quot; . $arvo . &quot;&lt;/h2&gt;&quot;;
++						print &quot;&lt;div class=\&quot;kentta\&quot; id=\&quot;&quot; . $arvo . &quot;\&quot;&gt;&quot;;
++						print &quot;&lt;h2&gt;&quot; . $this-&gt;parsi_nimi($arvo) . &quot;&lt;/h2&gt;&quot;;
+ 
+ 						$div_avattu = true;
+ 					}
+@@ -357,8 +384,9 @@
+ 						print &quot;&lt;b&gt;&quot; . $avain . &quot;:&lt;/b&gt; &quot; . $arvo . &quot;&lt;br /&gt;&quot;;
+ 					}
+ 				}
++				elseif($arvo == &quot;scanning&quot; || $arvo == &quot;script&quot;) break;
+ 
+-				$this-&gt;esita_sisatiedot($arvo, $avain);	
++				$this-&gt;esita_sisatiedot($arvo, $avain);
+ 				
+ 				if(is_array($arvo) &amp;&amp; $arvo[$this-&gt;_nimi] != &quot;value&quot;)
+ 				{
+@@ -388,16 +416,37 @@
+ 
+     private function esita_attribuutit(&amp;$palautus_array, $array, $listatyyppi = false)
+     {
++	$description = false;
++	$sisalto = false;
++
+ 	foreach($array as $avain =&gt; $arvo)
+ 	{
+ 		if($avain === $this-&gt;_parametrit)
++			if($arvo['code'] != &quot;&quot;) print &quot;koodi&quot;;
++			else
++			{
+ 			if(!$listatyyppi)
+ 				print &quot;&lt;h3&gt;&quot; . $arvo['name'] . &quot;&lt;/h3&gt;&quot;;
+ 			else 
+-				print &quot;&lt;td&gt;&lt;b&gt;&quot; . $arvo['name'] . &quot;&lt;/b&gt;&lt;/td&gt;&quot;;
++				print &quot;&lt;td&gt;&lt;b&gt;&quot; . $arvo['name'] . &quot;&lt;/b&gt;&lt;/td&gt;&quot;; }
+ 
+-		$this-&gt;esita_sisatiedot($arvo, $avain, $listatyyppi);		
++		$value = $this-&gt;esita_sisatiedot($arvo, $avain, $listatyyppi);
++
++		if($value == 2) $sisalto = true;
++		elseif($value == 1) $description = true;
++
++		if($listatyyppi &amp;&amp; $description &amp;&amp; !$sisalto)
++		{
++			print &quot;&lt;td class=\&quot;lista_value\&quot;&gt;&lt;table class=\&quot;value\&quot;&gt;&quot;;
++		}
++
+ 	}
++
++	//if(!$sisalto) print &quot;&lt;td&gt;nbsp;&lt;/td&gt;&quot;;
++	
++	if($listatyyppi &amp;&amp; $description &amp;&amp; !$sisalto) print &quot;&lt;tr&gt;&lt;td&gt;&nbsp;&lt;/td&gt;&lt;/tr&gt;&quot;;
++
++	if($listatyyppi &amp;&amp; $description) print &quot;&lt;/table&gt;&lt;/td&gt;&quot;;
+     }
+ 
+     private function sulje_attribuutti($listatyyppi = false, $attribuuttilaskuri = 0)
+@@ -417,8 +466,7 @@
+ 
+     private function esita_sisatiedot($array, $avain, $listatyyppi = false)
+     {
+-	$sisalto = 0;
+-	$desc = false;
++	$arvo = 0;
+ 
+ 	if(is_array($array) &amp;&amp; $avain !== $this-&gt;_parametrit)
+ 	{
+@@ -428,45 +476,36 @@
+ 		{
+ 			if(!is_array($arvo2))
+ 			{
+-				if($sisalto == 0) $sisalto = 1;
+-
+ 				if(!$listatyyppi)
+ 				{
+ 					if($edellinen_arvo == &quot;description&quot;)
+-					{
+-						$desc = true;
+-						print &quot;&lt;p&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
+-					}
++						//print &quot;&lt;p&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
++						print &quot;&lt;h3&gt;&quot; . $arvo2 . &quot;&lt;/h3&gt;&quot;;
+ 					else
+ 						if($avain2 == $this-&gt;_sisalto)
+-						{
+ 							print &quot;&lt;p&gt;&quot; . $arvo2 . &quot;&lt;/p&gt;&quot;;
+-							$sisalto = 2;
+-						}
+ 				}
+ 				else
+ 				{
+ 					if($edellinen_arvo == &quot;description&quot;)
+ 					{
+-						$desc = true;
+-						print &quot;&lt;td&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/td&gt;&quot;;
++						print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;lista_description\&quot;&gt;&lt;b&gt;&quot; . $arvo2 . &quot;&lt;/b&gt;&lt;/td&gt;&quot;;
++						$arvo = 1;
+ 					}
+ 					else
+ 						if($avain2 == $this-&gt;_sisalto)
+ 						{
+-							$sisalto = 2;
+-							print &quot;&lt;td&gt;&quot; . $arvo2 . &quot;&lt;/td&gt;&quot;;
++							print &quot;&lt;tr&gt;&lt;td&gt;&quot; . $arvo2 . &quot;&lt;/td&gt;&lt;/tr&gt;&quot;;
++							$arvo = 2;
+ 						}
+ 				}
+-				if($listatyyppi) print $sisalto;
++
+ 				$edellinen_arvo = $arvo2;
+ 			}
+ 		}
+ 	}
+-	//if($listatyyppi) print &quot;loppu&quot;;
+-	if($desc &amp;&amp; $sisalto == 1 &amp;&amp; $listatyyppi)
+-		print &quot;jep&quot;;		
+-//print &quot;&lt;td&gt;tyhj&#228;&lt;/td&gt;&quot;;
++
++	return $arvo;
+     }
+ 
+     private function hae_array($array, $etsittava, &amp;$pal_array)
+@@ -474,11 +513,126 @@
+    	foreach($array as $avain =&gt; $arvo)
+ 	{
+ 		if($avain === $this-&gt;_nimi &amp;&amp; ($avain == $etsittava || $arvo == $etsittava))
++		{
+ 			$pal_array = $array;
++			break;
++		}
+ 		else
+ 			if(is_array($arvo)) $this-&gt;hae_array($arvo, $etsittava, $pal_array);
+ 	}
+     }
++
++    private function parsi_nimi($nimi)
++    {
++	$palautus = &quot;&quot;;
++	for($i=0; $i &lt; strlen($nimi); $i++)
++	{
++		if($nimi[$i] == &quot;_&quot;) $palautus .= &quot; &quot;;
++		else $palautus .= $nimi[$i];
++	}
++	
++	return ucfirst($palautus);
++    }
++
++    public function hae_tieto($ryhma, $nimi)
++    {
++	return $this-&gt;hae_array2($this-&gt;_tietotaulu, $ryhma, $nimi);
++    }
++
++    private function hae_array2($array, $etsittava_nimi, $etsittava_arvo)
++    {
++	$haettava_paikallistettu = false;
++
++   	foreach($array as $avain =&gt; $arvo)
++	{
++		if($haettava_paikallistettu)
++		{
++			$loytyi = 0;
++
++			if(is_array($arvo))
++				foreach($arvo as $avain2 =&gt; $arvo2)
++				{
++					$edellinen = &quot;&quot;;
++
++					if(is_array($arvo2))
++						foreach($arvo2 as $avain3 =&gt; $arvo3)
++						{
++							if($edellinen == &quot;value&quot; &amp;&amp; $avain3 == $this-&gt;_sisalto)
++								if($loytyi) return $arvo3;
++
++							if($avain3 == $this-&gt;_sisalto &amp;&amp; $arvo3 == $etsittava_arvo)
++								$loytyi = 1;
++
++							$edellinen = $arvo3;
++						}
++				}
++		}
++
++		if($avain === $this-&gt;_nimi &amp;&amp; $arvo == $etsittava_nimi)
++		{
++			$haettava_paikallistettu = true;
++
++			if(is_array($array[$this-&gt;_parametrit]))
++				foreach($array[$this-&gt;_parametrit] as $avain2 =&gt; $arvo2)
++					if(strtolower($avain2)  == strtolower($etsittava_arvo)) return $arvo2;
++		}
++		else
++		{
++			$haettava_paikallistettu = false;
++
++			if(is_array($arvo)) 
++			{
++				$palautus = $this-&gt;hae_array2($arvo, $etsittava_nimi, $etsittava_arvo);
++				if($palautus != &quot;&quot;) return $palautus;
++			}
++		}
++	}
++    }
++
++    private function hae_paataulut()
++    {
++	$taulut = array();
++
++	// k&#228;y l&#228;pi p&#228;&#228;taulun kannasta l&#228;htien
++	foreach($this-&gt;_tietotaulu as $avain =&gt; $arvo)
++		if(is_array($arvo))
++			foreach($arvo as $avain2 =&gt; $arvo2)
++				if(is_array($arvo2))
++					foreach($arvo2 as $avain3 =&gt; $arvo3)
++						if($avain3 == $this-&gt;_nimi &amp;&amp; !is_array($arvo3))
++							array_push($taulut, $arvo3);
++
++	return $taulut;
++    }
++
++    private function nayta_quick_jump_valikko()
++    {
++	$taulut = $this-&gt;hae_paataulut();
++	
++	print &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;
++		&lt;!--
++
++		function loadPage(pageURL)
++		{
++			if(pageURL.selectedIndex &gt; 0)
++			{
++				sivu = \&quot;&quot; . $_SERVER['SCRIPT_NAME'] . &quot;?&quot; . $_SERVER['QUERY_STRING'] . &quot;#\&quot;;
++				location.href = sivu + pageURL.options[pageURL.selectedIndex].value;
++			}
++		}
++
++		//--&gt;
++		&lt;/script&gt;&quot;;
++
++	print &quot;&lt;form name=\&quot;qj_form\&quot;&gt;
++		&lt;select name=\&quot;quick_jump\&quot;&gt;&quot;;
++
++	foreach($taulut as $avain =&gt; $arvo)
++		print &quot;&lt;option name=\&quot;quick_jump_header\&quot; onclick=\&quot;loadPage(document.qj_form.quick_jump); \&quot; value=\&quot;&quot; . $arvo . &quot;\&quot;&gt;&quot; . $this-&gt;parsi_nimi($arvo) . &quot;&lt;/option&gt;&quot;;
++
++	print &quot;&lt;/select&gt;
++		&lt;/form&gt;&quot;;
++    }
+ }
+ 
+ ?&gt;
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2007-03-07 07:34:47 UTC (rev 684)
++++ trunk/osinfo/lib/infostring.functions	2007-03-07 07:42:15 UTC (rev 685)
+@@ -146,13 +146,12 @@
+ 	   [ ! &quot;$(grep '[^\ *]' &lt;&lt;&lt; &quot;${@}&quot;)&quot; ]; then
+ 
+ 		# but only if verbosity does not require extreme explicity (-vv)
+-		if [ $isverbose -ge 2 ]; then
++		if [ $isverbose -lt 2 ]; then
+ 
+ 			# if the last non-empty item (second to last)
+ 			# is an attribute or a header, unset it
+-			if [ &quot;$(grep 'attribute\|header' &lt;&lt;&lt; ${infostring[$((${#infostring[@]}-1))]} )&quot; ]; then
+-				unset infostring[$((${#infostring[@]}-1))]
+-				# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: &quot;
++			if [ &quot;$(grep 'attribute\|header' &lt;&lt;&lt; &quot;${infostring[$((${#infostring[@]}-1))]}&quot; )&quot; ]; then
++				unset infostring[$((${#infostring[@]}-1))];
+ 			fi
+ 		fi
+ 	else # there is an input value
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000072.html">[Osinfo-commit] r684 - trunk/osinfo/modules
+</A></li>
+	<LI>Next message: <A HREF="000074.html">[Osinfo-commit] r686 - in trunk/osinfo: html lib	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

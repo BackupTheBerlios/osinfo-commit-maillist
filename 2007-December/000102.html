@@ -1,0 +1,463 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r714 - trunk/osinfo/lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r714%20-%20trunk/osinfo/lib&In-Reply-To=%3C200712270712.lBR7CPm5005286%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000101.html">
+   <LINK REL="Next"  HREF="000103.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r714 - trunk/osinfo/lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r714%20-%20trunk/osinfo/lib&In-Reply-To=%3C200712270712.lBR7CPm5005286%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r714 - trunk/osinfo/lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Dec 27 08:12:25 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000101.html">[Osinfo-commit] r713 - trunk/osinfo/modules
+</A></li>
+        <LI>Next message: <A HREF="000103.html">[Osinfo-commit] r715 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-12-27 08:12:25 +0100 (Thu, 27 Dec 2007)
+New Revision: 714
+
+Modified:
+   trunk/osinfo/lib/cmdline
+Log:
+fixed indentation in cmdline
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2007-12-27 07:07:30 UTC (rev 713)
++++ trunk/osinfo/lib/cmdline	2007-12-27 07:12:25 UTC (rev 714)
+@@ -1,208 +1,208 @@
+ #!/bin/bash
+ ####### PARSE THE COMMAND LINE ARGUMENTS
+ function parse_arguments() {
+-	if [ &quot;$#&quot; -gt 0 ]; then
+-		while [ &quot;$#&quot; -gt 0 ]; do
+-			case &quot;$1&quot; in
+-				'--help'|'-help'|'--usage'|'-usage'|'-h'|'')
+-					PRINT_Version
+-					PRINT_Help
+-					PRINT_Debug
+-					exit 0
+-					;;
++  if [ &quot;$#&quot; -gt 0 ]; then
++    while [ &quot;$#&quot; -gt 0 ]; do
++      case &quot;$1&quot; in
++        '--help'|'-help'|'--usage'|'-usage'|'-h'|'')
++          PRINT_Version
++          PRINT_Help
++          PRINT_Debug
++          exit 0
++          ;;
+ 
+-				'--profile')
+-					# define the output profile
+-					if [ ! &quot;$2&quot; ]; then
+-						info &quot;Profile not defined!&quot;
+-						flush_values
+-						exit 1
+-					fi
+-					profile=&quot;${2}&quot;
+-					shift 2
+-					;;
++        '--profile')
++          # define the output profile
++          if [ ! &quot;$2&quot; ]; then
++                  info &quot;Profile not defined!&quot;
++                  flush_values
++                  exit 1
++          fi
++          profile=&quot;${2}&quot;
++          shift 2
++          ;;
+ 
+-				'--xml')
+-					# generate xml
+-					usexml=1
+-					output_mode=&quot;xml&quot;
+-					shift 1
+-					;;
++        '--xml')
++          # generate xml
++          usexml=1
++          output_mode=&quot;xml&quot;
++          shift 1
++          ;;
+ 
+-				'--html')
+-					# generate a html page of the output
+-					usexml=1
+-					output_mode=&quot;xml&quot;
+-					makehtml=1
+-					quiet=1
+-					shift 1
+-					;;
++        '--html')
++          # generate a html page of the output
++          usexml=1
++          output_mode=&quot;xml&quot;
++          makehtml=1
++          quiet=1
++          shift 1
++          ;;
+ 
+-				'-o'|'--output')
+-					# direct output to a named file
+-					if [ $2 ]; then
+-						usexml=1
+-						XMLFILE=&quot;${2}&quot;
+-						shift 2
+-					else
+-						missing_arg &quot;$1&quot;
+-					fi
+-					;;
++        '-o'|'--output')
++          # direct output to a named file
++          if [ $2 ]; then
++                  usexml=1
++                  XMLFILE=&quot;${2}&quot;
++                  shift 2
++          else
++                  missing_arg &quot;$1&quot;
++          fi
++          ;;
+ 
+-				'--lanforce')
+-					# use a special xml format
+-					usexml=1
+-					lanforce=1
+-					output_mode=&quot;lanforce_xml&quot;
+-					shift 1
+-					;;
++        '--lanforce')
++          # use a special xml format
++          usexml=1
++          lanforce=1
++          output_mode=&quot;lanforce_xml&quot;
++          shift 1
++          ;;
+ 
+-				'--tcpsend'|'--netcat')
+-					# send xml via tcp to remote osinfo daemon
+-					if [ &quot;$2&quot; ] &amp;&amp; [ &quot;$3&quot; ]; then
+-						usexml=1
+-						makehtml=0
+-						tcpsend=1
+-						output_mode=&quot;xml&quot;
+-						HOST=&quot;$2&quot;
+-						PORT=&quot;$3&quot;
+-						shift 3
+-					else
+-						echo &quot;You must set the target host and port!&quot;
+-						missing_arg &quot;$1&quot; 2
+-					fi
+-					;;
++        '--tcpsend'|'--netcat')
++          # send xml via tcp to remote osinfo daemon
++          if [ &quot;$2&quot; ] &amp;&amp; [ &quot;$3&quot; ]; then
++                  usexml=1
++                  makehtml=0
++                  tcpsend=1
++                  output_mode=&quot;xml&quot;
++                  HOST=&quot;$2&quot;
++                  PORT=&quot;$3&quot;
++                  shift 3
++          else
++                  echo &quot;You must set the target host and port!&quot;
++                  missing_arg &quot;$1&quot; 2
++          fi
++          ;;
+ 
+-				'--listen'|'daemon')
+-					# listen for incoming tcp connections,
+-					# receive xml sheet from osinfo clients
+-					tcpdaemon=1
++        '--listen'|'daemon')
++          # listen for incoming tcp connections,
++          # receive xml sheet from osinfo clients
++          tcpdaemon=1
+ 
+-					if [ &quot;$2&quot; ]; then
+-						tcp_listening_port=&quot;$2&quot;
+-						shift 2
++          if [ &quot;$2&quot; ]; then
++                  tcp_listening_port=&quot;$2&quot;
++                  shift 2
+ 
+-					elif [ ! &quot;$tcp_listening_port&quot; ]; then
+-						info &quot;You must set the listening port!&quot;
+-						flush_values
+-						exit 1
++          elif [ ! &quot;$tcp_listening_port&quot; ]; then
++                  info &quot;You must set the listening port!&quot;
++                  flush_values
++                  exit 1
+ 
+-					# the tcp port may be given at the conf file
+-					else
+-						shift 1
+-					fi
+-					;;
++          # the tcp port may be given at the conf file
++          else
++                  shift 1
++          fi
++          ;;
+ 
+-				'--Xorglog')
+-					# read Xorg detected values from this file
+-					# (by default /var/log/Xorg.0.log)
+-					if [ &quot;$2&quot; ]; then
+-						if [ ! -e &quot;${2}&quot; ]; then
+-							echo &quot;File $2 does not exist!&quot;
+-							exit 1
+-						fi
+-						XORG_LOG=&quot;${2}&quot;
+-						shift 2
+-					else
+-						echo &quot;Please give Xorg log input file!&quot;
+-						missing_arg &quot;$1&quot; 1
+-					fi
+-					;;
++        '--Xorglog')
++          # read Xorg detected values from this file
++          # (by default /var/log/Xorg.0.log)
++          if [ &quot;$2&quot; ]; then
++                  if [ ! -e &quot;${2}&quot; ]; then
++                          echo &quot;File $2 does not exist!&quot;
++                          exit 1
++                  fi
++                  XORG_LOG=&quot;${2}&quot;
++                  shift 2
++          else
++                  echo &quot;Please give Xorg log input file!&quot;
++                  missing_arg &quot;$1&quot; 1
++          fi
++          ;;
+ 
+-				'--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
+-					no_fancy=1
+-					# clear color codes; set empty values
+-					tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
+-					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
+-					shift 1
+-					;;
++        '--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
++          no_fancy=1
++          # clear color codes; set empty values
++          tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
++          tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
++          shift 1
++          ;;
+ 
+-				'-P'|'--prefix')
+-					# define the root dir
+-					if [ $2 ]; then
+-						# Make sure there is only one ending &quot;/&quot;.
+-						prefix=&quot;$(echo $2 | sed 's/\/*$/\//')&quot;
+-						shift 2
+-					else
+-						missing_arg &quot;$1&quot;
+-					fi
+-					;;
++        '-P'|'--prefix')
++          # define the root dir
++          if [ $2 ]; then
++                  # Make sure there is only one ending &quot;/&quot;.
++                  prefix=&quot;$(echo $2 | sed 's/\/*$/\//')&quot;
++                  shift 2
++          else
++                  missing_arg &quot;$1&quot;
++          fi
++          ;;
+ 
+-				'--kdialog')
+-					# print output in kdialog window
+-					usekdialog=1
+-					output_mode=&quot;kdialog&quot;
+-					shift 1
+-					;;
++        '--kdialog')
++          # print output in kdialog window
++          usekdialog=1
++          output_mode=&quot;kdialog&quot;
++          shift 1
++          ;;
+ 
+-				'-v'|'--verbose')
+-					isverbose=1
+-					shift 1
+-					;;
++        '-v'|'--verbose')
++          isverbose=1
++          shift 1
++          ;;
+ 
+-				'-vv'|'--very-verbose')
+-					isverbose=2
+-					shift 1
+-					;;
++        '-vv'|'--very-verbose')
++          isverbose=2
++          shift 1
++          ;;
+ 
+-				'-d'|'--debug')
+-					# standard debugging option
+-					export isdebug=1
+-					shift 1
+-					;;
++        '-d'|'--debug')
++          # standard debugging option
++          export isdebug=1
++          shift 1
++          ;;
+ 
+-				'-D'|'--fulldebug')
+-					# over-the-board debug option
+-					export isdebug=1
+-					set -x
+-					shift 1
+-					;;
++        '-D'|'--fulldebug')
++          # over-the-board debug option
++          export isdebug=1
++          set -x
++          shift 1
++          ;;
+ 
+-				'--dev')
+-					# the developement option to debug stuff
+-					export dev_code=1
+-					shift 1
+-					;;
++        '--dev')
++          # the developement option to debug stuff
++          export dev_code=1
++          shift 1
++          ;;
+ 
+-				'--fake')
+-					# for faking input from files to debug stuff, for example
+-					# LVM drives when no such drives are available
+-					export fake=1
+-					shift 1
+-					;;
++        '--fake')
++          # for faking input from files to debug stuff, for example
++          # LVM drives when no such drives are available
++          export fake=1
++          shift 1
++          ;;
+ 
+-				'--quiet'|'-q')
+-					# no not print anything to stdout
+-					quiet=1
+-					shift 1
+-					;;
++        '--quiet'|'-q')
++          # no not print anything to stdout
++          quiet=1
++          shift 1
++          ;;
+ 
+-				'-V'|'--version')
+-					PRINT_Version
+-					exit 0;
+-					;;
++        '-V'|'--version')
++          PRINT_Version
++          exit 0;
++          ;;
+ 
+-				'--checkdeps')
+-					check_dependencies
+-					exit 0
+-					;;
++        '--checkdeps')
++          check_dependencies
++          exit 0
++          ;;
+ 
+-				'--htmldebug')
+-					hostdir=&quot;html/hosts&quot;
+-					usexml=1
+-					create_indexxml &gt; &quot;index.xml&quot;
+-					update_sidebar &gt; &quot;sidebar.html&quot;
+-					cat index.xml
+-					exit 0
+-					;;
++        '--htmldebug')
++          hostdir=&quot;html/hosts&quot;
++          usexml=1
++          create_indexxml &gt; &quot;index.xml&quot;
++          update_sidebar &gt; &quot;sidebar.html&quot;
++          cat index.xml
++          exit 0
++          ;;
+ 
+-				*)
+-					module_cmds=&quot;$module_cmds $1&quot;
+-					shift 1;
+-					;;
+-			esac
+-		done
+-	else
+-		PRINT_Usage
+-	fi
++        *)
++          module_cmds=&quot;$module_cmds $1&quot;
++          shift 1;
++          ;;
++      esac
++    done
++  else
++    PRINT_Usage
++  fi
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000101.html">[Osinfo-commit] r713 - trunk/osinfo/modules
+</A></li>
+	<LI>Next message: <A HREF="000103.html">[Osinfo-commit] r715 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#102">[ date ]</a>
+              <a href="thread.html#102">[ thread ]</a>
+              <a href="subject.html#102">[ subject ]</a>
+              <a href="author.html#102">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

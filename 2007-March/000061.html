@@ -1,0 +1,390 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r673 - in trunk/osinfo: . lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r673%20-%20in%20trunk/osinfo%3A%20.%20lib%20modules&In-Reply-To=%3C200703050933.l259X1vC021346%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000060.html">
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r673 - in trunk/osinfo: . lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r673%20-%20in%20trunk/osinfo%3A%20.%20lib%20modules&In-Reply-To=%3C200703050933.l259X1vC021346%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r673 - in trunk/osinfo: . lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar  5 10:33:01 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000060.html">[Osinfo-commit] r672 - trunk/osinfo/html
+</A></li>
+        <LI>Next message: <A HREF="000062.html">[Osinfo-commit] r674 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-05 10:33:00 +0100 (Mon, 05 Mar 2007)
+New Revision: 673
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/dmi
+   trunk/osinfo/osinfo
+Log:
+some major bugs in dmi module fixed
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2007-03-05 07:57:48 UTC (rev 672)
++++ trunk/osinfo/lib/helper.functions	2007-03-05 09:33:00 UTC (rev 673)
+@@ -50,6 +50,7 @@
+ #	(2) input file
+ #	(3) node closer, the end keyword, defaults to 'node id'
+ extr_node() {
++
+ 	local node_id=&quot;${1}&quot;
+ 	local input_file=&quot;${2}&quot;
+ 	local node_closer=&quot;${3}&quot;
+@@ -78,18 +79,29 @@
+ 		# and end lines, based on indentation level (xml), echoing
+ 		# the results out
+ 		for nr in $(seq 1 1 $node_count); do
+-			this_node=&quot;$(sed -n &quot;$nr{p;q;}&quot; &lt;&lt;&lt; &quot;${all_nodes}&quot;)&quot;
+ 
++			# this sed gives me headache
++			this_node=&quot;$( sed -n &quot;$nr{p;q;}&quot; &lt;&lt;&lt; &quot;${all_nodes}&quot; 2&gt;/dev/null)&quot;
++
+ 			# this gets the line number of the wanted node
+ 			local begin=&quot;$(awk -F: {'print $1'} &lt;&lt;&lt; ${this_node})&quot;
++
++			# this gets the indentation
+ 			# debug: the line below should work.
+ 			#local node_indent=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; &quot;${this_node}&quot; | \
+ 			#		     grep -o '^[ ]*' | wc -m)&quot;
+ 			# debug: let's debug this line further
+-			local node_indent_dbg=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; &quot;${this_node}&quot;)&quot;
+-			local node_indent_dbg2=&quot;$(grep -o '^[ ]*' &lt;&lt;&lt; &quot;$node_indent_dbg&quot;)&quot;
+-			local node_indent=&quot;$(wc -m &lt;&lt;&lt; &quot;$node_indent_dbg2&quot;)&quot;
++			local node_indent_dbg=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; ${this_node})&quot;
++			local node_indent_dbg2=&quot;$(grep -o '^[ ]*' &lt;&lt;&lt; ${node_indent_dbg})&quot;
+ 
++			# if the indentation is zero, the echo | wc -m still gives one.
++			# this line tries to override this bug
++			if [ &quot;$node_indent_dbg2&quot; ]; then
++				local node_indent=&quot;$(wc -m &lt;&lt;&lt; ${node_indent_dbg2})&quot;
++			else
++				local node_indent=0
++			fi
++
+ 			# this loop takes care that all subnodes are included, by comparing
+ 			# the indentation level. not very elegant..
+ 			# basically it just searches for $node_closer and gets the line#
+@@ -119,7 +131,7 @@
+ 			# then what's between the first node and the closing id
+ 			# is echoed to whichever function called this
+ 			echo &quot;%node $nr%&quot;
+-			sed -n &quot;$begin,$nigeb{p;}&quot; $input_file
++			sed -n &quot;$begin,$nigeb{p;}&quot; $input_file 2&gt;/dev/null
+ 
+ 		done
+ 	fi
+
+Modified: trunk/osinfo/modules/dmi
+===================================================================
+--- trunk/osinfo/modules/dmi	2007-03-05 07:57:48 UTC (rev 672)
++++ trunk/osinfo/modules/dmi	2007-03-05 09:33:00 UTC (rev 673)
+@@ -1,9 +1,7 @@
++#!/bin/bash
+ #######################
+ # DMI / OEM INFORMATION
+ #
+-# NOTE: the structure is under construction!
+-
+-#
+ # this module uses dmidecode to read BIOS information of OEM info.
+ # look below for excerpt from 'man dmidecode':
+ #
+@@ -23,7 +21,10 @@
+ 		# 0x0003 or 0x0004 = 'Chassis Information'
+ 		# 0x0004 or 0x0005 = 'Processor Information'
+ 		# .... and more
++#
++# NOTE: the structure is under construction!
+ 
++
+ Module_dmi() {
+ 	local moduleName=&quot;DMI information&quot;
+ 	module_header &quot;${moduleName}&quot;
+@@ -41,21 +42,24 @@
+ }
+ 
+ ##########################
+-## dmi helper functions
++## dmi functions
+ #
+-# remember to run &quot;dmi_info&quot; before attempting to use these functions!
++# remember to add &quot;extract_dmi&quot; if you create a new function!
+ 
+ 	extract_dmi() {
+ 		# load dmi temp file
+ 		dmi_info
+ 
++		handle_desc=&quot;${1}&quot;
++
+ 		# IFS need to be changed because the values are separated by newline
+ 		local IFS_bak=&quot;$IFS&quot; value
+ 		IFS=$','
+ 
+-		# extract the handle and string the first line
++		# extract the handle and strip the first line
+ 		# (%node% identifier that is useless here)
+-		extr_node ${handle_desc} ${dmi_tmp_file} Handle | \
++
++		extr_node &quot;$handle_desc&quot; &quot;${dmi_tmp_file}&quot; 'Handle' | \
+ 			sed -n &quot;2,\${p;}&quot; &gt; ${osinfo_tmp}
+ 
+ 		# because sometimes there's some extra info, head -n 5
+@@ -71,14 +75,14 @@
+ 		local handle_desc='BIOS Information'
+ 
+ 		# extract the handle to a temp file
+-		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
++		extract_dmi &quot;${handle_desc}&quot; &gt; ${osinfo_tmp}
+ 
+ 		add_header    &quot;BIOS&quot;
+ 
+ 		add_attribute 'Vendor'
+ 		add_values    &quot;$(grep -i vendor ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Revision'	'bios_version'
+@@ -87,14 +91,14 @@
+ 
+ 		add_attribute 'Date'	'bios_date'
+ 		add_values    &quot;$(grep -i date ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Serial number'	'bios_serial_number'
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 		add_footer
+ 	}
+@@ -109,35 +113,35 @@
+ 		add_header  &quot;System info&quot;
+ 
+ 		add_attribute 'Manufacturer' \
+-					  'system_manufacturer'
++				  'system_manufacturer'
+ 		add_values    &quot;$(grep -i manufacturer ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Model'	'system_model'
+ 		add_values    &quot;$(grep -i product ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Version number'
+ 		add_values    &quot;$(grep -i version ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'OEM serial number' \
+-					  'computer_product_serial'
++				  'computer_product_serial'
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'UUID' 	'uuid'
+ 		add_values    &quot;$(grep -i uuid ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 		add_footer
+ 	}
+@@ -152,27 +156,27 @@
+ 		add_header    &quot;Motherboard&quot;
+ 
+ 		add_attribute 'Manufacturer' \
+-					  'mother_board_manufacturer'
++				  'mother_board_manufacturer'
+ 		add_values    &quot;$(get_mobo_manufacturer)&quot;
+ 
+ 
+ 		add_attribute 'Model' \
+-					  'mother_board_model'
++				  'mother_board_model'
+ 		add_values    &quot;$(get_mobo_model)&quot;
+ 
+ 
+ 		add_attribute 'Version' \
+-					  'mother_board_version'
++				  'mother_board_version'
+ 		add_values    &quot;$(grep -i version ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Serial number' \
+-					  'mother_board_serial_number'
++				  'mother_board_serial_number'
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 		add_footer
+ 	}
+@@ -188,45 +192,45 @@
+ 
+ 		add_attribute 'Manufacturer' 	'chassis_manufacturer'
+ 		add_values    &quot;$(grep -i manufacturer ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Type' 	'chassis_type'
+ 		add_values    &quot;$(grep -i type ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Version' 	'chassis_version'
+ 		add_values    &quot;$(grep -i version ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Serial number' \
+ 					  'chassis_serial_number'
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 
+ 		add_attribute 'Lock' 	'chassis_lock'
+ 		add_values    &quot;$(grep -i lock ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 		add_attribute 'Asset tag' 'chassis_asset_tag'
+ 		add_values    &quot;$(grep -i asset ${osinfo_tmp} | \
+-						 awk -F':' {'print $2'} | \
+-						 sed 's/^\ *//')&quot;
++				 awk -F':' {'print $2'} | \
++				 sed 's/^\ *//')&quot;
+ 
+ 		add_footer
+ 	}
+ 
+ 		get_mobo_manufacturer() {
+ 			grep -i manufacturer ${osinfo_tmp} | \
+-			awk -F':' {'print $2'} | sed 's/^\ *//'
++			 awk -F':' {'print $2'} | sed 's/^\ *//'
+ 		}
+ 
+ 		get_mobo_model() {
+@@ -236,5 +240,5 @@
+ 
+ 		get_bios_revision() {
+ 			grep -i version ${osinfo_tmp} | \
+-		    awk -F':' {'print $2'} | sed 's/^\ *//'
++			 awk -F':' {'print $2'} | sed 's/^\ *//'
+ 		}
+
+Modified: trunk/osinfo/osinfo
+===================================================================
+--- trunk/osinfo/osinfo	2007-03-05 07:57:48 UTC (rev 672)
++++ trunk/osinfo/osinfo	2007-03-05 09:33:00 UTC (rev 673)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ################################################################################
+ ################################################################################
+ ## MAIN FUNCTION                                                              ##
+@@ -5,7 +6,7 @@
+ ################################################################################
+ 
+ ## source the necessary files
+-source sources # lines beginning with &quot;source&quot; are removed in the all-in-one package
++source sources # lines beginning with &quot;source&quot; are removed during the Make process
+ 
+ [ -e &quot;/etc/osinfo.conf&quot; ] &amp;&amp; \
+ . /etc/osinfo.conf                # the configuration file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000060.html">[Osinfo-commit] r672 - trunk/osinfo/html
+</A></li>
+	<LI>Next message: <A HREF="000062.html">[Osinfo-commit] r674 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

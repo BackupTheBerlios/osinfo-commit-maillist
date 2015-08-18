@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r646 - in trunk/osinfo: . lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r646%20-%20in%20trunk/osinfo%3A%20.%20lib&In-Reply-To=%3C200612051639.kB5Gddmu023486%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000033.html">
+   <LINK REL="Next"  HREF="000035.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r646 - in trunk/osinfo: . lib</H1>
+    <B>anmaster at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r646%20-%20in%20trunk/osinfo%3A%20.%20lib&In-Reply-To=%3C200612051639.kB5Gddmu023486%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r646 - in trunk/osinfo: . lib">anmaster at mail.berlios.de
+       </A><BR>
+    <I>Tue Dec  5 17:39:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000033.html">[Osinfo-commit] r645 - in trunk/osinfo: . lib modules
+</A></li>
+        <LI>Next message: <A HREF="000035.html">[Osinfo-commit] r647 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: anmaster
+Date: 2006-12-05 17:39:39 +0100 (Tue, 05 Dec 2006)
+New Revision: 646
+
+Modified:
+   trunk/osinfo/lib/print.functions
+   trunk/osinfo/osinfo.dtd
+Log:
+Changed xml format, more sane now, updated DTD
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2006-12-05 15:42:51 UTC (rev 645)
++++ trunk/osinfo/lib/print.functions	2006-12-05 16:39:39 UTC (rev 646)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ############################################
+ # XML HEADER &amp; FOOTER FUNCTIONS
+ # -----------------------------
+@@ -52,30 +53,30 @@
+ 	xml_param_tag_closed &quot;script version&quot; \
+ 	&quot;${major_version}.${minor_version}.${micro_version}-${patch_version} ${dev_status}&quot;
+ 
+-	# profile
+ 	add_indentation
+-	xml_param_tag_closed &quot;computer profile&quot; &quot;${profile}&quot;
++	xml_opentag_start &quot;computer&quot;
+ 
++	# profile
++	xml_opentag_param &quot;profile&quot; &quot;${profile}&quot;
++
+ 	# hostname
+-	add_indentation
+-	xml_param_tag_closed &quot;computer hostname&quot; &quot;$(get_hostname)&quot;
++	xml_opentag_param &quot;hostname&quot; &quot;$(get_hostname)&quot;
+ 
+ 	# IP address
+ 	#add_indentation
+ 	#xml_param_tag_closed &quot;computer ipv4&quot; &quot;${ip}&quot;
+ 
+ 	# DNS Domain
+-	add_indentation
+-	xml_param_tag_closed &quot;computer domain&quot; &quot;${get_dns_domain}&quot;
++	xml_opentag_param &quot;domain&quot; &quot;${get_dns_domain}&quot;
+ 
+ 	# operating system
+-	add_indentation
+-	xml_param_tag_closed &quot;computer OS&quot; &quot;$(get_operating_system)&quot;
++	xml_opentag_param &quot;os&quot; &quot;$(get_operating_system)&quot;
+ 
+ 	# processor
+-	add_indentation
+-	xml_param_tag_closed &quot;computer CPU&quot; &quot;$(get_cpu_model)&quot;
++	xml_opentag_param &quot;cpu&quot; &quot;$(get_cpu_model)&quot;
+ 
++	xml_opentag_stop 0
++
+ 	# scanning date
+ 	add_indentation
+ 	xml_param_tag_closed &quot;scanning date&quot; &quot;${timestamp}&quot;
+
+Modified: trunk/osinfo/osinfo.dtd
+===================================================================
+--- trunk/osinfo/osinfo.dtd	2006-12-05 15:42:51 UTC (rev 645)
++++ trunk/osinfo/osinfo.dtd	2006-12-05 16:39:39 UTC (rev 646)
+@@ -1,72 +1,112 @@
+-&lt;!ELEMENT osinfo (distribution|
++&lt;!ELEMENT osinfo (script|
++                  computer|
++                  scanning|
+                   system|
++                  distribution|
+                   kernel|
+                   processor|
++                  system_ram_memory|
++                  system_memory|
++                  hard_drive_configuration|
++                  network_information|
++                  wlan_information|
++                  dmi_information|
+                   applications|
+                   terminal_info|
+-                  dmi_information|
+-                  system_memory|
+                   devices|
++                  enhancements|
++                  cd_dvd_drives|
+                   users|
+-                  cd_dvd_drives|
+-                  network_information|
+-                  wlan_information|
+-                  disk_information|
+-                  services)*&gt;
++                  services|
++                  battery|
++                  oem_information)*&gt;
+ 
+ 
++&lt;!ELEMENT script EMPTY&gt;
++&lt;!ATTLIST script version CDATA #REQUIRED&gt;
+ 
+-&lt;!ELEMENT cd_dvd_drives (cd_drive)*&gt;
+-&lt;!ELEMENT cd_drive (attribute+)&gt;
+-&lt;!ATTLIST cd_drive name CDATA #REQUIRED&gt;
++&lt;!ELEMENT computer EMPTY&gt;
++&lt;!ATTLIST computer profile  CDATA #REQUIRED
++                   hostname CDATA #REQUIRED
++                   domain   CDATA #REQUIRED
++                   os       CDATA #REQUIRED
++                   cpu      CDATA #REQUIRED&gt;
+ 
+-&lt;!ELEMENT devices (attribute+)&gt;
++&lt;!ELEMENT scanning EMPTY&gt;
++&lt;!ATTLIST scanning date CDATA #REQUIRED&gt;
+ 
+-&lt;!ELEMENT system_memory (attribute+)&gt;
+ 
+-&lt;!ELEMENT users (current_user|
+-                 last_logged_in_user|
+-                 all_users)*&gt;
+-&lt;!ELEMENT current_user (attribute+)&gt;
+-&lt;!ELEMENT last_logged_in_user (attribute+)&gt;
+-&lt;!ELEMENT all_users (value+)&gt;
+ 
+-&lt;!ELEMENT applications (attribute+)&gt;
+ 
+-&lt;!ELEMENT terminal_info (attribute+)&gt;
++&lt;!ELEMENT attribute (description|value)*&gt;
++&lt;!ATTLIST attribute name CDATA #REQUIRED
++                    code CDATA #IMPLIED&gt;
++&lt;!ELEMENT description (#PCDATA)&gt;
++&lt;!ELEMENT value (#PCDATA)&gt;
+ 
+-&lt;!ELEMENT processor (attribute+)&gt;
+ 
++&lt;!ELEMENT system (attribute+)&gt;
++&lt;!ELEMENT distribution (attribute+)&gt;
+ &lt;!ELEMENT kernel (attribute+)&gt;
++&lt;!ELEMENT processor (attribute+)&gt;
++&lt;!ELEMENT system_ram_memory (ram+)&gt;
++&lt;!ELEMENT system_memory (ram+)&gt;
++&lt;!ELEMENT hard_drive_configuration (drive+)&gt;
++&lt;!ELEMENT network_information (computer*)&gt;
++&lt;!ELEMENT wlan_information (attribute*)&gt; &lt;!-- UNKNOWN --&gt;
++&lt;!ELEMENT dmi_information (bios|
++                           system_info|
++                           motherboard|
++                           chassis)*&gt;
++&lt;!ELEMENT applications (attribute+)&gt;
++&lt;!ELEMENT terminal_info (attribute+)&gt;
++&lt;!ELEMENT devices (motherboard,controllers)&gt;
++&lt;!ELEMENT enhancements (attribute+)&gt;
++&lt;!ELEMENT cd_dvd_drives (cd_drive)*&gt;
++&lt;!ELEMENT users (active_user,wtmp_statistics)&gt;
++&lt;!ELEMENT services (value+)&gt;
++&lt;!ELEMENT battery (attribute*)&gt; &lt;!-- UNKNOWN --&gt;
++&lt;!ELEMENT oem_information (attribute+)&gt;
+ 
+-&lt;!ELEMENT system (attribute+)&gt;
+ 
+-&lt;!ELEMENT distribution (attribute+)&gt;
+ 
+-&lt;!ELEMENT wlan_information (attribute*)&gt;
++&lt;!-- system_ram_memory, system_memory --&gt;
++&lt;!ELEMENT ram (attribute+)&gt;
+ 
+-&lt;!ELEMENT network_information (computer*)&gt;
+-&lt;!ELEMENT computer (attribute|iface)*&gt;
+-&lt;!ATTLIST computer name CDATA #REQUIRED&gt;
++
++&lt;!-- hard_drive_configuration --&gt;
++&lt;!ELEMENT drive (attribute|partitions)*&gt;
++&lt;!ELEMENT partitions (value+)&gt;
++
++
++&lt;!-- network_information --&gt;
++&lt;!-- &lt;!ELEMENT computer (attribute|iface)*&gt;
++&lt;!ATTLIST computer name CDATA #REQUIRED&gt; --&gt;
+ &lt;!ELEMENT iface (attribute+)&gt;
+ &lt;!ATTLIST iface name CDATA #REQUIRED&gt;
+ 
+-&lt;!ELEMENT dmi_information (bios|
+-                           system_info|
+-                           motherboard|
+-                           chassis)*&gt;
++
++&lt;!-- dmi_information, devices --&gt;
++&lt;!ELEMENT motherboard (attribute+)&gt;
++
++
++&lt;!-- dmi_information --&gt;
+ &lt;!ELEMENT bios (attribute+)&gt;
+ &lt;!ELEMENT system_info (attribute+)&gt;
+-&lt;!ELEMENT motherboard (attribute+)&gt;
+-&lt;!ELEMENT chassis (attribute+)&gt;
++&lt;!ELEMENT chassis (attribute*)&gt;
+ 
+-&lt;!ELEMENT services (value+)&gt;
+ 
+-&lt;!ELEMENT disk_information (attribute+)&gt;
++&lt;!-- devices --&gt;
++&lt;!ELEMENT controllers (attribute+)&gt;
+ 
+ 
++&lt;!-- cd_dvd_drives --&gt;
++&lt;!ELEMENT cd_drive (attribute+)&gt;
++&lt;!ATTLIST cd_drive name CDATA #REQUIRED&gt;
+ 
+-&lt;!ELEMENT attribute (value*)&gt;
+-&lt;!ATTLIST attribute name CDATA #REQUIRED
+-                    code CDATA #IMPLIED&gt;
+-&lt;!ELEMENT value (#PCDATA)&gt;
++
++&lt;!-- users --&gt;
++&lt;!ELEMENT active_user (value+)&gt;
++&lt;!ATTLIST active_user unixname CDATA #REQUIRED&gt;
++&lt;!ELEMENT wtmp_statistics (value+)&gt;
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000033.html">[Osinfo-commit] r645 - in trunk/osinfo: . lib modules
+</A></li>
+	<LI>Next message: <A HREF="000035.html">[Osinfo-commit] r647 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#34">[ date ]</a>
+              <a href="thread.html#34">[ thread ]</a>
+              <a href="subject.html#34">[ subject ]</a>
+              <a href="author.html#34">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

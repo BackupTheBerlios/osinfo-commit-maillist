@@ -1,0 +1,282 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r684 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r684%20-%20trunk/osinfo/modules&In-Reply-To=%3C200703070734.l277YlRw007837%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000071.html">
+   <LINK REL="Next"  HREF="000073.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r684 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r684%20-%20trunk/osinfo/modules&In-Reply-To=%3C200703070734.l277YlRw007837%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r684 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar  7 08:34:47 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000071.html">[Osinfo-commit] r683 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000073.html">[Osinfo-commit] r685 - in trunk/osinfo: docs html lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-07 08:34:47 +0100 (Wed, 07 Mar 2007)
+New Revision: 684
+
+Modified:
+   trunk/osinfo/modules/devices
+   trunk/osinfo/modules/ram
+Log:
+some specifics to ram and devices
+
+Modified: trunk/osinfo/modules/devices
+===================================================================
+--- trunk/osinfo/modules/devices	2007-03-07 07:17:56 UTC (rev 683)
++++ trunk/osinfo/modules/devices	2007-03-07 07:34:47 UTC (rev 684)
+@@ -43,24 +43,27 @@
+ 		return 1
+ 	fi
+ 
+-	# load lshw xml temp file
+-	lshw_xml
++	if CheckReq_root &quot;motherboard and BIOS data&quot;; then
++	
++		# load lshw xml temp file
++		lshw_xml
+ 
+-	# get entries from lspci into the $DEVICE[] array
+-	load_lspci_arrays
++		# get entries from lspci into the $DEVICE[] array
++		load_lspci_arrays
+ 
+-	if CheckReq_root &quot;motherboard and BIOS data&quot;; then
+-		print_mobo_info
+-	fi
++		# print
++		print_internal
++		print_external
+ 
+-	# output by category
+-#	print_categories
++		# output by category (deprecated)
++		#print_categories
+ 
+-	flush_values
++		flush_values
++	fi
+ }
+ 
+ ############################################
+-# helper functions for to get device data
++# helper functions for to get and display device data
+ #
+ 	###################
+ 	## load_categories
+@@ -71,7 +74,7 @@
+ 	}
+ 
+ 	#####################
+-	## print_categories
++	## print_categories (deprecated)
+ 	#
+ 	# this function defines all categories
+ 	# and prints the selected ones
+@@ -108,8 +111,8 @@
+ 	}
+ 
+ 	####################
+-	## print_mobo_info
+-	print_mobo_info(){
++	## print_internal
++	print_internal(){
+ 
+ 		add_header    &quot;Motherboard&quot;
+ 
+@@ -122,6 +125,17 @@
+ 	}
+ 
+ 	####################
++	## print_external
++	print_external(){
++
++		add_header    &quot;External devices&quot;
++
++		print_usbbusinfo;
++
++		add_footer
++	}
++	
++	####################
+ 	## Motherboard subcategories: bridges, controllers, interfaces
+ 
+ 	print_bridges(){
+@@ -142,6 +156,18 @@
+ 		add_footer 'Interfaces'
+ 	}
+ 
++	# some possible future functios
++	#	print_mobobusinfo(){}
++	#	print_pciinfo(){}
++	#	print_apginfo(){}
++	#	print_idebusinfo(){}
++	#	print_scsibusinfo(){}
++	
++
++	#################################
++	### DATA ACQUISATION ROUTINES ###
++	#################################
++	
+ 	#####################
+ 	## load_lspci_arrays
+ 	#
+@@ -296,7 +322,22 @@
+ # 		fi
+ 
+ 	}
++	
++	#######################
++	## print_usbbusinfo
++	#
++	# prints information of the USB bus (speed)
++	print_usbbusinfo(){
++		add_subheader      'USB'
++		
++		 add_attribute     'Standard'
++		 add_values        &quot;n/a&quot;
+ 
++		 print_usb_devices
++
++		add_footer 'USB'
++	}
++
+ 	#######################
+ 	## print_usb_devices
+ 	#
+@@ -317,13 +358,9 @@
+ 		IFS=&quot;$IFS_bak&quot;
+ 	}
+ 
+-	# some possible future functios
+-	#	print_mobobusinfo(){}
+-	#	print_pciinfo(){}
+-	#	print_apginfo(){}
+-	#	print_idebusinfo(){}
+-	#	print_scsibusinfo(){}
+-	#	print_usbbusinfo(){}
++	print_power_supply(){
++		echo &quot;TODO&quot;
++	}
+ 
+ 	#######################
+ 	## get_video_card_info
+
+Modified: trunk/osinfo/modules/ram
+===================================================================
+--- trunk/osinfo/modules/ram	2007-03-07 07:17:56 UTC (rev 683)
++++ trunk/osinfo/modules/ram	2007-03-07 07:34:47 UTC (rev 684)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ #######################
+ # RAM
+ #
+@@ -62,32 +63,48 @@
+ 
+ 					add_attribute     &quot;RAM bank$bank description&quot;
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep description $banknode))&quot;
++					                   $(grep description $banknode))&quot;
+ 
+ 					add_attribute     &quot;RAM bank$bank size&quot;
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep size $banknode))&quot;
++					                   $(grep size $banknode))&quot;
+ 
+-					add_attribute     &quot;RAM bank$bank vendor&quot;
++					add_attribute     &quot;RAM bank$bank type&quot; # DDR
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep vendor $banknode))&quot;
++					                   $(grep type $banknode))&quot; # check DMI
+ 
+-					add_attribute     &quot;RAM bank$bank serial&quot;
++					add_attribute     &quot;RAM bank$bank form factor&quot; # DIMM
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep serial $banknode))&quot;
++					                   $(grep 'form factor' $banknode))&quot; # check DMI
+ 
+-					add_attribute     &quot;RAM bank$bank slot&quot;
++					add_attribute     &quot;RAM bank$bank detail&quot; # syncronous
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep slot $banknode))&quot;
++					                   $(grep 'detail' $banknode))&quot; # check DMI
+ 
+-					add_attribute     &quot;RAM bank$bank width&quot;
++					add_attribute     &quot;RAM bank$bank bit width&quot;
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep width $banknode))&quot;
++					                   $(grep width $banknode))&quot;
+ 
+ 					add_attribute     &quot;RAM bank$bank speed&quot;
+ 					add_values        &quot;$(extr_xml_value \
+-					                  $(grep speed $banknode))&quot;
++					                   $(grep speed $banknode))&quot;
+ 
++					add_attribute     &quot;RAM bank$bank slot&quot;
++					add_values        &quot;$(extr_xml_value \
++					                   $(grep slot $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank vendor&quot;
++					add_values        &quot;$(extr_xml_value \
++					                   $(grep vendor $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank serial&quot;
++					add_values        &quot;$(extr_xml_value \
++					                   $(grep serial $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank asset tag&quot;
++					add_values        &quot;$(extr_xml_value \
++					                   $(grep 'asset tag' $banknode))&quot;
++
+ 					add_footer        &quot;Bank&quot;
+ 
+ 					[ $usexml -ne 1 ] &amp;&amp; flush_values
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000071.html">[Osinfo-commit] r683 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000073.html">[Osinfo-commit] r685 - in trunk/osinfo: docs html lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#72">[ date ]</a>
+              <a href="thread.html#72">[ thread ]</a>
+              <a href="subject.html#72">[ subject ]</a>
+              <a href="author.html#72">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

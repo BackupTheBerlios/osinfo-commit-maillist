@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r705 - trunk/osinfo/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r705%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121224.l2CCOxcu012406%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000092.html">
+   <LINK REL="Next"  HREF="000094.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r705 - trunk/osinfo/html</H1>
+    <B>lamikae at mail.berlios.de</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r705%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121224.l2CCOxcu012406%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r705 - trunk/osinfo/html">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar 12 13:24:59 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000092.html">[Osinfo-commit] r704 - trunk/osinfo/html
+</A></li>
+        <LI>Next message: <A HREF="000094.html">[Osinfo-commit] r706 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-12 13:24:57 +0100 (Mon, 12 Mar 2007)
+New Revision: 705
+
+Modified:
+   trunk/osinfo/html/index.php
+Log:
+p?\195?\164ivitys
+
+Modified: trunk/osinfo/html/index.php
+===================================================================
+--- trunk/osinfo/html/index.php	2007-03-12 12:11:28 UTC (rev 704)
++++ trunk/osinfo/html/index.php	2007-03-12 12:24:57 UTC (rev 705)
+@@ -280,7 +280,6 @@
+ 	}
+ 
+ 	// lajittelee taulukon halutun arvon mukaan, joka annetaan input-parametriin $nimi
+-
+ 	private function lajittele_array($array, $nimi)
+ 	{
+ 		$nimet = array(&quot; &quot;);
+@@ -310,7 +309,6 @@
+ 	}
+ 
+ 	// yleinen taulukon k&#228;sittelyfunktio, joka php:st&#228; itsest&#228;&#228;n puuttuu
+-
+ 	private function array_lisaa_samaan(&amp;$array)
+ 	{
+ 		$argumentit = func_get_args();
+@@ -332,7 +330,6 @@
+ 	}
+ 
+ 	// k&#228;y l&#228;pi tiedostokansion ja palauttaa viimeksi muokatun tiedoston p&#228;iv&#228;m&#228;&#228;r&#228;n unixin aika-arvona
+-
+ 	private function hae_viimeksi_paivitetty()
+ 	{
+ 		if(file_exists($this-&gt;_xmlkansio))
+@@ -359,8 +356,7 @@
+ 		}
+ 	}
+ 
+-	// n&#228;ytt&#228;&#228; sivuframen sis&#228;ll&#246;n
+-	
++	// n&#228;ytt&#228;&#228; sivuframen sis&#228;ll&#246;n	
+ 	public function nayta_sivuframe()
+ 	{
+ 		print &quot;&lt;div class=\&quot;SivuFrame\&quot;&gt;&quot;;
+@@ -396,7 +392,6 @@
+ 	}
+ 	
+ 	// n&#228;ytt&#228;&#228; p&#228;&#228;framen sis&#228;ll&#246;n
+-
+ 	public function nayta_paaframe($sivu = &quot;&quot;)
+ 	{
+ 		print &quot;&lt;div class=\&quot;PaaFrame\&quot;&gt;&quot;;
+@@ -431,6 +426,7 @@
+ 		$this-&gt;listaa_tiedostot(false);
+ 	}
+ 
++	// t&#228;m&#228;n funktion alle tulisi xml-tiedostojen p&#228;ivitys
+ 	private function paivitys()
+ 	{
+ 		if($_POST['paivitettava_client'])
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000092.html">[Osinfo-commit] r704 - trunk/osinfo/html
+</A></li>
+	<LI>Next message: <A HREF="000094.html">[Osinfo-commit] r706 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#93">[ date ]</a>
+              <a href="thread.html#93">[ thread ]</a>
+              <a href="subject.html#93">[ subject ]</a>
+              <a href="author.html#93">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

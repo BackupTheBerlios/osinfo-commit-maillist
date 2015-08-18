@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r683 - in trunk/osinfo: lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r683%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703070717.l277Hurs006562%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000070.html">
+   <LINK REL="Next"  HREF="000072.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r683 - in trunk/osinfo: lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r683%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703070717.l277Hurs006562%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r683 - in trunk/osinfo: lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Wed Mar  7 08:17:56 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000070.html">[Osinfo-commit] r682 - in trunk/osinfo: docs lib modules	modules/experimental
+</A></li>
+        <LI>Next message: <A HREF="000072.html">[Osinfo-commit] r684 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-07 08:17:56 +0100 (Wed, 07 Mar 2007)
+New Revision: 683
+
+Modified:
+   trunk/osinfo/lib/global_variables
+   trunk/osinfo/modules/devices
+   trunk/osinfo/modules/dmi
+Log:
+fine-tuning devices
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2007-03-06 15:11:20 UTC (rev 682)
++++ trunk/osinfo/lib/global_variables	2007-03-07 07:17:56 UTC (rev 683)
+@@ -44,6 +44,7 @@
+ Modules=()
+ Missing=() # helper applications that aren't installed
+ 
++
+ ### DAEMON MODE VARIABLES ###
+ 
+ # if the conf file is not available..
+
+Modified: trunk/osinfo/modules/devices
+===================================================================
+--- trunk/osinfo/modules/devices	2007-03-06 15:11:20 UTC (rev 682)
++++ trunk/osinfo/modules/devices	2007-03-07 07:17:56 UTC (rev 683)
+@@ -110,30 +110,14 @@
+ 	####################
+ 	## print_mobo_info
+ 	print_mobo_info(){
+-		# load MOBO info from dmi
+-		local handle_desc='Base Board information'
+-		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+ 		add_header    &quot;Motherboard&quot;
+-		add_attribute 'Manufacturer' 'mother_board_manufacturer'
+ 
+-		add_values    &quot;$(get_mobo_manufacturer)&quot;
+-		              # these functions are inherited from module_dmi
++		print_mobo_dmi;
++		 print_bridges;
++		 print_interfaces;
++		 print_controllers;
+ 
+-		add_attribute 'Model' 'mother_board_model'
+-		add_values    &quot;$(get_mobo_model)&quot;
+-
+-		# load BIOS info from dmi
+-		local handle_desc='BIOS Information'
+-		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+-
+-		add_attribute 'BIOS revision' 'bios_version'
+-		add_values    &quot;$(get_bios_revision)&quot;
+-
+-		print_bridges;
+-		print_interfaces;
+-		print_controllers;
+-
+ 		add_footer
+ 	}
+ 
+@@ -273,10 +257,10 @@
+ 
+ 		# add an xml code for ethernet and display adapters
+ 		if [ &quot;$(grep -i 'network\|ethernet' &lt;&lt;&lt; &quot;${func[$arraynr]}&quot;)&quot; ]; then
+-			add_attribute ' Ethernet controller(s)' &quot;network_adapter&quot;
++			add_attribute &quot;${busID[$arraynr]} Ethernet controller&quot; &quot;network_adapter&quot;
+ 
+ 		elif [ &quot;$(grep -i 'vga\|display' &lt;&lt;&lt; &quot;${func[$arraynr]}&quot;)&quot; ]; then
+-			add_attribute ' Display adapter(s)' &quot;display_adapter&quot;
++			add_attribute &quot;${busID[$arraynr]} Display adapter&quot; &quot;display_adapter&quot;
+ 
+ 		else
+ 			add_attribute &quot;${busID[$arraynr]} ${func[$arraynr]}&quot;
+
+Modified: trunk/osinfo/modules/dmi
+===================================================================
+--- trunk/osinfo/modules/dmi	2007-03-06 15:11:20 UTC (rev 682)
++++ trunk/osinfo/modules/dmi	2007-03-07 07:17:56 UTC (rev 683)
+@@ -31,10 +31,21 @@
+ 
+ 	if CheckReq_dmidecode &amp;&amp; CheckReq_root; then
+ 
+-		print_bios_info
+-		print_oem_info
+-		print_mobo_dmi
+-		print_chassis_info
++		add_header    &quot;BIOS&quot;
++		 print_bios_info
++		add_footer
++		
++		add_header    &quot;System info&quot;
++		 print_oem_info
++		add_footer
++		
++		add_header    &quot;Motherboard&quot;
++		 print_mobo_dmi
++		add_footer
++		
++		add_header    'Chassis'
++		 print_chassis_info
++		add_footer
+ 
+ 	fi
+ 
+@@ -77,8 +88,6 @@
+ 		# extract the handle to a temp file
+ 		extract_dmi &quot;${handle_desc}&quot; &gt; ${osinfo_tmp}
+ 
+-		add_header    &quot;BIOS&quot;
+-
+ 		add_attribute 'Vendor'
+ 		add_values    &quot;$(grep -i vendor ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+@@ -99,8 +108,6 @@
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+ 				 sed 's/^\ *//')&quot;
+-
+-		add_footer
+ 	}
+ 
+ 
+@@ -110,8 +117,6 @@
+ 		# extract the handle to a temp file
+ 		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+-		add_header  &quot;System info&quot;
+-
+ 		add_attribute 'Manufacturer' \
+ 				  'system_manufacturer'
+ 		add_values    &quot;$(grep -i manufacturer ${osinfo_tmp} | \
+@@ -142,8 +147,6 @@
+ 		add_values    &quot;$(grep -i uuid ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+ 				 sed 's/^\ *//')&quot;
+-
+-		add_footer
+ 	}
+ 
+ 
+@@ -153,8 +156,6 @@
+ 		# extract the handle to a temp file
+ 		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+-		add_header    &quot;Motherboard&quot;
+-
+ 		add_attribute 'Manufacturer' \
+ 				  'mother_board_manufacturer'
+ 		add_values    &quot;$(get_mobo_manufacturer)&quot;
+@@ -177,8 +178,6 @@
+ 		add_values    &quot;$(grep -i serial ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+ 				 sed 's/^\ *//')&quot;
+-
+-		add_footer
+ 	}
+ 
+ 
+@@ -188,8 +187,6 @@
+ 		# extract the handle to a temp file
+ 		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+-		add_header    'Chassis'
+-
+ 		add_attribute 'Manufacturer' 	'chassis_manufacturer'
+ 		add_values    &quot;$(grep -i manufacturer ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+@@ -224,8 +221,6 @@
+ 		add_values    &quot;$(grep -i asset ${osinfo_tmp} | \
+ 				 awk -F':' {'print $2'} | \
+ 				 sed 's/^\ *//')&quot;
+-
+-		add_footer
+ 	}
+ 
+ 		get_mobo_manufacturer() {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000070.html">[Osinfo-commit] r682 - in trunk/osinfo: docs lib modules	modules/experimental
+</A></li>
+	<LI>Next message: <A HREF="000072.html">[Osinfo-commit] r684 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

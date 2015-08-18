@@ -1,0 +1,440 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r722 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2008-August/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r722%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291530.m7TFUpDq003882%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000108.html">
+   <LINK REL="Next"  HREF="000110.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r722 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r722%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291530.m7TFUpDq003882%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r722 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Fri Aug 29 17:30:51 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000108.html">[Osinfo-commit] r721 - trunk/osinfo/modules
+</A></li>
+        <LI>Next message: <A HREF="000110.html">[Osinfo-commit] r723 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2008-08-29 17:30:51 +0200 (Fri, 29 Aug 2008)
+New Revision: 722
+
+Modified:
+   trunk/osinfo/modules/hdd
+Log:
+fixed indentation
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2008-08-29 15:26:56 UTC (rev 721)
++++ trunk/osinfo/modules/hdd	2008-08-29 15:30:51 UTC (rev 722)
+@@ -160,210 +160,210 @@
+   # if the drive type is unknown, let's get it out of the way first..
+   if [ &quot;$hdd_type&quot; == &quot;unknown&quot; ]; then
+ 
+-          add_header  &quot;${drvdev}&quot;
+-          add_attribute &quot;Drive type&quot;
+-          add_values    &quot;unknown&quot;
+-          add_footer
++    add_header  &quot;${drvdev}&quot;
++    add_attribute &quot;Drive type&quot;
++    add_values    &quot;unknown&quot;
++    add_footer
+ 
+-          break;
++    break;
+   fi
+-  
++
+   case &quot;$output_mode&quot; in
+-          'stdout')	# standard output
++    'stdout')	# standard output
+ 
+-                  # HDD DEVICE NODE
+-                  add_header  &quot;\n${drvdev}&quot;
++      # HDD DEVICE NODE
++      add_header  &quot;\n${drvdev}&quot;
+ 
+-                  # HDD TYPE and model name
+-                  add_attribute &quot;$hdd_type&quot;
+-                  add_values  &quot;$(echo $hdd_vendor $hdd_model | sed 's/^ *//')&quot;
++      # HDD TYPE and model name
++      add_attribute &quot;$hdd_type&quot;
++      add_values  &quot;$(echo $hdd_vendor $hdd_model | sed 's/^ *//')&quot;
+ 
+-                  # bus configuration; verbose
+-                  if [ $isverbose -ge 1 ]; then
+-                          add_attribute 'Bus configuration'
+-                          # case by the last letter in $drvdev
+-                          case ${drvdev: -1:1} in
+-                                  'a')
+-                                          add_values 'primary master'
+-                                          ;;
+-                                  'b')
+-                                          add_values 'primary slave'
+-                                          ;;
+-                                  'c')
+-                                          add_values 'secondary master'
+-                                          ;;
+-                                  'd')
+-                                          add_values 'secondary slave'
+-                                          ;;
+-                                  *)
+-                                          add_values 'unknown'
+-                                          ;;
+-                          esac
+-                  fi
++      # bus configuration; verbose
++      if [ $isverbose -ge 1 ]; then
++        add_attribute 'Bus configuration'
++        # case by the last letter in $drvdev
++        case ${drvdev: -1:1} in
++          'a')
++            add_values 'primary master'
++            ;;
++          'b')
++            add_values 'primary slave'
++            ;;
++          'c')
++            add_values 'secondary master'
++            ;;
++          'd')
++            add_values 'secondary slave'
++            ;;
++          *)
++            add_values 'unknown'
++            ;;
++        esac
++      fi
+ 
+ 
+-                  # HDD REPORTED CAPACITY
+-                  add_attribute 'Capacity (reported)'
+-                  add_values  &quot;$hdd_capacity_label&quot;
++      # HDD REPORTED CAPACITY
++      add_attribute 'Capacity (reported)'
++      add_values  &quot;$hdd_capacity_label&quot;
+ 
+-                  # verbose
+-                  if [ $isverbose -ge 1 ]; then
++      # verbose
++      if [ $isverbose -ge 1 ]; then
+ 
+-                          # HDD ACTUAL CAPACITY (verbose)
+-                          add_attribute 'Capacity (actual)'
+-                          add_values    &quot;$(hdd_human_readable $hdd_capacity)&quot;
++        # HDD ACTUAL CAPACITY (verbose)
++        add_attribute 'Capacity (actual)'
++        add_values    &quot;$(hdd_human_readable $hdd_capacity)&quot;
+ 
+-                          # SERIAL NUMBER
+-                          add_attribute 'Serial number'
+-                          add_values    &quot;$hdd_serial&quot;
+-                  fi
++        # SERIAL NUMBER
++        add_attribute 'Serial number'
++        add_values    &quot;$hdd_serial&quot;
++      fi
+ 
+-                  # DMA
+-                  add_attribute 'DMA'
+-                          # if DMA is off, print it in red
+-                          if [ &quot;$(grep -i off &lt;&lt;&lt; $hdd_dma)&quot; ]; then
+-                                  add_values  &quot;${tcRED}$hdd_dma${tSTD}&quot;
+-                          elif [ &quot;$(grep -i on &lt;&lt;&lt; $hdd_dma)&quot; ]; then
+-                                  #add_values  &quot;$hdd_dma&quot;
+-                                  add_values  &quot;${tcGREEN}$hdd_dma${tSTD}&quot;
+-                          else
+-                                  add_values  &quot;${tcRED}n/a${tSTD}&quot;
+-                          fi
++      # DMA
++      add_attribute 'DMA'
++        # if DMA is off, print it in red
++        if [ &quot;$(grep -i off &lt;&lt;&lt; $hdd_dma)&quot; ]; then
++                add_values  &quot;${tcRED}$hdd_dma${tSTD}&quot;
++        elif [ &quot;$(grep -i on &lt;&lt;&lt; $hdd_dma)&quot; ]; then
++                #add_values  &quot;$hdd_dma&quot;
++                add_values  &quot;${tcGREEN}$hdd_dma${tSTD}&quot;
++        else
++                add_values  &quot;${tcRED}n/a${tSTD}&quot;
++        fi
+ 
+-                  # ACTIVITY STATE; verbose
+-                  if [ $isverbose -ge 1 ]; then
+-                          add_attribute 'State'
+-                          add_values &quot;$hdd_state&quot;
+-                  fi
++      # ACTIVITY STATE; verbose
++      if [ $isverbose -ge 1 ]; then
++        add_attribute 'State'
++        add_values &quot;$hdd_state&quot;
++      fi
+ 
+-                  # ATA standard; more verbose
+-                  if [ $isverbose -ge 2 ]; then
+-                          add_attribute   'ATA Standard'
+-                          add_values      &quot;$hdd_ata_standard&quot;
++      # ATA standard; more verbose
++      if [ $isverbose -ge 2 ]; then
++        add_attribute   'ATA Standard'
++        add_values      &quot;$hdd_ata_standard&quot;
+ 
+-                          add_attribute 'Driver'
+-                          add_values    &quot;$hdd_driver&quot;
++        add_attribute 'Driver'
++        add_values    &quot;$hdd_driver&quot;
+ 
+-                          add_attribute 'Geometry'
+-                          add_values    &quot;$hdd_geometry&quot;
+-                  fi
++        add_attribute 'Geometry'
++        add_values    &quot;$hdd_geometry&quot;
++      fi
+ 
+ 
+-                  # SMART capability; more verbose
+-                  if [ $isverbose -ge 2 ]; then
+-                          # SMART capability
+-                          add_attribute   'S.M.A.R.T.'
+-                          add_values      &quot;$hdd_smart&quot;
+-                  fi
++      # SMART capability; more verbose
++      if [ $isverbose -ge 2 ]; then
++        # SMART capability
++        add_attribute   'S.M.A.R.T.'
++        add_values      &quot;$hdd_smart&quot;
++      fi
+ 
+-                  # S.M.A.R.T DATA
+-                  # TODO: use add_subheader
+-                  if [ &quot;$(type -p smartctl)&quot; ]; then
++      # S.M.A.R.T DATA
++      # TODO: use add_subheader
++      if [ &quot;$(type -p smartctl)&quot; ]; then
+ 
+-                          # TEMPERATURE
+-                          add_attribute   'Temperature'
+-                          add_values  &quot;$hdd_tempC&quot;
+-                                  [ &quot;$hdd_tempC&quot; ]
++        # TEMPERATURE
++        add_attribute   'Temperature'
++        add_values  &quot;$hdd_tempC&quot;
++                [ &quot;$hdd_tempC&quot; ]
+ 
+-                          # verbose
+-                          if [ $isverbose -ge 1 ]; then
++        # verbose
++        if [ $isverbose -ge 1 ]; then
+ 
+-                                  # LIFETIME
+-                                  add_attribute   'Lifetime'
+-                                  add_values      &quot;$hdd_lifetime&quot;
++          # LIFETIME
++          add_attribute   'Lifetime'
++          add_values      &quot;$hdd_lifetime&quot;
+ 
+-                                  # START-UP COUNT
+-                                  add_attribute   'Start-up count'
+-                                  add_values      &quot;$hdd_startup&quot;
++          # START-UP COUNT
++          add_attribute   'Start-up count'
++          add_values      &quot;$hdd_startup&quot;
+ 
+-                                  # HEALTH STATUS
+-                                  add_attribute   'Health Status'
+-                                  add_values      &quot;$hdd_health&quot;
+-                          fi
+-                  fi
++          # HEALTH STATUS
++          add_attribute   'Health Status'
++          add_values      &quot;$hdd_health&quot;
++        fi
++      fi
+ 
+ 
+-                  flush_values
++      flush_values
+ 
+ 
+-                  ## PARTITION DATA
+-                  add_header	'' # adds a space into stdout, does not affect xml
+-                  add_nc_header	&quot; Partition%col%mountpoint%col%blocks%col%free%col%filesystem\n&quot;
+-                  add_nc_header	&quot; ---------%col%----------%col%------%col%----%col%----------&quot;
++      ## PARTITION DATA
++      add_header	'' # adds a space into stdout, does not affect xml
++      add_nc_header	&quot; Partition%col%mountpoint%col%blocks%col%free%col%filesystem\n&quot;
++      add_nc_header	&quot; ---------%col%----------%col%------%col%----%col%----------&quot;
+ 
+-                  for hdd_pt in $(seq 1 1 $partitions_on_drive); do
+-                          # print the device node
+-                          add_attribute &quot;  ${hdd_pt_node[$hdd_pt]}&quot;
++      for hdd_pt in $(seq 1 1 $partitions_on_drive); do
++        # print the device node
++        add_attribute &quot;  ${hdd_pt_node[$hdd_pt]}&quot;
+ 
+-                          # print info of mounted drives
+-                          if [ &quot;${hdd_pt_mp[$hdd_pt]}&quot; ]; then #mount point exists
++        # print info of mounted drives
++        if [ &quot;${hdd_pt_mp[$hdd_pt]}&quot; ]; then #mount point exists
+ 
+-                                  # mount point
+-                                  add_values    &quot;${hdd_pt_mp[$hdd_pt]}&quot;
++          # mount point
++          add_values    &quot;${hdd_pt_mp[$hdd_pt]}&quot;
+ 
+-                                  # blocks
+-                                  add_values    &quot;$(hdd_human_readable \
+-                                                            ${hdd_pt_blocks[$hdd_pt]})&quot;
+-                                  # free
+-                                  if [ &quot;${hdd_pt_free[$hdd_pt]}&quot; != &quot;&quot; ]; then
+-                                  add_values    &quot;$(hdd_human_readable \
+-                                                            ${hdd_pt_free[$hdd_pt]})&quot;
+-                                  #add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
+-                                  else
+-                                          add_values '-'
+-                                  fi
++          # blocks
++          add_values    &quot;$(hdd_human_readable \
++                                    ${hdd_pt_blocks[$hdd_pt]})&quot;
++          # free
++          if [ &quot;${hdd_pt_free[$hdd_pt]}&quot; != &quot;&quot; ]; then
++          add_values    &quot;$(hdd_human_readable \
++                                    ${hdd_pt_free[$hdd_pt]})&quot;
++          #add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
++          else
++            add_values '-'
++          fi
+ 
+-                                  # fs type
+-                                  add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
++          # fs type
++          add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
+ 
+-                          else
++        else
+ 
+-                                  # mount point
+-                                  add_values    &quot; &quot;
++          # mount point
++          add_values    &quot; &quot;
+ 
+-                                  # blocks
+-                                  add_values    &quot;$(hdd_human_readable \
+-                                                            ${hdd_pt_blocks[$hdd_pt]})&quot;
++          # blocks
++          add_values    &quot;$(hdd_human_readable \
++                                    ${hdd_pt_blocks[$hdd_pt]})&quot;
+ 
+-                                  # free would come here
+-                                  add_values    ' '
++          # free would come here
++          add_values    ' '
+ 
+-                                  # fs type
+-                                  add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
++          # fs type
++          add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
+ 
+-                          fi
++        fi
+ 
+-                  done
++      done
+ 
+-                  flush_values
+-                  ;;
++      flush_values
++      ;;
+ 
+-          'xml')	# XML OUTPUT
++    'xml')	# XML OUTPUT
+ 
+-                  add_header    &quot;drive&quot;
++      add_header    &quot;drive&quot;
+ 
+-                          add_attribute &quot;$hdd_type&quot;			'hard_disk'
+-                          # TODO: how to break these into many lines in the code?
+-                          add_values    &quot;$hdd_type $hdd_vendor $hdd_model ($hdd_serial) $hdd_capacity_label&quot;
++        add_attribute &quot;$hdd_type&quot;			'hard_disk'
++        # TODO: how to break these into many lines in the code?
++        add_values    &quot;$hdd_type $hdd_vendor $hdd_model ($hdd_serial) $hdd_capacity_label&quot;
+ 
+-                          if [ $lanforce -eq 1 ]; then
+-                                  add_attribute &quot;partitions&quot;		'drive'
+-                          else
+-                                  add_header    &quot;partitions&quot;
+-                          fi
++        if [ $lanforce -eq 1 ]; then
++          add_attribute &quot;partitions&quot;		'drive'
++        else
++          add_header    &quot;partitions&quot;
++        fi
+ 
+-                          for hdd_pt in $(seq 1 1 $partitions_on_drive); do
+-                                  add_values    &quot;${hdd_pt_node[$hdd_pt]} ${hdd_pt_mp[$hdd_pt]} ${hdd_pt_free[$hdd_pt]}/${hdd_pt_blocks[$hdd_pt]} ${hdd_pt_fs[$hdd_pt]}&quot;
+-                          done
++        for hdd_pt in $(seq 1 1 $partitions_on_drive); do
++          add_values    &quot;${hdd_pt_node[$hdd_pt]} ${hdd_pt_mp[$hdd_pt]} ${hdd_pt_free[$hdd_pt]}/${hdd_pt_blocks[$hdd_pt]} ${hdd_pt_fs[$hdd_pt]}&quot;
++        done
+ 
+ 
+-                          if [ $lanforce -eq 0 ]; then
+-                                  add_footer
+-                          fi
++        if [ $lanforce -eq 0 ]; then
++          add_footer
++        fi
+ 
+-                  add_footer
++      add_footer
+ 
+-                  ;;
++      ;;
+   esac
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000108.html">[Osinfo-commit] r721 - trunk/osinfo/modules
+</A></li>
+	<LI>Next message: <A HREF="000110.html">[Osinfo-commit] r723 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#109">[ date ]</a>
+              <a href="thread.html#109">[ thread ]</a>
+              <a href="subject.html#109">[ subject ]</a>
+              <a href="author.html#109">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

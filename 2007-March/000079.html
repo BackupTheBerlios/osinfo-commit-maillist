@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r691 - trunk/osinfo/lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r691%20-%20trunk/osinfo/lib&In-Reply-To=%3C200703080746.l287kS0w027317%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000078.html">
+   <LINK REL="Next"  HREF="000080.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r691 - trunk/osinfo/lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r691%20-%20trunk/osinfo/lib&In-Reply-To=%3C200703080746.l287kS0w027317%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r691 - trunk/osinfo/lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar  8 08:46:28 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000078.html">[Osinfo-commit] r690 - trunk/osinfo/lib
+</A></li>
+        <LI>Next message: <A HREF="000080.html">[Osinfo-commit] r692 - in trunk/osinfo: conf lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-08 08:46:28 +0100 (Thu, 08 Mar 2007)
+New Revision: 691
+
+Modified:
+   trunk/osinfo/lib/daemon.functions
+Log:
+debugging
+
+Modified: trunk/osinfo/lib/daemon.functions
+===================================================================
+--- trunk/osinfo/lib/daemon.functions	2007-03-08 07:40:19 UTC (rev 690)
++++ trunk/osinfo/lib/daemon.functions	2007-03-08 07:46:28 UTC (rev 691)
+@@ -53,7 +53,7 @@
+ 		info &quot;$(date)&quot;
+ 		info &quot;$(wc -l $inputxml_tmp | grep -Eo '^[0-9]*') lines caught!&quot;
+ 		flush_values
+-
++exit 0
+ 		# if the input is (not) valid osinfo xml..
+ 		if [ ! &quot;$(grep -i '&lt;!doctype osinfo' ${inputxml_tmp})&quot; ]; then
+ 			info &quot;Input is not valid osinfo xml!&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000078.html">[Osinfo-commit] r690 - trunk/osinfo/lib
+</A></li>
+	<LI>Next message: <A HREF="000080.html">[Osinfo-commit] r692 - in trunk/osinfo: conf lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

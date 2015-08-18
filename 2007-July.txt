@@ -1,0 +1,286 @@
+From lamikae at mail.berlios.de  Sat Jul  7 14:02:52 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sat, 7 Jul 2007 14:02:52 +0200
+Subject: [Osinfo-commit] r709 - in trunk/osinfo: . lib modules
+	modules/experimental
+Message-ID: <200707071202.l67C2q82002648@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-07-07 14:02:51 +0200 (Sat, 07 Jul 2007)
+New Revision: 709
+
+Added:
+   trunk/osinfo/COPYRIGHT
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/modules/aa_INDEX
+   trunk/osinfo/modules/experimental/firewall
+   trunk/osinfo/modules/hdd
+   trunk/osinfo/modules/memory
+   trunk/osinfo/modules/network
+Log:
+comments
+
+Added: trunk/osinfo/COPYRIGHT
+===================================================================
+--- trunk/osinfo/COPYRIGHT	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/COPYRIGHT	2007-07-07 12:02:51 UTC (rev 709)
+@@ -0,0 +1,2 @@
++Copyright (C) 2005-2006 Arvid Norlander
++Copyright (C) 2006 Mikael Lammentausta
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/Makefile	2007-07-07 12:02:51 UTC (rev 709)
+@@ -22,7 +22,17 @@
+ 	@echo "  distclean       - remove the dist dir and *~"
+ 	@echo "  clean           - remove *~"
+ 
+-dist: distclean man
++info:
++	####################################
++	# Building osinfo for distribution
++	#
++	# (C) 2005-2006 Arvid Norlander
++	# (C) Savonia University of Applied Sciences
++	#     2006-2007 Mikael Lammentausta
++	#          2007 Lauri Miettinen
++	####################################
++
++dist: info distclean man
+ 	mkdir -p dist/$(appname)
+ 
+ 	######################
+@@ -59,7 +69,7 @@
+ 	######################
+ 	cp -r man dist/$(appname)
+ 
+-	# done!
++	# Exited successfully!
+ 
+ # Not very elegant
+ # It greps the definitions out of osinfo and then evals it.
+@@ -71,8 +81,9 @@
+ 	# make the tarball
+ 	######################
+ 	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}_$${patch_version}).tar.bz2" $(appname)
+-	# done!
+ 
++	# Exited successfully!
++
+ distclean: clean
+ 	-rm -rf dist
+ 
+@@ -92,4 +103,4 @@
+ 
+ tarbz2: dist-tarbz2
+ 
+-.PHONY : all clean dist distclean checkxml
++.PHONY : all clean dist distclean checkxml info
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/lib/bash.functions	2007-07-07 12:02:51 UTC (rev 709)
+@@ -298,5 +298,5 @@
+ 
+ # prints a message with a green star in the beginning of each line 
+ print_info() {
+-	echo -e " ${tcGREEN}*${tSTD} ${@}"
++	echo -e " ${tcGREEN}*${tSTD} ${@}" > /dev/stderr
+ }
+
+Modified: trunk/osinfo/modules/aa_INDEX
+===================================================================
+--- trunk/osinfo/modules/aa_INDEX	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/modules/aa_INDEX	2007-07-07 12:02:51 UTC (rev 709)
+@@ -6,7 +6,7 @@
+ ################################################################################
+ 
+ 
+-# these are used to control run access and validify against
++# these are used to control run access and to validate against
+ 
+ MODULES_LINUX='system distro kernel processor ram memory hdd network wlan dmi applications terminal devices cdrom users services battery firewall'
+ MODULES_BSD='system kernel applications terminal network devices dmi'
+
+Modified: trunk/osinfo/modules/experimental/firewall
+===================================================================
+--- trunk/osinfo/modules/experimental/firewall	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/modules/experimental/firewall	2007-07-07 12:02:51 UTC (rev 709)
+@@ -8,4 +8,41 @@
+ 	local moduleDescription="Firewall setup"
+ 	module_header   "${moduleName}"
+ 
+-}
+\ No newline at end of file
++	local fw_ip="127.0.0.1"
++	local fw_ip="192.168.0.1"
++
++	print_bind_info
++	print_nslookup_info
++
++	flush_values
++}
++
++	# helpers
++	print_bind_info() {
++
++		add_subheader   'BIND'
++
++		add_attribute   'BIND version'
++		add_values      "$(dig @$fw_ip version.bind txt chaos | \
++				   grep ANSWER -A 2 | \
++				   awk /version.bind/{'print $NF'} )"
++
++		add_footer      'BIND'
++	}
++
++	print_nslookup_info() {
++		add_subheader   'nslookup'
++
++		add_attribute   'server'
++		add_values      "$(nslookup $fw_ip | grep -i ^server | awk {'print $NF'})"
++
++		add_attribute   'address'
++		add_values      "$(nslookup $fw_ip | grep -i ^address | awk {'print $NF'})"
++
++		add_attribute   'in-addr.arpa'
++		for addr in "$(nslookup $fw_ip )"; do #| grep -i in-addr.arpa | awk -F'\t' {'print $NF'})"; do
++			add_values	"$(grep -i in-addr.arpa <<< "$addr" | awk -F'\t' {'print $NF'})"
++		done
++
++		add_footer      'nslookup'
++	}
+\ No newline at end of file
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/modules/hdd	2007-07-07 12:02:51 UTC (rev 709)
+@@ -462,6 +462,8 @@
+ 
+ 		# get the activity state of the HDD
+ 		hdd_state="$(hdparm -C $dev_scan | awk -F\: {'print $NF'})"
++
++		hdd_udevinfo="$(udevinfo -a -p $(udevinfo -q path -n ${dev_scan}) )"
+ 	}
+ 
+ 
+@@ -492,7 +494,7 @@
+ 		smart_info="$(mktemp /tmp/osinfo.XXXXXX)"
+ 		TempFiles=("${TempFiles[@]}" "$smart_info")
+ 
+-		smartctl -a -d $dev_type ${dev_scan} > $smart_info
++		smartctl -a -d $dev_type ${dev_scan}  2> ${error_log} > $smart_info
+ 
+ 		hdd_smart="$(grep 'SMART support' ${smart_info} | \
+ 		             head -n 1 | awk -F': ' {'print $2'})"
+@@ -731,12 +733,15 @@
+ 			#
+ 			# this smart scan is not included into the scan_hdd_smart()
+ 			# because it would break the correct order of the report.
+-			hdd_vendor="$(smartctl -i ${dev_scan} | grep '^Model' | \
++			hdd_vendor="$(smartctl -i ${dev_scan} 2> ${error_log} | grep '^Model' | \
+ 			              awk -F: {'print $2'} | sed 's/^ *//')"
+ 
+ 		elif [ "${udev_info}" ]; then
+-			hdd_vendor="$(udevinfo -q all -n ${dev_scan} | grep -i vendor | \
++			hdd_vendor="$(grep -i vendor <<< ${hdd_udevinfo} | \
+ 			              awk -F_ {'print $NF'})"
++
++			#hdd_vendor="$(udevinfo -q all -n ${dev_scan} | grep -i vendor | \
++			#              awk -F_ {'print $NF'})"
+ 		fi
+ 
+ 		# check whether we got anything else than empty $vendor string
+@@ -845,7 +850,7 @@
+ 			# allocate a temp file
+ 			smart_sata="$(mktemp /tmp/osinfo.XXXXXX)"
+ 			TempFiles=("${TempFiles[@]}" "$smart_sata")
+-			smartctl -a -d ata ${dev_scan} > $smart_sata
++			smartctl -a -d ata ${dev_scan} > $smart_sata 2> ${error_log}
+ 		fi
+ 
+ 		# NOTE:
+@@ -970,7 +975,7 @@
+ 		########
+ 		# Driver
+ 		if [ -e "${proc_info}" ]; then
+-			hdd_driver="Linux SCSI Generic (sg) v. ${sg_version}"
++			hdd_driver="Linux SCSI Generic (sg) v. $(cat ${sg_version})"
+ 		fi
+ 
+ 
+@@ -980,9 +985,20 @@
+ 		###########
+ 		# scan for SMART attributes
+ 		if [ $smart_sata ]; then scan_hdd_smart ${dev_scan} ata; fi
++
++
++		if [ "$hdd_type" == "USB drive" ]; then scan_usb_params ${dev_scan}; fi
+ 	}
+ 
++	#######################
++	# detect special USB drive params
++	#
++	scan_usb_params() {
++		#add_attribute      'USB bus'
++		#add_values "n/a"
++	}
+ 
++
+ 	#######################
+ 	# SOFTWARE RAID ARRAYS
+ 	#
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/modules/memory	2007-07-07 12:02:51 UTC (rev 709)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ #######################
+ # MEMORY
+ #
+@@ -5,6 +6,7 @@
+ # used on the system.
+ # THE MODULE IS STILL VERY INCOMPLETE!
+ #
++# TODO: checkout vmstat
+ Module_memory() {
+ 	local moduleName="System memory"
+ 	module_header "${moduleName}"
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2007-03-23 11:29:25 UTC (rev 708)
++++ trunk/osinfo/modules/network	2007-07-07 12:02:51 UTC (rev 709)
+@@ -82,6 +82,9 @@
+ 				add_attribute 'Device'
+ 				add_values    "$(get_device_name ${nw_info} ${iw_info})"
+ 
++				add_attribute 'Bus'
++				add_values    "$(get_device_bus ${nw_info} ${iw_info})"
++
+ 				add_attribute 'MAC'		"mac_address"
+ 				add_values    "$(grep -Eo '([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}' ${nw_info})"
+ 
+@@ -195,6 +198,12 @@
+ 		fi
+ 		}
+ 
++	function get_device_bus() {
++		# parameters:
++		#  1  device node
++		echo
++	}
++
+ 	function get_device_flags() {
+ 		# parameters:
+ 		#  1  device node
+
+
+

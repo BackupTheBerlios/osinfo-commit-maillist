@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r718 - in trunk/osinfo: . debug examples
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r718%20-%20in%20trunk/osinfo%3A%20.%20debug%20examples&In-Reply-To=%3C200712291535.lBTFZC3T027071%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000104.html">
+   <LINK REL="Next"  HREF="000106.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r718 - in trunk/osinfo: . debug examples</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r718%20-%20in%20trunk/osinfo%3A%20.%20debug%20examples&In-Reply-To=%3C200712291535.lBTFZC3T027071%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r718 - in trunk/osinfo: . debug examples">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Sat Dec 29 16:35:12 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000104.html">[Osinfo-commit] r716 - in trunk/osinfo: . lib
+</A></li>
+        <LI>Next message: <A HREF="000106.html">[Osinfo-commit] r719 - trunk/osinfo/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-12-29 16:35:11 +0100 (Sat, 29 Dec 2007)
+New Revision: 718
+
+Added:
+   trunk/osinfo/debug/xml.dtd
+   trunk/osinfo/examples/
+   trunk/osinfo/examples/dtd.example
+Log:
+cleanup; some examples
+
+Added: trunk/osinfo/debug/xml.dtd
+===================================================================
+--- trunk/osinfo/debug/xml.dtd	2007-12-27 07:31:20 UTC (rev 717)
++++ trunk/osinfo/debug/xml.dtd	2007-12-29 15:35:11 UTC (rev 718)
+@@ -0,0 +1,120 @@
++#!/bin/bash
++####
++# XML functions for LanForce output.
++####
++
++
++function lanforce_dtd () {
++	echo &quot;&lt;!ELEMENT entityset (entity+)&gt;&quot;
++	echo &quot;&lt;!ELEMENT entity (template, attribute*, note*)&gt;&quot;
++	echo &quot;&lt;!ATTLIST entity id         CDATA #IMPLIED&quot;
++	echo &quot;                 name       CDATA #REQUIRED&quot;
++	echo &quot;                 ip         CDATA #IMPLIED&gt;&quot;
++	echo &quot;&lt;!ELEMENT template EMPTY&gt;&quot;
++	echo &quot;&lt;!ATTLIST template id       CDATA #IMPLIED&quot;
++	echo &quot;                    name    CDATA #IMPLIED&quot;
++	echo &quot;                    code    CDATA #REQUIRED&gt;&quot;
++	echo &quot;&lt;!ELEMENT attribute header?,(value | reference | embeddedreference |&quot;
++	echo &quot;                            externalreference)*, footer?&gt;&quot;
++	echo &quot;&lt;!ATTLIST attribute id      CDATA #IMPLIED&quot;
++	echo &quot;                     name   CDATA #IMPLIED&quot;
++	echo &quot;                     code   CDATA #REQUIRED&gt;&quot;
++	echo &quot;&lt;!ELEMENT header #PCDATA&gt;&quot;
++	echo &quot;&lt;!ELEMENT value #PCDATA&gt;&quot;
++	echo &quot;&lt;!ELEMENT reference EMPTY&gt;&quot;
++	echo &quot;&lt;!ATTLIST reference id      CDATA #IMPLIED&quot;
++	echo &quot;                     type   CDATA #IMPLIED&gt;&quot;
++	echo &quot;&lt;!ELEMENT embeddedreference EMPTY&gt;&quot;
++	echo &quot;&lt;!ATTLIST embeddedreference id         CDATA #IMPLIED&quot;
++	echo &quot;                            type       CDATA #IMPLIED&gt;&quot;
++	echo &quot;&lt;!ELEMENT externalreference EMPTY&gt;&quot;
++	echo &quot;&lt;!ATTLIST externalreference name       CDATA #IMPLIED&quot;
++	echo &quot;                            location   CDATA #IMPLIED&gt;&quot;
++	echo &quot;&lt;!ELEMENT footer #PCDATA&gt;&quot;
++	echo &quot;&lt;!ELEMENT note (name, text)&gt;&quot;
++	echo &quot;&lt;!ATTLIST note   creator               CDATA #REQUIRED&quot;
++	echo &quot;                 timestamp             CDATA #IMPLIED&quot;
++	echo &quot;                 follow-references     CDATA #REQUIRED&gt;&quot;
++	echo &quot;&lt;!ELEMENT name #PCDATA&gt;&quot;
++	echo &quot;&lt;!ELEMENT text #PCDATA&gt;&quot;
++}
++
++function lf_entityset () {
++	id=&quot;$1&quot;
++	name=&quot;$2&quot;
++	ip=&quot;$3&quot;
++
++	echo &quot;&lt;!ELEMENT entityset (entity+)&gt;&quot;
++	echo &quot;&lt;!ELEMENT entity (template, attribute*, note*)&gt;&quot;
++	echo &quot;&lt;!ATTLIST entity id         $id #IMPLIED&quot;
++	echo &quot;                 name       $name #REQUIRED&quot;
++	echo &quot;                 ip         $ip #IMPLIED&gt;&quot;
++}
++
++function lf_entity_start () {
++	hostname=&quot;$1&quot;
++	ip=&quot;$2&quot;
++	timestamp=&quot;$(date +%Y-%m-%d\ %H:%M:%S)&quot;
++
++
++	echo &quot;&lt;entityset&gt;&quot;
++	echo &quot; &lt;entity name=\&quot;$hostname\&quot;&gt;&quot;
++	echo &quot;  &lt;template code=\&quot;computer\&quot;\&gt;&quot;
++	lf_attribute_value &quot;computer_name&quot; &quot;${hostname}&quot;
++	lf_attribute_value &quot;scanning_date&quot; &quot;${timestamp}&quot;
++}
++
++function lf_entity_stop () {
++	echo &quot;&lt;/entityset&gt;&quot;
++}
++
++function lf_template () {
++	id=&quot;$1&quot;
++	name=&quot;$2&quot;
++	code=&quot;$3&quot;
++
++	echo &quot;&lt;!ELEMENT template EMPTY&gt;&quot;
++	echo &quot;&lt;!ATTLIST template id      $id #IMPLIED&quot;
++	echo &quot;                   name    $name #IMPLIED&quot;
++	echo &quot;                   code    $code #REQUIRED&gt;&quot;
++}
++
++function lf_attributeset () {
++	id=&quot;$1&quot;
++	name=&quot;$2&quot;
++	code=&quot;$3&quot;
++
++	echo &quot;&lt;!ELEMENT attribute header?,(value | reference | embeddedreference |&quot;
++	echo &quot;                            externalreference)*, footer?&gt;&quot;
++	echo &quot;&lt;!ATTLIST attribute id     $id #IMPLIED&quot;
++	echo &quot;                    name   $name #IMPLIED&quot;
++	echo &quot;                    code   $code #REQUIRED&gt;&quot;
++
++}
++
++function lf_attribute_value () {
++	code=&quot;$1&quot;
++	value=&quot;$2&quot;
++
++	echo &quot;  &lt;attribute code=\&quot;$code\&quot;&gt;&quot;
++	echo &quot;   &lt;value&gt;$value&lt;/value&gt;&quot;
++	echo &quot;  &lt;/attribute&gt;&quot;
++}
++
++function lf_value () {
++	value=&quot;$1&quot;
++
++	echo &quot;&lt;!ELEMENT value $value&gt;&quot;
++}
++
++function lf_note () {
++	creator=&quot;osinfo alpha&quot;
++	timestamp=&quot;$(date +%Y%m%d\ %H:%M)&quot;
++	ref=&quot;no&quot;
++
++	echo &quot;&lt;!ELEMENT note (name, text)&gt;&quot;
++	echo &quot;&lt;!ATTLIST note   creator               $creator #REQUIRED&quot;
++	echo &quot;                 timestamp             $timestamp #IMPLIED&quot;
++	echo &quot;                 follow-references     $ref #REQUIRED&gt;&quot;
++#	echo &quot;&lt;!ELEMENT name #PCDATA&gt;&quot;
++}
+
+Added: trunk/osinfo/examples/dtd.example
+===================================================================
+--- trunk/osinfo/examples/dtd.example	2007-12-27 07:31:20 UTC (rev 717)
++++ trunk/osinfo/examples/dtd.example	2007-12-29 15:35:11 UTC (rev 718)
+@@ -0,0 +1,47 @@
++&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
++&lt;entityset&gt;
++ &lt;entity name=&quot;COMPUTER001&quot;&gt;
++  &lt;template code=&quot;computer&quot;/&gt;
++  &lt;attribute code=&quot;computer_name&quot;&gt;
++   &lt;value&gt;COMPUTER001&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;scanning_date&quot;&gt;
++   &lt;value&gt;2004-05-21 14:22:27&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;ram&quot;&gt;
++   &lt;value&gt;1023&lt;/value&gt;
++   &lt;footer&gt;MB&lt;/footer&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;software&quot;&gt;
++   &lt;value&gt;ATI Display Driver&lt;/value&gt;
++   &lt;value&gt;Java Web Start&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;host_name&quot;&gt;
++   &lt;value&gt;computer001&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;hard_disk&quot;&gt;
++   &lt;value&gt;Maxtor 6E040L0 (atapi)&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;drive&quot;&gt;
++   &lt;value&gt;C:\ 30.87 GB / 38.28 GB&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;cdrom&quot;&gt;
++   &lt;value&gt;HL-DT-ST DVD-ROM GDR8161B (atapi)&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;drive_capacity&quot;&gt;
++   &lt;value&gt;38.28&lt;/value&gt;
++   &lt;footer&gt;GB&lt;/footer&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;processor_speed&quot;&gt;
++   &lt;value&gt;2407&lt;/value&gt;
++   &lt;footer&gt;MHz&lt;/footer&gt;
++  &lt;/attribute&gt;
++  &lt;attribute code=&quot;last_logged_user&quot;&gt;
++   &lt;value&gt;Administrator&lt;/value&gt;
++  &lt;/attribute&gt;
++  &lt;note&gt;
++   &lt;name&gt;Agreement&lt;/name&gt;
++   &lt;text&gt;Node founded by discovery.&lt;/text&gt;
++  &lt;/note&gt;
++ &lt;/entity&gt;
++&lt;/entityset&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000104.html">[Osinfo-commit] r716 - in trunk/osinfo: . lib
+</A></li>
+	<LI>Next message: <A HREF="000106.html">[Osinfo-commit] r719 - trunk/osinfo/docs
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#105">[ date ]</a>
+              <a href="thread.html#105">[ thread ]</a>
+              <a href="subject.html#105">[ subject ]</a>
+              <a href="author.html#105">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

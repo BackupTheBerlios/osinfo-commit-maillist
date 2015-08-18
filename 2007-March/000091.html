@@ -1,0 +1,982 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r703 - trunk/osinfo/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r703%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121158.l2CBwkJ4017155%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000090.html">
+   <LINK REL="Next"  HREF="000092.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r703 - trunk/osinfo/html</H1>
+    <B>lamikae at mail.berlios.de</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r703%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121158.l2CBwkJ4017155%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r703 - trunk/osinfo/html">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar 12 12:58:46 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000090.html">[Osinfo-commit] r702 - trunk/osinfo/html
+</A></li>
+        <LI>Next message: <A HREF="000092.html">[Osinfo-commit] r704 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#91">[ date ]</a>
+              <a href="thread.html#91">[ thread ]</a>
+              <a href="subject.html#91">[ subject ]</a>
+              <a href="author.html#91">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-12 12:58:42 +0100 (Mon, 12 Mar 2007)
+New Revision: 703
+
+Added:
+   trunk/osinfo/html/index.php
+Removed:
+   trunk/osinfo/html/index.php
+Log:
+p?\195?\164ivitys
+
+Deleted: trunk/osinfo/html/index.php
+===================================================================
+--- trunk/osinfo/html/index.php	2007-03-12 11:56:36 UTC (rev 702)
++++ trunk/osinfo/html/index.php	2007-03-12 11:58:42 UTC (rev 703)
+@@ -1,448 +0,0 @@
+-&lt;?php
+-
+-// luodaan Index-olio. Input-parametrit:
+-
+-// $xmlkansio, kansio jossa kaikki xml-tiedostot sijaitsevat
+-// $r, divien taustav&#228;rin punaisen arvo
+-// $g, divien taustav&#228;rin vihre&#228;n arvo
+-// $b, divien taustav&#228;rin sinisen arvo
+-// $fade_korkeus, sivuframen alla olevan fade-kuvan korkeus
+-// $clienteja_rivilla, index viewin clienttien lukum&#228;&#228;r&#228; rivill&#228;
+-
+-$index = new Index(&quot;hosts&quot;, 222, 197, 148, 150, 3);
+-
+-$index-&gt;tulosta_alkukoodi(true);
+-$index-&gt;nayta_sivuframe();
+-$index-&gt;nayta_paaframe($_GET['target']);
+-$index-&gt;tulosta_loppukoodi();
+-
+-class Index
+-{
+-	private $_xmlkansio;
+-	private $_xmlparseri = &quot;xml-parseri.php&quot;;
+-	private $_parseri;
+-	private $_clientteja_rivilla;
+-	private $_r;
+-	private $_g;
+-	private $_b;
+-	private $_fade_korkeus;
+-
+-	public function __construct($xmlkansio, $r, $g, $b, $fade_korkeus, $clientteja_rivilla)
+-	{
+-		// sijoitetaan input-parametrit luokan j&#228;senmuuttujiin
+-
+-		$this-&gt;_xmlkansio = $xmlkansio;
+-		$this-&gt;_r = $r;
+-		$this-&gt;_g = $g;
+-		$this-&gt;_b = $b;
+-		$this-&gt;_fade_korkeus = $fade_korkeus;
+-		$this-&gt;_clientteja_rivilla = $clientteja_rivilla;
+-
+-		// tarkistetaan, xmlparseri on olemassa ja luodaan siit&#228; olio
+-
+-		if(file_exists($this-&gt;_xmlparseri))
+-		{
+-			include($this-&gt;_xmlparseri);
+-
+-			$this-&gt;_parseri = new xmlparseri();
+-		}
+-		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Cannot find file \&quot;&quot; . $this-&gt;_xmlparseri . &quot;\&quot;&lt;/p&gt;&quot;;
+-	}
+-
+-	public function tulosta_alkukoodi($tyylit = true)
+-	{
+-		// tekee sivulle alkukoodit
+-	
+-		print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
+-
+-		print &quot;&lt;html&gt;\n&quot;;	
+-		print &quot;&lt;head&gt;\n&quot;;	
+-		print &quot;&lt;title&gt;OS info&lt;/title&gt;\n\n&quot;;
+-
+-		if($tyylit) $this-&gt;tulosta_tyyli();
+-
+-		print &quot;\n\n&lt;/head&gt;\n\n&quot;;
+-		print &quot;&lt;body&gt;\n\n&quot;;
+-	}
+-
+-	public function tulosta_loppukoodi()
+-	{
+-		// tekee sivulle loppukoodit
+-
+-		print &quot;&lt;/body&gt;\n&quot;;
+-		print &quot;&lt;/html&gt;&quot;;
+-	}
+-	
+-	private function tulosta_tyyli()
+-	{
+-		// m&#228;&#228;ritet&#228;&#228;n ylim&#228;&#228;r&#228;iset tyyliasetukset divien v&#228;rille
+-
+-		$varisyote = &quot;r=&quot; . $this-&gt;_r . &quot;&amp;g=&quot; . $this-&gt;_g . &quot;&amp;b=&quot; . $this-&gt;_b;
+-
+-		print &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;xmltyyli.css\&quot; /&gt;&quot;;
+-		print &quot;&lt;style type=\&quot;text/css\&quot;&gt;
+-
+-		
+-		div.SivuFrameSisalto, div.PaaFrame
+-		{
+-			background-color: rgb(&quot; . $this-&gt;_r . &quot;, &quot; . $this-&gt;_g . &quot;, &quot; . $this-&gt;_b . &quot;);
+-		}
+-
+-		div.SivuFrameFade
+-		{
+-			background-image: url('fade.php?w=1&amp;h=&quot;. $this-&gt;_fade_korkeus . &quot;&amp;&quot; . $varisyote . &quot;');
+-			background-repeat: repeat-x;
+-			background-position: top;
+-			height: &quot;. $this-&gt;_fade_korkeus . &quot;px;
+-		}
+-
+-		&lt;/style&gt;&quot;;
+-	}
+-
+-	// Listaa xml-tiedostokansion sis&#228;ll&#246;n sivu- ja p&#228;&#228;framelle.
+-	// Ottaa input-parametrina tiedon, onko kyse valikosta vai index viewist&#228;
+-	// $valikko = true --&gt; valikko
+-	// $valikko = false --&gt; index view
+-	
+-	private function listaa_tiedostot($valikko = false)
+-	{
+-		if(file_exists($this-&gt;_xmlkansio))
+-		{
+-			$kansio = opendir($this-&gt;_xmlkansio);
+-
+-			$xml_array = array();
+-
+-			for($i=0; $tiedosto = readdir($kansio); $i++)
+-			{
+-				// selvitt&#228;&#228; tiedostop&#228;&#228;tteen
+-
+-				$p_array = explode(&quot;.&quot;, $tiedosto);
+-				$paate = $p_array[sizeof($p_array)-1];
+-
+-				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
+-				{
+-					// parsii k&#228;sitelt&#228;v&#228;n xml-tiedoston
+-
+-					$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
+-
+-					// hakee parserista halutut tiedot taulukkoon
+-
+-					// hakualgoritmi etsii tiedon sen yl&#228;otsikon kautta, joten funktiolle
+-					// pit&#228;&#228; antaa kaksi parametria, sen l&#228;hin yl&#228;otsikko ja haettava tieto
+-
+-					if($valikko)
+-					{
+-						// n&#228;m&#228; arvot haetaan valikkoon
+-
+-						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
+-						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
+-						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
+-						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
+-						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
+-						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;));
+-					}
+-					else
+-					{
+-						// n&#228;m&#228; arvot haetaan index viewiin
+-
+-						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
+-						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
+-						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
+-						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
+-						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
+-						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;),
+-						&quot;script_version&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;),
+-						&quot;ram&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;ram&quot;, &quot;Physical RAM&quot;),
+-						&quot;drive&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;drive&quot;, &quot;SATA/SCSI drive&quot;),
+-						&quot;device&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;Device&quot;),
+-						&quot;ip&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;IPv4&quot;)
+-						);
+-					}
+-
+-					// lis&#228;&#228; tiedoston tiedot p&#228;&#228;taulukkoon ja jatkaa tiedostojen l&#228;pik&#228;ymist&#228;
+-					array_push($xml_array, $temp_array);
+-				}
+-			}
+-
+-			// lajittelee koneet domaineittain
+-
+-			$domainit = $this-&gt;lajittele_array($xml_array, &quot;domain&quot;);
+-			$profilet = array();
+-
+-			// lajittelee koneet (alustavasti) profiileittain
+-
+-			foreach($domainit as $domain =&gt; $arvo)
+-			{
+-				$temp_array = array($domain =&gt; $this-&gt;lajittele_array($arvo, &quot;profile&quot;));
+-				$this-&gt;array_lisaa_samaan($profilet, $temp_array);
+-			}
+-
+-			ksort($profilet);
+-
+-			if($valikko)
+-			{
+-				foreach($profilet as $domain =&gt; $profiles)
+-				{
+-					// lajittelee koneet profiileittain
+-					ksort($profiles);
+-
+-					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
+-
+-					print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
+-
+-					foreach($profiles as $profile =&gt; $hostnames)
+-					{
+-						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
+-
+-						print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Profile: &lt;i&gt;&quot; . $profile . 
+-							&quot;&lt;/i&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
+-
+-						// n&#228;ytt&#228;&#228; halutut yksityiskohtaiset konetiedot valikossa
+-
+-						foreach($hostnames as $hostname =&gt; $arvot)
+-						{
+-							print &quot;&lt;li&gt;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
+-								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;
+-								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;os&quot;] . &quot;&lt;/li&gt;
+-								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;cpu&quot;] . &quot;&lt;/li&gt;
+-								&lt;/ul&gt;&lt;/li&gt;&quot;;
+-
+-						}
+-
+-						// sulkee profiilien tagit
+-						print &quot;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&quot;;
+-					}
+-
+-					// sulkee domainien tagit
+-					print &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
+-				}
+-			}
+-			else
+-			{
+-				foreach($profilet as $domain =&gt; $profiles)
+-				{
+-					// lajittelee koneet profiileittain
+-					ksort($profiles);
+-
+-					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
+-					print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
+-
+-					foreach($profiles as $profile =&gt; $hostnames)
+-					{
+-						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
+-
+-						print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Profile: &lt;i&gt;&quot; . $profile . 
+-							&quot;&lt;/i&gt;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&quot;;
+-
+-						$laskuri = 0;
+-
+-						// n&#228;ytt&#228;&#228; kaikki yksityiskohtaiset konetiedot valikossa
+-
+-						foreach($hostnames as $hostname =&gt; $arvot)
+-						{
+-							if($laskuri == 0) 
+-								print &quot;&lt;tr&gt;&quot;;
+-							elseif($laskuri % $this-&gt;_clientteja_rivilla == 0)
+- 								print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
+-
+-							print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_clientteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
+-
+-							print &quot;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
+-								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
+-
+-							foreach($arvot as $tyyppi =&gt; $arvo)
+-							{
+-								if($tyyppi != &quot;hostname&quot; &amp;&amp; $tyyppi != &quot;domain&quot; &amp;&amp; $tyyppi != &quot;profile&quot; &amp;&amp; $tyyppi != &quot;tiedosto&quot; &amp;&amp; $arvo != &quot;&quot;)
+-								{
+-									print &quot;&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvo . &quot;&lt;/li&gt;&quot;;
+-								}
+-							}
+-
+-							print &quot;&lt;/ul&gt;&lt;/td&gt;&quot;;
+-
+-							$laskuri++;
+-						}
+-
+-						while($laskuri % $this-&gt;_clientteja_rivilla != 0)
+-						{
+-							print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
+-							$laskuri++;
+-						}
+-	
+-						print &quot;&lt;/table&gt;&lt;/h3&gt;&lt;/div&gt;&quot;;
+-					}
+-	
+-					print &quot;&lt;/h3&gt;&lt;/div&gt;&quot;;
+-				}
+-			}
+-		}
+-		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Directory \&quot;&quot; . $this-&gt;_xmlkansio . &quot;\&quot; does not exist&lt;/p&gt;&quot;;
+-	}
+-
+-	// lajittelee taulukon halutun arvon mukaan, joka annetaan input-parametriin $nimi
+-
+-	private function lajittele_array($array, $nimi)
+-	{
+-		$nimet = array(&quot; &quot;);
+-		$nimet_lajiteltuna = array();
+-
+-		foreach($array as $avain =&gt; $arvo)
+-		{
+-			if(is_array($arvo))
+-			{
+-				$loytyi = false;
+-
+-				for($i=0; $i &lt; sizeof($nimet); $i++)
+-					if($arvo[$nimi] == $nimet[$i]) $loytyi = true;
+-
+-				if(!$loytyi)
+-				{
+-					$temp_array = array($arvo[$nimi] =&gt; array());
+-					$this-&gt;array_lisaa_samaan($nimet_lajiteltuna, $temp_array);
+-					array_push($nimet, $arvo[$nimi]);
+-				}
+-				
+-				array_push($nimet_lajiteltuna[$arvo[$nimi]], $arvo);
+-			}
+-		}
+-
+-		return $nimet_lajiteltuna;
+-	}
+-
+-	// yleinen taulukon k&#228;sittelyfunktio, joka php:st&#228; itsest&#228;&#228;n puuttuu
+-
+-	private function array_lisaa_samaan(&amp;$array)
+-	{
+-		$argumentit = func_get_args();
+-	
+-		foreach($argumentit as $argumentti)
+-		{
+-			if(is_array($argumentti))
+-			{
+-				foreach($argumentti as $avain =&gt; $arvo)
+-				{
+-					$array[$avain] = $arvo;
+-					$paluuarvo++;
+-				}
+-			}
+-			else $array[$argumentti] = &quot;&quot;;
+-		}
+-	
+-		return $paluuarvo;
+-	}
+-
+-	// k&#228;y l&#228;pi tiedostokansion ja palauttaa viimeksi muokatun tiedoston p&#228;iv&#228;m&#228;&#228;r&#228;n unixin aika-arvona
+-
+-	private function hae_viimeksi_paivitetty()
+-	{
+-		if(file_exists($this-&gt;_xmlkansio))
+-		{
+-			$kansio = opendir($this-&gt;_xmlkansio);
+-	
+-			$suurin = 0;
+-		
+-			for($i=0; $tiedosto = readdir($kansio); $i++)
+-			{
+-				$p_array = explode(&quot;.&quot;, $tiedosto);
+-				$paate = $p_array[sizeof($p_array)-1];
+-		
+-				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
+-				{
+-					$aika = filemtime($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
+-	
+-					if($aika &gt; $suurin)
+-						$suurin = $aika;
+-				}
+-			}
+-			
+-			return $suurin;
+-		}
+-	}
+-
+-	// n&#228;ytt&#228;&#228; sivuframen sis&#228;ll&#246;n
+-	
+-	public function nayta_sivuframe()
+-	{
+-		print &quot;&lt;div class=\&quot;SivuFrame\&quot;&gt;&quot;;
+-		print &quot;&lt;div class=\&quot;SivuFrameSisalto\&quot;&gt;&quot;;
+-
+-		print &quot;&lt;h3&gt;OS info&lt;/h3&gt;
+-			&lt;p&gt;&lt;a href=\&quot;&quot; . $_SERVER[&quot;SCRIPT_NAME&quot;] . &quot;\&quot;&gt;index view&lt;/a&gt;&lt;/p&gt;
+-			&lt;hr /&gt;&quot;;
+-
+-		// listaa xml-tiedostokansion sis&#228;ll&#246;n sivuframelle
+-		$this-&gt;listaa_tiedostot(true);
+-	
+-		print &quot;&lt;hr /&gt;&quot;;
+-
+-		$this-&gt;paivitys();
+-
+-		print &quot;&lt;hr /&gt;&quot;;
+-
+-		print &quot;&lt;p&gt;Last update:&lt;/p&gt;&quot;;
+-
+-		// hakee viimeksi p&#228;ivitetyn tiedoston aika-arvon
+-		$viimeksi_paivitetty = $this-&gt;hae_viimeksi_paivitetty();
+-
+-		if($viimeksi_paivitetty &gt; 0)
+-			// n&#228;ytt&#228;&#228; viimeksi p&#228;ivitetyn tiedoston p&#228;iv&#228;yksen ja ajan
+-			print &quot;&lt;p&gt;&lt;i&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
+-	
+-		print &quot;&lt;/div&gt;&quot;;
+-
+-		print &quot;&lt;div class=\&quot;SivuFrameFade\&quot;&gt;&lt;/div&gt;&quot;;
+-
+-		print &quot;&lt;/div&gt;&quot;;
+-	}
+-	
+-	// n&#228;ytt&#228;&#228; p&#228;&#228;framen sis&#228;ll&#246;n
+-
+-	public function nayta_paaframe($sivu = &quot;&quot;)
+-	{
+-		print &quot;&lt;div class=\&quot;PaaFrame\&quot;&gt;&quot;;
+-		
+-		// jos osoiterivin target-arvo on m&#228;&#228;ritelty, kokeilee n&#228;ytt&#228;&#228; sivun sis&#228;ll&#246;n p&#228;&#228;frameen
+-
+-		if($sivu != &quot;&quot;)
+-		{
+-			// tarkistaa ensin, ett&#228; tiedosto on olemassa
+-			if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
+-			{
+-				// parsii xml-tiedoston l&#228;pi
+-				$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
+-
+-				// n&#228;ytt&#228;&#228; xml:st&#228; &quot;osinfo&quot; tagien sis&#228;ll&#228; olevan tiedon
+-				$this-&gt;_parseri-&gt;hae_arvot(&quot;osinfo&quot;);
+-			}
+-			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
+-		}
+-		else
+-			// jos osoiterivin target-arvoa ei ole m&#228;&#228;ritelty, n&#228;ytt&#228;&#228; index viewin
+-			$this-&gt;nayta_index_view();
+-
+-		print &quot;&lt;/div&gt;&quot;;
+-	}
+-
+-	private function nayta_index_view()
+-	{
+-		print &quot;&lt;h3&gt;index view&lt;/h3&gt;&quot;;
+-
+-		// listaa xml-kansion tiedostot p&#228;&#228;framelle
+-		$this-&gt;listaa_tiedostot(false);
+-	}
+-
+-	private function paivitys()
+-	{
+-		if($_POST['paivitettava_client'])
+-			print &quot;&lt;p&gt;-- update &quot; . $_POST['paivitettava_client'] . &quot; --&lt;/p&gt;&quot;;
+-
+-		print &quot;&lt;form name=\&quot;paivitysformi\&quot; action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
+-			&lt;p&gt;Client: 
+-				&lt;input type=\&quot;text\&quot; name=\&quot;paivitettava_client\&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
+-				&lt;input type=\&quot;submit\&quot; value=\&quot;Update\&quot; /&gt;
+-			&lt;/p&gt;
+-			&lt;/form&gt;&quot;;
+-	}
+-}
+-
+-?&gt; 
+\ No newline at end of file
+
+Added: trunk/osinfo/html/index.php
+===================================================================
+--- trunk/osinfo/html/index.php	2007-03-12 11:56:36 UTC (rev 702)
++++ trunk/osinfo/html/index.php	2007-03-12 11:58:42 UTC (rev 703)
+@@ -0,0 +1,448 @@
++&lt;?php
++
++// luodaan Index-olio. Input-parametrit:
++
++// $xmlkansio, kansio jossa kaikki xml-tiedostot sijaitsevat
++// $r, divien taustav&#228;rin punaisen arvo
++// $g, divien taustav&#228;rin vihre&#228;n arvo
++// $b, divien taustav&#228;rin sinisen arvo
++// $fade_korkeus, sivuframen alla olevan fade-kuvan korkeus
++// $clienteja_rivilla, index viewin clienttien lukum&#228;&#228;r&#228; rivill&#228;
++
++$index = new Index(&quot;hosts&quot;, 222, 197, 148, 150, 3);
++
++$index-&gt;tulosta_alkukoodi(true);
++$index-&gt;nayta_sivuframe();
++$index-&gt;nayta_paaframe($_GET['target']);
++$index-&gt;tulosta_loppukoodi();
++
++class Index
++{
++	private $_xmlkansio;
++	private $_xmlparseri = &quot;xml-parseri.php&quot;;
++	private $_parseri;
++	private $_clientteja_rivilla;
++	private $_r;
++	private $_g;
++	private $_b;
++	private $_fade_korkeus;
++
++	public function __construct($xmlkansio, $r, $g, $b, $fade_korkeus, $clientteja_rivilla)
++	{
++		// sijoitetaan input-parametrit luokan j&#228;senmuuttujiin
++
++		$this-&gt;_xmlkansio = $xmlkansio;
++		$this-&gt;_r = $r;
++		$this-&gt;_g = $g;
++		$this-&gt;_b = $b;
++		$this-&gt;_fade_korkeus = $fade_korkeus;
++		$this-&gt;_clientteja_rivilla = $clientteja_rivilla;
++
++		// tarkistetaan, xmlparseri on olemassa ja luodaan siit&#228; olio
++
++		if(file_exists($this-&gt;_xmlparseri))
++		{
++			include($this-&gt;_xmlparseri);
++
++			$this-&gt;_parseri = new xmlparseri();
++		}
++		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Cannot find file \&quot;&quot; . $this-&gt;_xmlparseri . &quot;\&quot;&lt;/p&gt;&quot;;
++	}
++
++	public function tulosta_alkukoodi($tyylit = true)
++	{
++		// tekee sivulle alkukoodit
++	
++		print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
++
++		print &quot;&lt;html&gt;\n&quot;;	
++		print &quot;&lt;head&gt;\n&quot;;	
++		print &quot;&lt;title&gt;OS info&lt;/title&gt;\n\n&quot;;
++
++		if($tyylit) $this-&gt;tulosta_tyyli();
++
++		print &quot;\n\n&lt;/head&gt;\n\n&quot;;
++		print &quot;&lt;body&gt;\n\n&quot;;
++	}
++
++	public function tulosta_loppukoodi()
++	{
++		// tekee sivulle loppukoodit
++
++		print &quot;&lt;/body&gt;\n&quot;;
++		print &quot;&lt;/html&gt;&quot;;
++	}
++	
++	private function tulosta_tyyli()
++	{
++		// m&#228;&#228;ritet&#228;&#228;n ylim&#228;&#228;r&#228;iset tyyliasetukset divien v&#228;rille
++
++		$varisyote = &quot;r=&quot; . $this-&gt;_r . &quot;&amp;g=&quot; . $this-&gt;_g . &quot;&amp;b=&quot; . $this-&gt;_b;
++
++		print &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;xmltyyli.css\&quot; /&gt;&quot;;
++		print &quot;&lt;style type=\&quot;text/css\&quot;&gt;
++
++		
++		div.SivuFrameSisalto, div.PaaFrame
++		{
++			background-color: rgb(&quot; . $this-&gt;_r . &quot;, &quot; . $this-&gt;_g . &quot;, &quot; . $this-&gt;_b . &quot;);
++		}
++
++		div.SivuFrameFade
++		{
++			background-image: url('fade.php?w=1&amp;h=&quot;. $this-&gt;_fade_korkeus . &quot;&amp;&quot; . $varisyote . &quot;');
++			background-repeat: repeat-x;
++			background-position: top;
++			height: &quot;. $this-&gt;_fade_korkeus . &quot;px;
++		}
++
++		&lt;/style&gt;&quot;;
++	}
++
++	// Listaa xml-tiedostokansion sis&#228;ll&#246;n sivu- ja p&#228;&#228;framelle.
++	// Ottaa input-parametrina tiedon, onko kyse valikosta vai index viewist&#228;
++	// $valikko = true --&gt; valikko
++	// $valikko = false --&gt; index view
++	
++	private function listaa_tiedostot($valikko = false)
++	{
++		if(file_exists($this-&gt;_xmlkansio))
++		{
++			$kansio = opendir($this-&gt;_xmlkansio);
++
++			$xml_array = array();
++
++			for($i=0; $tiedosto = readdir($kansio); $i++)
++			{
++				// selvitt&#228;&#228; tiedostop&#228;&#228;tteen
++
++				$p_array = explode(&quot;.&quot;, $tiedosto);
++				$paate = $p_array[sizeof($p_array)-1];
++
++				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
++				{
++					// parsii k&#228;sitelt&#228;v&#228;n xml-tiedoston
++
++					$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
++
++					// hakee parserista halutut tiedot taulukkoon
++
++					// hakualgoritmi etsii tiedon sen yl&#228;otsikon kautta, joten funktiolle
++					// pit&#228;&#228; antaa kaksi parametria, sen l&#228;hin yl&#228;otsikko ja haettava tieto
++
++					if($valikko)
++					{
++						// n&#228;m&#228; arvot haetaan valikkoon
++
++						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
++						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
++						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
++						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
++						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
++						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;));
++					}
++					else
++					{
++						// n&#228;m&#228; arvot haetaan index viewiin
++
++						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
++						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
++						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
++						&quot;profile&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;profile&quot;),
++						&quot;os&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;os&quot;),
++						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;),
++						&quot;script_version&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;),
++						&quot;ram&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;ram&quot;, &quot;Physical RAM&quot;),
++						&quot;drive&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;drive&quot;, &quot;SATA/SCSI drive&quot;),
++						&quot;device&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;Device&quot;),
++						&quot;ip&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;IPv4&quot;)
++						);
++					}
++
++					// lis&#228;&#228; tiedoston tiedot p&#228;&#228;taulukkoon ja jatkaa tiedostojen l&#228;pik&#228;ymist&#228;
++					array_push($xml_array, $temp_array);
++				}
++			}
++
++			// lajittelee koneet domaineittain
++
++			$domainit = $this-&gt;lajittele_array($xml_array, &quot;domain&quot;);
++			$profilet = array();
++
++			// lajittelee koneet (alustavasti) profiileittain
++
++			foreach($domainit as $domain =&gt; $arvo)
++			{
++				$temp_array = array($domain =&gt; $this-&gt;lajittele_array($arvo, &quot;profile&quot;));
++				$this-&gt;array_lisaa_samaan($profilet, $temp_array);
++			}
++
++			ksort($profilet);
++
++			if($valikko)
++			{
++				foreach($profilet as $domain =&gt; $profiles)
++				{
++					// lajittelee koneet profiileittain
++					ksort($profiles);
++
++					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
++
++					print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
++
++					foreach($profiles as $profile =&gt; $hostnames)
++					{
++						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
++
++						print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Profile: &lt;i&gt;&quot; . $profile . 
++							&quot;&lt;/i&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
++
++						// n&#228;ytt&#228;&#228; halutut yksityiskohtaiset konetiedot valikossa
++
++						foreach($hostnames as $hostname =&gt; $arvot)
++						{
++							print &quot;&lt;li&gt;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
++								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;
++								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;os&quot;] . &quot;&lt;/li&gt;
++								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;cpu&quot;] . &quot;&lt;/li&gt;
++								&lt;/ul&gt;&lt;/li&gt;&quot;;
++
++						}
++
++						// sulkee profiilien tagit
++						print &quot;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&quot;;
++					}
++
++					// sulkee domainien tagit
++					print &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
++				}
++			}
++			else
++			{
++				foreach($profilet as $domain =&gt; $profiles)
++				{
++					// lajittelee koneet profiileittain
++					ksort($profiles);
++
++					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
++					print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
++
++					foreach($profiles as $profile =&gt; $hostnames)
++					{
++						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
++
++						print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Profile: &lt;i&gt;&quot; . $profile . 
++							&quot;&lt;/i&gt;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&quot;;
++
++						$laskuri = 0;
++
++						// n&#228;ytt&#228;&#228; kaikki yksityiskohtaiset konetiedot valikossa
++
++						foreach($hostnames as $hostname =&gt; $arvot)
++						{
++							if($laskuri == 0) 
++								print &quot;&lt;tr&gt;&quot;;
++							elseif($laskuri % $this-&gt;_clientteja_rivilla == 0)
++ 								print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
++
++							print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_clientteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
++
++							print &quot;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
++								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
++
++							foreach($arvot as $tyyppi =&gt; $arvo)
++							{
++								if($tyyppi != &quot;hostname&quot; &amp;&amp; $tyyppi != &quot;domain&quot; &amp;&amp; $tyyppi != &quot;profile&quot; &amp;&amp; $tyyppi != &quot;tiedosto&quot; &amp;&amp; $arvo != &quot;&quot;)
++								{
++									print &quot;&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvo . &quot;&lt;/li&gt;&quot;;
++								}
++							}
++
++							print &quot;&lt;/ul&gt;&lt;/td&gt;&quot;;
++
++							$laskuri++;
++						}
++
++						while($laskuri % $this-&gt;_clientteja_rivilla != 0)
++						{
++							print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
++							$laskuri++;
++						}
++	
++						print &quot;&lt;/table&gt;&lt;/h3&gt;&lt;/div&gt;&quot;;
++					}
++	
++					print &quot;&lt;/h3&gt;&lt;/div&gt;&quot;;
++				}
++			}
++		}
++		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Directory \&quot;&quot; . $this-&gt;_xmlkansio . &quot;\&quot; does not exist&lt;/p&gt;&quot;;
++	}
++
++	// lajittelee taulukon halutun arvon mukaan, joka annetaan input-parametriin $nimi
++
++	private function lajittele_array($array, $nimi)
++	{
++		$nimet = array(&quot; &quot;);
++		$nimet_lajiteltuna = array();
++
++		foreach($array as $avain =&gt; $arvo)
++		{
++			if(is_array($arvo))
++			{
++				$loytyi = false;
++
++				for($i=0; $i &lt; sizeof($nimet); $i++)
++					if($arvo[$nimi] == $nimet[$i]) $loytyi = true;
++
++				if(!$loytyi)
++				{
++					$temp_array = array($arvo[$nimi] =&gt; array());
++					$this-&gt;array_lisaa_samaan($nimet_lajiteltuna, $temp_array);
++					array_push($nimet, $arvo[$nimi]);
++				}
++				
++				array_push($nimet_lajiteltuna[$arvo[$nimi]], $arvo);
++			}
++		}
++
++		return $nimet_lajiteltuna;
++	}
++
++	// yleinen taulukon k&#228;sittelyfunktio, joka php:st&#228; itsest&#228;&#228;n puuttuu
++
++	private function array_lisaa_samaan(&amp;$array)
++	{
++		$argumentit = func_get_args();
++	
++		foreach($argumentit as $argumentti)
++		{
++			if(is_array($argumentti))
++			{
++				foreach($argumentti as $avain =&gt; $arvo)
++				{
++					$array[$avain] = $arvo;
++					$paluuarvo++;
++				}
++			}
++			else $array[$argumentti] = &quot;&quot;;
++		}
++	
++		return $paluuarvo;
++	}
++
++	// k&#228;y l&#228;pi tiedostokansion ja palauttaa viimeksi muokatun tiedoston p&#228;iv&#228;m&#228;&#228;r&#228;n unixin aika-arvona
++
++	private function hae_viimeksi_paivitetty()
++	{
++		if(file_exists($this-&gt;_xmlkansio))
++		{
++			$kansio = opendir($this-&gt;_xmlkansio);
++	
++			$suurin = 0;
++		
++			for($i=0; $tiedosto = readdir($kansio); $i++)
++			{
++				$p_array = explode(&quot;.&quot;, $tiedosto);
++				$paate = $p_array[sizeof($p_array)-1];
++		
++				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
++				{
++					$aika = filemtime($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
++	
++					if($aika &gt; $suurin)
++						$suurin = $aika;
++				}
++			}
++			
++			return $suurin;
++		}
++	}
++
++	// n&#228;ytt&#228;&#228; sivuframen sis&#228;ll&#246;n
++	
++	public function nayta_sivuframe()
++	{
++		print &quot;&lt;div class=\&quot;SivuFrame\&quot;&gt;&quot;;
++		print &quot;&lt;div class=\&quot;SivuFrameSisalto\&quot;&gt;&quot;;
++
++		print &quot;&lt;h3&gt;OS info&lt;/h3&gt;
++			&lt;p&gt;&lt;a href=\&quot;&quot; . $_SERVER[&quot;SCRIPT_NAME&quot;] . &quot;\&quot;&gt;index view&lt;/a&gt;&lt;/p&gt;
++			&lt;hr /&gt;&quot;;
++
++		// listaa xml-tiedostokansion sis&#228;ll&#246;n sivuframelle
++		$this-&gt;listaa_tiedostot(true);
++	
++		print &quot;&lt;hr /&gt;&quot;;
++
++		$this-&gt;paivitys();
++
++		print &quot;&lt;hr /&gt;&quot;;
++
++		print &quot;&lt;p&gt;Last update:&lt;/p&gt;&quot;;
++
++		// hakee viimeksi p&#228;ivitetyn tiedoston aika-arvon
++		$viimeksi_paivitetty = $this-&gt;hae_viimeksi_paivitetty();
++
++		if($viimeksi_paivitetty &gt; 0)
++			// n&#228;ytt&#228;&#228; viimeksi p&#228;ivitetyn tiedoston p&#228;iv&#228;yksen ja ajan
++			print &quot;&lt;p&gt;&lt;i&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
++	
++		print &quot;&lt;/div&gt;&quot;;
++
++		print &quot;&lt;div class=\&quot;SivuFrameFade\&quot;&gt;&lt;/div&gt;&quot;;
++
++		print &quot;&lt;/div&gt;&quot;;
++	}
++	
++	// n&#228;ytt&#228;&#228; p&#228;&#228;framen sis&#228;ll&#246;n
++
++	public function nayta_paaframe($sivu = &quot;&quot;)
++	{
++		print &quot;&lt;div class=\&quot;PaaFrame\&quot;&gt;&quot;;
++		
++		// jos osoiterivin target-arvo on m&#228;&#228;ritelty, kokeilee n&#228;ytt&#228;&#228; sivun sis&#228;ll&#246;n p&#228;&#228;frameen
++
++		if($sivu != &quot;&quot;)
++		{
++			// tarkistaa ensin, ett&#228; tiedosto on olemassa
++			if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
++			{
++				// parsii xml-tiedoston l&#228;pi
++				$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
++
++				// n&#228;ytt&#228;&#228; xml:st&#228; &quot;osinfo&quot; tagien sis&#228;ll&#228; olevan tiedon
++				$this-&gt;_parseri-&gt;hae_arvot(&quot;osinfo&quot;);
++			}
++			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
++		}
++		else
++			// jos osoiterivin target-arvoa ei ole m&#228;&#228;ritelty, n&#228;ytt&#228;&#228; index viewin
++			$this-&gt;nayta_index_view();
++
++		print &quot;&lt;/div&gt;&quot;;
++	}
++
++	private function nayta_index_view()
++	{
++		print &quot;&lt;h3&gt;index view&lt;/h3&gt;&quot;;
++
++		// listaa xml-kansion tiedostot p&#228;&#228;framelle
++		$this-&gt;listaa_tiedostot(false);
++	}
++
++	private function paivitys()
++	{
++		if($_POST['paivitettava_client'])
++			print &quot;&lt;p&gt;-- update &quot; . $_POST['paivitettava_client'] . &quot; --&lt;/p&gt;&quot;;
++
++		print &quot;&lt;form name=\&quot;paivitysformi\&quot; action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
++			&lt;p&gt;Client: 
++				&lt;input type=\&quot;text\&quot; name=\&quot;paivitettava_client\&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
++				&lt;input type=\&quot;submit\&quot; value=\&quot;Update\&quot; /&gt;
++			&lt;/p&gt;
++			&lt;/form&gt;&quot;;
++	}
++}
++
++?&gt; 
+\ No newline at end of file
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000090.html">[Osinfo-commit] r702 - trunk/osinfo/html
+</A></li>
+	<LI>Next message: <A HREF="000092.html">[Osinfo-commit] r704 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#91">[ date ]</a>
+              <a href="thread.html#91">[ thread ]</a>
+              <a href="subject.html#91">[ subject ]</a>
+              <a href="author.html#91">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

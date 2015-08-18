@@ -1,0 +1,881 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r666 - in trunk/osinfo: . debug docs ebuild html	html/dtd scripts
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r666%20-%20in%20trunk/osinfo%3A%20.%20debug%20docs%20ebuild%20html%0A%09html/dtd%20scripts&In-Reply-To=%3C200612220701.kBM71log019175%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000053.html">
+   <LINK REL="Next"  HREF="000055.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r666 - in trunk/osinfo: . debug docs ebuild html	html/dtd scripts</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r666%20-%20in%20trunk/osinfo%3A%20.%20debug%20docs%20ebuild%20html%0A%09html/dtd%20scripts&In-Reply-To=%3C200612220701.kBM71log019175%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r666 - in trunk/osinfo: . debug docs ebuild html	html/dtd scripts">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Fri Dec 22 08:01:47 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000053.html">[Osinfo-commit] r665 - in trunk/osinfo: . ebuild html lib scripts
+</A></li>
+        <LI>Next message: <A HREF="000055.html">[Osinfo-commit] r667 - in trunk/osinfo: . html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#54">[ date ]</a>
+              <a href="thread.html#54">[ thread ]</a>
+              <a href="subject.html#54">[ subject ]</a>
+              <a href="author.html#54">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-22 08:01:46 +0100 (Fri, 22 Dec 2006)
+New Revision: 666
+
+Added:
+   trunk/osinfo/debug/LF_inventory.pdf
+   trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+   trunk/osinfo/html/dtd/lanforce.dtd
+   trunk/osinfo/html/dtd/osinfo.dtd
+Removed:
+   trunk/osinfo/docs/LF_inventory.pdf
+   trunk/osinfo/ebuild/files/
+   trunk/osinfo/html/xslt
+   trunk/osinfo/lanforce.dtd
+   trunk/osinfo/osinfo.dtd
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/debug/planck.xml
+   trunk/osinfo/scripts/upload_tarbz2.sh
+Log:
+removed symlink, updated ebuild
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/Makefile	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,8 +1,8 @@
+ # osinfo Makefile
+ #
+ mainapp=osinfo
+-subdirs=docs html html/xslt html/hosts
+-src_subdir=conf man init.d lib modules modules/experimental xslt profiles ebuild ebuild/files
++subdirs=docs html 
++src_subdir=conf man init.d lib modules xslt profiles ebuild 
+ 
+ # helpers go only to the src/ directory
+ helpers=sources
+@@ -41,7 +41,6 @@
+ 	done
+ 	cp $(helpers) dist/$(appname)/src
+ 	cp $(mainapp) dist/$(appname)/src
+-	cp $(our_dtd) dist/$(appname)/src
+ 
+ 	######################
+ 	# make all-in-one package
+@@ -58,7 +57,7 @@
+ 	######################
+ 	# copy manual
+ 	######################
+-	cp man/osinfo.1 dist/osinfo
++	cp -r man dist/$(appname)
+ 
+ 	# done!
+ 
+
+Copied: trunk/osinfo/debug/LF_inventory.pdf (from rev 663, trunk/osinfo/docs/LF_inventory.pdf)
+
+Modified: trunk/osinfo/debug/planck.xml
+===================================================================
+--- trunk/osinfo/debug/planck.xml	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/debug/planck.xml	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,11 +1,13 @@
+ &lt;?xml version=&quot;1.0&quot; ?&gt;
+ &lt;!DOCTYPE osinfo SYSTEM &quot;osinfo.dtd&quot;&gt;
+ &lt;osinfo&gt;
+-	&lt;osinfo version=&quot;0.2.9-8 alpha&quot; /&gt;
+-	&lt;client hostname=&quot;planck&quot; /&gt;
+-	&lt;ip v4=&quot;192.168.0.100&quot; /&gt;
+-	&lt;computer profile=&quot;desktop&quot; /&gt;
+-	&lt;scanning date=&quot;2006-09-28 12:20:40&quot; /&gt;
++	&lt;script version=&quot;0.2.11-1 beta&quot; /&gt;
++	&lt;computer profile=&quot;undefined&quot; /&gt;
++	&lt;computer hostname=&quot;planck&quot; /&gt;
++	&lt;computer domain=&quot;&quot; /&gt;
++	&lt;computer OS=&quot;Gentoo Linux 2006.1&quot; /&gt;
++	&lt;computer CPU=&quot;Intel(R) Pentium(R) 4 CPU 2.80GHz&quot; /&gt;
++	&lt;scanning date=&quot;2006-11-20 20:55:47&quot; /&gt;
+ 	&lt;system&gt;
+ 		&lt;attribute name=&quot;hostname&quot; code=&quot;hostname&quot;&gt;
+ 			&lt;description&gt;Hostname&lt;/description&gt;
+@@ -17,26 +19,11 @@
+ 			&lt;value&gt;Gentoo Linux 2006.1&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;operating_system_kernel&quot; code=&quot;os_build&quot;&gt;
+-			&lt;description&gt;Operating system kernel&lt;/description&gt;
+-			&lt;value&gt;Linux 2.6.17-gentoo-r8&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+ 		&lt;attribute name=&quot;system_uptime&quot; code=&quot;uptime&quot;&gt;
+ 			&lt;description&gt;System uptime&lt;/description&gt;
+-			&lt;value&gt;9 min&lt;/value&gt;
++			&lt;value&gt;12 min&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;cpu_temperature&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;CPU temperature&lt;/description&gt;
+-			&lt;value&gt;26.0&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+-		&lt;attribute name=&quot;m_b_temperature&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;M/B temperature&lt;/description&gt;
+-			&lt;value&gt;26 C  &lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+ 	&lt;/system&gt;
+ 	&lt;distribution&gt;
+ 		&lt;attribute name=&quot;root_dir&quot; code=&quot;&quot;&gt;
+@@ -49,6 +36,11 @@
+ 			&lt;value&gt;Gentoo&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
++		&lt;attribute name=&quot;release&quot; code=&quot;&quot;&gt;
++			&lt;description&gt;Release&lt;/description&gt;
++			&lt;value&gt;2006.1&lt;/value&gt;
++		&lt;/attribute&gt;
++
+ 	&lt;/distribution&gt;
+ 	&lt;kernel&gt;
+ 		&lt;attribute name=&quot;kernel_name&quot; code=&quot;&quot;&gt;
+@@ -63,7 +55,7 @@
+ 
+ 		&lt;attribute name=&quot;kernel_version&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Kernel version&lt;/description&gt;
+-			&lt;value&gt;#1 PREEMPT Tue Sep 26 18:24:31 EEST 2006&lt;/value&gt;
++			&lt;value&gt;#2 PREEMPT Sun Oct 22 20:34:48 EEST 2006&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;kernel_name&quot; code=&quot;&quot;&gt;
+@@ -73,68 +65,56 @@
+ 
+ 	&lt;/kernel&gt;
+ 	&lt;processor&gt;
+-		&lt;attribute name=&quot;vendor&quot; code=&quot;processor_vendor&quot;&gt;
+-			&lt;description&gt;Vendor&lt;/description&gt;
++		&lt;attribute name=&quot;cpu_vendor&quot; code=&quot;processor_vendor&quot;&gt;
++			&lt;description&gt;CPU Vendor&lt;/description&gt;
+ 			&lt;value&gt;GenuineIntel&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;model&quot; code=&quot;processor_model&quot;&gt;
+-			&lt;description&gt;Model&lt;/description&gt;
++		&lt;attribute name=&quot;cpu_model&quot; code=&quot;processor_model&quot;&gt;
++			&lt;description&gt;CPU Model&lt;/description&gt;
+ 			&lt;value&gt;Intel(R) Pentium(R) 4 CPU 2.80GHz&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;frequency&quot; code=&quot;processor_speed&quot;&gt;
+-			&lt;description&gt;Frequency&lt;/description&gt;
++		&lt;attribute name=&quot;cpu_frequency&quot; code=&quot;processor_speed&quot;&gt;
++			&lt;description&gt;CPU Frequency&lt;/description&gt;
+ 			&lt;value&gt;2800.000 MHz&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;architecture&quot; code=&quot;system_type&quot;&gt;
+-			&lt;description&gt;Architecture&lt;/description&gt;
+-			&lt;value&gt;i686&lt;/value&gt;
++		&lt;attribute name=&quot;virtualization&quot; code=&quot;vmx&quot;&gt;
++			&lt;description&gt;Virtualization&lt;/description&gt;
++			&lt;value&gt;no&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;cpu_temperature&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;CPU temperature&lt;/description&gt;
+-			&lt;value&gt;26.0&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+-		&lt;attribute name=&quot;fan&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;Fan&lt;/description&gt;
+-			&lt;value&gt;964 RPM&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+-		&lt;attribute name=&quot;voltage&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;Voltage&lt;/description&gt;
+-			&lt;value&gt;+1.46 V&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+-		&lt;attribute name=&quot;cache&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;Cache&lt;/description&gt;
+-			&lt;value&gt;512 KB&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+-		&lt;attribute name=&quot;stepping&quot; code=&quot;&quot;&gt;
+-			&lt;description&gt;Stepping&lt;/description&gt;
+-			&lt;value&gt;9&lt;/value&gt;
+-		&lt;/attribute&gt;
+-
+ 	&lt;/processor&gt;
+ 	&lt;disk_information&gt;
+-		&lt;attribute name=&quot;ide_drive&quot; code=&quot;hard_disk&quot;&gt;
+-			&lt;description&gt;IDE drive&lt;/description&gt;
+-			&lt;value&gt;IDE drive Hitachi Deskstar 7K250 series HDS722512VLAT20 (VN341EC4G2U1RK) 123.5 GB&lt;/value&gt;
+-		&lt;/attribute&gt;
++		&lt;drive&gt;
++			&lt;attribute name=&quot;ide_drive&quot; code=&quot;hard_disk&quot;&gt;
++				&lt;description&gt;IDE drive&lt;/description&gt;
++				&lt;value&gt;IDE drive Hitachi Deskstar 7K250 series HDS722512VLAT20 (VN341EC4G2U1RK) 123.5 GB&lt;/value&gt;
++			&lt;/attribute&gt;
+ 
+-		&lt;attribute name=&quot;partitions&quot; code=&quot;drive&quot;&gt;
+-			&lt;description&gt;partitions&lt;/description&gt;
+-			&lt;value&gt;/dev/hda1 swap /746991 Linux swap / Solaris &lt;/value&gt;
+-			&lt;value&gt;/dev/hda2 - /1 W95 Ext'd (LBA) &lt;/value&gt;
+-			&lt;value&gt;/dev/hda3 /usr/portage 254620/498015 Linux &lt;/value&gt;
+-			&lt;value&gt;/dev/hda4 / 92680/13888192 Linux &lt;/value&gt;
+-			&lt;value&gt;/dev/hda5 /mnt/hda5 15982812/18643401 Linux &lt;/value&gt;
+-			&lt;value&gt;/dev/hda6 - /64324228 HPFS/NTFS &lt;/value&gt;
+-		&lt;/attribute&gt;
++			&lt;partitions&gt;
++				&lt;value&gt;/dev/hda1 swap n/a/746991 Linux swap / Solaris&lt;/value&gt;
++				&lt;value&gt;/dev/hda2 - n/a/1 W95 Ext'd (LBA)&lt;/value&gt;
++				&lt;value&gt;/dev/hda3 /usr/portage 219868/498015 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hda4 / 4337256/13888192 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hda5 /home 2044328/18643401 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hda6 /mnt/kirjasto 17902552/22523098 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hda7 - n/a/64324228 HPFS/NTFS&lt;/value&gt;
++			&lt;/partitions&gt;
++		&lt;/drive&gt;
++		&lt;drive&gt;
++			&lt;attribute name=&quot;ide_drive&quot; code=&quot;hard_disk&quot;&gt;
++				&lt;description&gt;IDE drive&lt;/description&gt;
++				&lt;value&gt;IDE drive Maxtor DiamondMax 10 family Maxtor_6L300R0 (L62F481G) 300.0 GB&lt;/value&gt;
++			&lt;/attribute&gt;
+ 
++			&lt;partitions&gt;
++				&lt;value&gt;/dev/hdb1 /mnt/arkisto 29460348/43945776 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hdb2 /mnt/musiikki 62683792/89843512 Linux&lt;/value&gt;
++				&lt;value&gt;/dev/hdb3 /mnt/valokuva-arkisto 104253940/159260377 Linux&lt;/value&gt;
++			&lt;/partitions&gt;
++		&lt;/drive&gt;
+ 	&lt;/disk_information&gt;
+ 	&lt;applications&gt;
+ 		&lt;attribute name=&quot;applications&quot; code=&quot;software&quot;&gt;
+@@ -152,26 +132,16 @@
+ 			&lt;iface name=&quot;dummy0&quot; &gt;
+ 				&lt;attribute name=&quot;mac&quot; code=&quot;mac_address&quot;&gt;
+ 					&lt;description&gt;MAC&lt;/description&gt;
+-					&lt;value&gt;F6:DB:38:04:C6:91&lt;/value&gt;
++					&lt;value&gt;E2:BF:BE:F1:E4:66&lt;/value&gt;
+ 				&lt;/attribute&gt;
+ 
+-				&lt;attribute name=&quot;ip_type&quot; code=&quot;ip_type&quot;&gt;
+-					&lt;description&gt;IP type&lt;/description&gt;
+-					&lt;value&gt;undetermined&lt;/value&gt;
++			&lt;/iface&gt;
++			&lt;iface name=&quot;eth0&quot; &gt;
++				&lt;attribute name=&quot;device&quot; code=&quot;&quot;&gt;
++					&lt;description&gt;Device&lt;/description&gt;
++					&lt;value&gt;8139 (rev 10)&lt;/value&gt;
+ 				&lt;/attribute&gt;
+ 
+-				&lt;attribute name=&quot;rx_bytes&quot; code=&quot;&quot;&gt;
+-					&lt;description&gt;RX bytes&lt;/description&gt;
+-					&lt;value&gt;0 (0.0 b)&lt;/value&gt;
+-				&lt;/attribute&gt;
+-
+-				&lt;attribute name=&quot;tx_bytes&quot; code=&quot;&quot;&gt;
+-					&lt;description&gt;TX bytes&lt;/description&gt;
+-					&lt;value&gt;0 (0.0 b)&lt;/value&gt;
+-				&lt;/attribute&gt;
+-
+-			&lt;/iface&gt;
+-			&lt;iface name=&quot;eth0&quot; &gt;
+ 				&lt;attribute name=&quot;mac&quot; code=&quot;mac_address&quot;&gt;
+ 					&lt;description&gt;MAC&lt;/description&gt;
+ 					&lt;value&gt;00:48:54:82:BE:30&lt;/value&gt;
+@@ -202,16 +172,6 @@
+ 					&lt;value&gt;255.255.255.0&lt;/value&gt;
+ 				&lt;/attribute&gt;
+ 
+-				&lt;attribute name=&quot;rx_bytes&quot; code=&quot;&quot;&gt;
+-					&lt;description&gt;RX bytes&lt;/description&gt;
+-					&lt;value&gt;3286918 (3.1 Mb)&lt;/value&gt;
+-				&lt;/attribute&gt;
+-
+-				&lt;attribute name=&quot;tx_bytes&quot; code=&quot;&quot;&gt;
+-					&lt;description&gt;TX bytes&lt;/description&gt;
+-					&lt;value&gt;508558 (496.6 Kb)&lt;/value&gt;
+-				&lt;/attribute&gt;
+-
+ 			&lt;/iface&gt;
+ 		&lt;/computer&gt;
+ 	&lt;/network_information&gt;
+@@ -220,7 +180,7 @@
+ 	&lt;terminal_info&gt;
+ 		&lt;attribute name=&quot;terminal_type&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Terminal type&lt;/description&gt;
+-			&lt;value&gt;xterm&lt;/value&gt;
++			&lt;value&gt;linux&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;terminal_speed&quot; code=&quot;&quot;&gt;
+@@ -230,70 +190,87 @@
+ 
+ 		&lt;attribute name=&quot;rows&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Rows&lt;/description&gt;
+-			&lt;value&gt;58&lt;/value&gt;
++			&lt;value&gt;51&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;columns&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Columns&lt;/description&gt;
+-			&lt;value&gt;178&lt;/value&gt;
++			&lt;value&gt;138&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 	&lt;/terminal_info&gt;
+ 	&lt;devices&gt;
++		&lt;motherboard&gt;
++			&lt;attribute name=&quot;_manufacturer&quot; code=&quot;mother_board_manufacturer&quot;&gt;
++				&lt;description&gt;Manufacturer&lt;/description&gt;
++				&lt;value&gt;ASUSTeK Computer Inc.&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;_model&quot; code=&quot;mother_board_model&quot;&gt;
++				&lt;description&gt;Model&lt;/description&gt;
++				&lt;value&gt;P4C800&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;_bios_revision&quot; code=&quot;bios_version&quot;&gt;
++				&lt;description&gt;BIOS revision&lt;/description&gt;
++				&lt;value&gt;1017.004&lt;/value&gt;
++			&lt;/attribute&gt;
++
++		&lt;/motherboard&gt;
+ 		&lt;controllers&gt;
+ 			&lt;attribute name=&quot;_host_bridge&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;Host bridge&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82875P/E7210 Memory Controller Hub (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82875P/E7210 Memory Controller Hub (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_pci_bridge&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;PCI bridge&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82875P Processor to AGP Controller (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82875P Processor to AGP Controller (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_usb_controller&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;USB Controller&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #1 (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #1 (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_usb_controller&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;USB Controller&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #2 (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #2 (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_usb_controller&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;USB Controller&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #3 (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #3 (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_usb_controller&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;USB Controller&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #4 (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #4 (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_usb_controller&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;USB Controller&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB2 EHCI Controller (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) USB2 EHCI Controller (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_pci_bridge&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;PCI bridge&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801 PCI Bridge (rev c2) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801 PCI Bridge (rev c2)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_isa_bridge&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;ISA bridge&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) LPC Interface Bridge (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) LPC Interface Bridge (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_ide_interface&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;IDE interface&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 			&lt;attribute name=&quot;_smbus&quot; code=&quot;&quot;&gt;
+ 				&lt;description&gt;SMBus&lt;/description&gt;
+-				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) SMBus Controller (rev 02) &lt;/value&gt;
++				&lt;value&gt;Intel Corporation 82801EB/ER (ICH5/ICH5R) SMBus Controller (rev 02)&lt;/value&gt;
+ 			&lt;/attribute&gt;
+ 
+ 		&lt;/controllers&gt;
+@@ -301,35 +278,43 @@
+ 	&lt;enhancements&gt;
+ 		&lt;attribute name=&quot;_display_adapter(s)&quot; code=&quot;display_adapter&quot;&gt;
+ 			&lt;description&gt;Display adapter(s)&lt;/description&gt;
+-			&lt;value&gt;ATI Technologies Inc RV280 [Radeon 9200 PRO] (rev 01) &lt;/value&gt;
++			&lt;value&gt;ATI Technologies Inc RV280 [Radeon 9200 PRO] (rev 01)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;_display_adapter(s)&quot; code=&quot;display_adapter&quot;&gt;
+ 			&lt;description&gt;Display adapter(s)&lt;/description&gt;
+-			&lt;value&gt;ATI Technologies Inc RV280 [Radeon 9200 PRO] (Secondary) (rev 01) &lt;/value&gt;
++			&lt;value&gt;ATI Technologies Inc RV280 [Radeon 9200 PRO] (Secondary) (rev 01)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;_multimedia_audio_controller&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Multimedia audio controller&lt;/description&gt;
+-			&lt;value&gt;Creative Labs SB Audigy (rev 04) &lt;/value&gt;
++			&lt;value&gt;Creative Labs SB Audigy (rev 04)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;_input_device_controller&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;Input device controller&lt;/description&gt;
+-			&lt;value&gt;Creative Labs SB Audigy MIDI/Game port (rev 04) &lt;/value&gt;
++			&lt;value&gt;Creative Labs SB Audigy MIDI/Game port (rev 04)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;_firewire_(ieee_1394)&quot; code=&quot;&quot;&gt;
+ 			&lt;description&gt;FireWire (IEEE 1394)&lt;/description&gt;
+-			&lt;value&gt;Creative Labs SB Audigy FireWire Port (rev 04) &lt;/value&gt;
++			&lt;value&gt;Creative Labs SB Audigy FireWire Port (rev 04)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 		&lt;attribute name=&quot;_ethernet_controller(s)&quot; code=&quot;network_adapter&quot;&gt;
+ 			&lt;description&gt;Ethernet controller(s)&lt;/description&gt;
+-			&lt;value&gt;Realtek Semiconductor Co., Ltd. RTL-8139/8139C/8139C+ (rev 10) &lt;/value&gt;
++			&lt;value&gt;Unknown device 0001:8139 (rev 10)&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 	&lt;/enhancements&gt;
++	&lt;usb&gt;
++		&lt;value&gt;Bus 005 Device 001: ID 0000:0000  &lt;/value&gt;
++		&lt;value&gt;Bus 004 Device 001: ID 0000:0000  &lt;/value&gt;
++		&lt;value&gt;Bus 003 Device 001: ID 0000:0000  &lt;/value&gt;
++		&lt;value&gt;Bus 002 Device 002: ID 046d:c50b Logitech, Inc. Cordless Desktop Optical&lt;/value&gt;
++		&lt;value&gt;Bus 002 Device 001: ID 0000:0000  &lt;/value&gt;
++		&lt;value&gt;Bus 001 Device 001: ID 0000:0000  &lt;/value&gt;
++	&lt;/usb&gt;
+ 	&lt;dmi_information&gt;
+ 		&lt;bios&gt;
+ 			&lt;attribute name=&quot;vendor&quot; code=&quot;&quot;&gt;
+@@ -430,25 +415,62 @@
+ 
+ 		&lt;/chassis&gt;
+ 	&lt;/dmi_information&gt;
++	&lt;cd_dvd_drives&gt;
++		&lt;cd_drive name=&quot;cd_dvd_drive_1&quot; &gt;
++			&lt;attribute name=&quot;model&quot; code=&quot;cdrom&quot;&gt;
++				&lt;description&gt;Model&lt;/description&gt;
++				&lt;value&gt;BENQ DVD DD DW1640&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;drive_type&quot; code=&quot;&quot;&gt;
++				&lt;description&gt;Drive type&lt;/description&gt;
++				&lt;value&gt;DVD writer&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;serial_number&quot; code=&quot;&quot;&gt;
++				&lt;description&gt;Serial number&lt;/description&gt;
++				&lt;value&gt;9JB5U150F351907510PP&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;physical_bus&quot; code=&quot;&quot;&gt;
++				&lt;description&gt;Physical bus&lt;/description&gt;
++				&lt;value&gt;<A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">ide at 1.1</A>&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;device_node&quot; code=&quot;&quot;&gt;
++				&lt;description&gt;Device node&lt;/description&gt;
++				&lt;value&gt;/dev/hdd&lt;/value&gt;
++			&lt;/attribute&gt;
++
++			&lt;attribute name=&quot;capabilities&quot; code=&quot;&quot;&gt;
++				&lt;description&gt;Capabilities&lt;/description&gt;
++				&lt;value&gt;DVD-R burning &lt;/value&gt;
++				&lt;value&gt;DVD playback &lt;/value&gt;
++				&lt;value&gt;CD-RW burning &lt;/value&gt;
++				&lt;value&gt;CD-R burning &lt;/value&gt;
++				&lt;value&gt;Audio CD playback &lt;/value&gt;
++				&lt;value&gt;can read CD-ROMs &lt;/value&gt;
++			&lt;/attribute&gt;
++
++		&lt;/cd_drive&gt;
++	&lt;/cd_dvd_drives&gt;
+ 	&lt;system_memory&gt;
+-		&lt;attribute name=&quot;total_size&quot; code=&quot;ram&quot;&gt;
+-			&lt;description&gt;Total size&lt;/description&gt;
+-			&lt;value&gt;256.0 MB&lt;/value&gt;
++		&lt;attribute name=&quot;total_ram&quot; code=&quot;ram&quot;&gt;
++			&lt;description&gt;Total RAM&lt;/description&gt;
++			&lt;value&gt;1024.0 MB&lt;/value&gt;
+ 		&lt;/attribute&gt;
+ 
+ 	&lt;/system_memory&gt;
+ 	&lt;users&gt;
+ 		&lt;active_user unixname=&quot;&quot; &gt;
+ 			&lt;value&gt;real name: root&lt;/value&gt;
+-			&lt;value&gt;login date: &lt;/value&gt;
++			&lt;value&gt;login date:&lt;/value&gt;
+ 			&lt;value&gt;uid: 0&lt;/value&gt;
+ 			&lt;value&gt;gid: 0&lt;/value&gt;
+-			&lt;value&gt;groups: root bin daemon sys adm disk wheel floppy dialout tape video &lt;/value&gt;
+-			&lt;value&gt;shell: /bin/bash
+-/bin/bash&lt;/value&gt;
+-			&lt;value&gt;home: /root
+-/root&lt;/value&gt;
+-			&lt;value&gt;locales: &lt;/value&gt;
++			&lt;value&gt;groups: root bin daemon sys adm disk wheel floppy dialout tape video&lt;/value&gt;
++			&lt;value&gt;shell: /bin/bash /bin/bash&lt;/value&gt;
++			&lt;value&gt;home: /root /root&lt;/value&gt;
++			&lt;value&gt;locales:&lt;/value&gt;
+ 		&lt;/active_user&gt;
+ 		&lt;wtmp_statistics&gt;
+ 			&lt;value&gt;wtmp begins Sat Jan 14 21:50:12 2006&lt;/value&gt;
+@@ -459,22 +481,29 @@
+ 			&lt;value&gt;shell: /bin/bash&lt;/value&gt;
+ 			&lt;value&gt;home: /home/mikael&lt;/value&gt;
+ 			&lt;value&gt;first login date: 2006-01-19&lt;/value&gt;
+-			&lt;value&gt;last login date: 2006-09-28&lt;/value&gt;
++			&lt;value&gt;last login date: 2006-11-20&lt;/value&gt;
+ 			&lt;value&gt;latest entry: :0&lt;/value&gt;
+-			&lt;value&gt;login count: 429&lt;/value&gt;
++			&lt;value&gt;login count: 700&lt;/value&gt;
+ 		&lt;/last_login&gt;
+ 		&lt;all_users&gt;
+ 			&lt;user unixname=&quot;mikael&quot; &gt;
+ 				&lt;value&gt;uid: 1000&lt;/value&gt;
+ 				&lt;value&gt;gid: 100&lt;/value&gt;
+ 				&lt;value&gt;first login date: 2006-01-19&lt;/value&gt;
+-				&lt;value&gt;last login date: 2006-09-28&lt;/value&gt;
+-				&lt;value&gt;login count: 429&lt;/value&gt;
++				&lt;value&gt;last login date: 2006-11-20&lt;/value&gt;
++				&lt;value&gt;login count: 700&lt;/value&gt;
+ 			&lt;/user&gt;
++			&lt;user unixname=&quot;pekka&quot; &gt;
++				&lt;value&gt;uid: 1002&lt;/value&gt;
++				&lt;value&gt;gid: 1002&lt;/value&gt;
++				&lt;value&gt;first login date: 2006-11-08&lt;/value&gt;
++				&lt;value&gt;last login date: 2006-11-08&lt;/value&gt;
++				&lt;value&gt;login count: 1&lt;/value&gt;
++			&lt;/user&gt;
+ 			&lt;user unixname=&quot;&quot; &gt;
+-				&lt;value&gt;first login date: &lt;/value&gt;
+-				&lt;value&gt;last login date: &lt;/value&gt;
+-				&lt;value&gt;login count: &lt;/value&gt;
++				&lt;value&gt;first login date:&lt;/value&gt;
++				&lt;value&gt;last login date:&lt;/value&gt;
++				&lt;value&gt;login count:&lt;/value&gt;
+ 			&lt;/user&gt;
+ 			&lt;user unixname=&quot;vaula&quot; &gt;
+ 				&lt;value&gt;uid: 1001&lt;/value&gt;
+@@ -487,15 +516,13 @@
+ 	&lt;/users&gt;
+ 	&lt;services&gt;
+ 		&lt;value&gt;apache2&lt;/value&gt;
++		&lt;value&gt;cupsd&lt;/value&gt;
+ 		&lt;value&gt;hald&lt;/value&gt;
+ 		&lt;value&gt;local&lt;/value&gt;
+ 		&lt;value&gt;net.eth0&lt;/value&gt;
+ 		&lt;value&gt;netmount&lt;/value&gt;
+-		&lt;value&gt;nfs &lt;/value&gt;
+ 		&lt;value&gt;ntp-client&lt;/value&gt;
+-		&lt;value&gt;portmap&lt;/value&gt;
+-		&lt;value&gt;splash&lt;/value&gt;
+-		&lt;value&gt;sshd&lt;/value&gt;
+-		&lt;value&gt;xdm &lt;/value&gt;
++		&lt;value&gt;xdm&lt;/value&gt;
++		&lt;value&gt;xinerama&lt;/value&gt;
+ 	&lt;/services&gt;
+ &lt;/osinfo&gt;
+
+Deleted: trunk/osinfo/docs/LF_inventory.pdf
+===================================================================
+(Binary files differ)
+
+Added: trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 07:01:46 UTC (rev 666)
+@@ -0,0 +1,58 @@
++# Copyright 1999-2006 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: $
++
++inherit eutils
++
++DESCRIPTION=&quot;OSinfo lists system information available to the OS&quot;
++HOMEPAGE=&quot;<A HREF="http://osinfo.berlios.de">http://osinfo.berlios.de</A>&quot;
++SRC_URI=&quot;<A HREF="ftp://ftp.berlios.de/pub/${PN">ftp://ftp.berlios.de/pub/${PN</A>}/${P}.tar.bz2&quot;
++
++S=&quot;${WORKDIR}/${PN}&quot;
++
++LICENSE=&quot;BSD&quot;
++SLOT=&quot;0&quot;
++KEYWORDS=&quot;~x86 ~amd64&quot;
++IUSE=&quot;html devices hdd tcp&quot; #add later: dvb ddc
++
++DEPEND=&quot;&quot;
++RDEPEND=&quot;html? (dev-libs/libxslt)
++		devices? (sys-apps/lshw
++		          sys-apps/pciutils
++		          sys-apps/usbutils)
++		hdd? (sys-apps/hdparm
++		      app-admin/hddtemp
++		      &gt;=sys-apps/smartmontools-5.36)
++		ddc? (sys-apps/ddcxinfo-knoppix)
++		dvb? (media-tv/dvbtune
++              media-tv/linuxtv-dvb-apps
++              media-video/dvbsnoop)
++		app-shells/bash
++		&gt;=sys-apps/grep-2.5.1
++		sys-devel/bc
++		tcp? ( || (net-analyzer/netcat net-analyzer/netcat6	net-analyzer/gnu-netcat))
++		|| (sys-apps/gawk sys-apps/mawk)&quot;
++
++
++src_install() {
++	dobin osinfo
++	doman man/osinfo.1
++	dodoc docs/*
++}
++
++pkg_postinst() {
++	elog
++	elog &quot;Osinfo is still beta; you can help be addressing bugs at&quot;
++	elog &quot;the osinfo mailinglist: <A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
++	elog
++	elog &quot;Osinfo has many nice features that are not obvious at first.&quot;
++	elog &quot;You can create an HTML document of the computers in your&quot;
++	elog &quot;LAN, and run osinfo in daemon mode on a box with Apache server.&quot;
++	elog &quot;Send the xml sheet to the daemon with the --tcpsend option.&quot;
++	elog &quot;These features are still incomplete, not installed by the ebuild,&quot;
++	elog &quot;but you can help to improve them!&quot;
++	elog
++	elog &quot;You can freely add more modules to osinfo. Check the source&quot;
++	elog &quot;code inside the tarball. Thank you for interest.&quot;
++	elog 
++}
+
+Copied: trunk/osinfo/html/dtd/lanforce.dtd (from rev 663, trunk/osinfo/lanforce.dtd)
+
+Copied: trunk/osinfo/html/dtd/osinfo.dtd (from rev 663, trunk/osinfo/osinfo.dtd)
+
+Deleted: trunk/osinfo/html/xslt
+===================================================================
+--- trunk/osinfo/html/xslt	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/html/xslt	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1 +0,0 @@
+-link ../xslt/
+\ No newline at end of file
+
+Deleted: trunk/osinfo/lanforce.dtd
+===================================================================
+--- trunk/osinfo/lanforce.dtd	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/lanforce.dtd	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,31 +0,0 @@
+-&lt;!ELEMENT entityset (entity+)&gt;
+-&lt;!ELEMENT entity (template, attribute*, note*)&gt;
+-&lt;!ATTLIST entity id         CDATA #IMPLIED
+-                 name       CDATA #REQUIRED
+-                 ip         CDATA #IMPLIED&gt;
+-&lt;!ELEMENT template EMPTY&gt;
+-&lt;!ATTLIST template id       CDATA #IMPLIED
+-                    name    CDATA #IMPLIED
+-                    code    CDATA #REQUIRED&gt;
+-&lt;!ELEMENT attribute (header?,(value|reference|embeddedreference|externalreference)*,footer?)&gt;
+-&lt;!ATTLIST attribute id      CDATA #IMPLIED
+-                     name   CDATA #IMPLIED
+-                     code   CDATA #REQUIRED&gt;
+-&lt;!ELEMENT header (#PCDATA)&gt;
+-&lt;!ELEMENT value (#PCDATA)&gt;
+-&lt;!ELEMENT reference EMPTY&gt;
+-&lt;!ATTLIST reference id      CDATA #IMPLIED
+-                     type   CDATA #IMPLIED&gt;
+-&lt;!ELEMENT embeddedreference EMPTY&gt;
+-&lt;!ATTLIST embeddedreference id         CDATA #IMPLIED
+-                            type       CDATA #IMPLIED&gt;
+-&lt;!ELEMENT externalreference EMPTY&gt;
+-&lt;!ATTLIST externalreference name       CDATA #IMPLIED
+-                            location   CDATA #IMPLIED&gt;
+-&lt;!ELEMENT footer (#PCDATA)&gt;
+-&lt;!ELEMENT note (name,text)&gt;
+-&lt;!ATTLIST note   creator               CDATA #REQUIRED
+-                 timestamp             CDATA #IMPLIED
+-                 follow-references     CDATA #REQUIRED&gt;
+-&lt;!ELEMENT name (#PCDATA)&gt;
+-&lt;!ELEMENT text (#PCDATA)&gt;
+
+Deleted: trunk/osinfo/osinfo.dtd
+===================================================================
+--- trunk/osinfo/osinfo.dtd	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/osinfo.dtd	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,112 +0,0 @@
+-&lt;!ELEMENT osinfo (script|
+-                  computer|
+-                  scanning|
+-                  system|
+-                  distribution|
+-                  kernel|
+-                  processor|
+-                  system_ram_memory|
+-                  system_memory|
+-                  hard_drive_configuration|
+-                  network_information|
+-                  wlan_information|
+-                  dmi_information|
+-                  applications|
+-                  terminal_info|
+-                  devices|
+-                  enhancements|
+-                  cd_dvd_drives|
+-                  users|
+-                  services|
+-                  battery|
+-                  oem_information)*&gt;
+-
+-
+-&lt;!ELEMENT script EMPTY&gt;
+-&lt;!ATTLIST script version CDATA #REQUIRED&gt;
+-
+-&lt;!ELEMENT computer EMPTY&gt;
+-&lt;!ATTLIST computer profile  CDATA #REQUIRED
+-                   hostname CDATA #REQUIRED
+-                   domain   CDATA #REQUIRED
+-                   os       CDATA #REQUIRED
+-                   cpu      CDATA #REQUIRED&gt;
+-
+-&lt;!ELEMENT scanning EMPTY&gt;
+-&lt;!ATTLIST scanning date CDATA #REQUIRED&gt;
+-
+-
+-
+-
+-&lt;!ELEMENT attribute (description|value)*&gt;
+-&lt;!ATTLIST attribute name CDATA #REQUIRED
+-                    code CDATA #IMPLIED&gt;
+-&lt;!ELEMENT description (#PCDATA)&gt;
+-&lt;!ELEMENT value (#PCDATA)&gt;
+-
+-
+-&lt;!ELEMENT system (attribute+)&gt;
+-&lt;!ELEMENT distribution (attribute+)&gt;
+-&lt;!ELEMENT kernel (attribute+)&gt;
+-&lt;!ELEMENT processor (attribute+)&gt;
+-&lt;!ELEMENT system_ram_memory (ram+)&gt;
+-&lt;!ELEMENT system_memory (ram+)&gt;
+-&lt;!ELEMENT hard_drive_configuration (drive+)&gt;
+-&lt;!ELEMENT network_information (computer*)&gt;
+-&lt;!ELEMENT wlan_information (attribute*)&gt; &lt;!-- UNKNOWN --&gt;
+-&lt;!ELEMENT dmi_information (bios|
+-                           system_info|
+-                           motherboard|
+-                           chassis)*&gt;
+-&lt;!ELEMENT applications (attribute+)&gt;
+-&lt;!ELEMENT terminal_info (attribute+)&gt;
+-&lt;!ELEMENT devices (motherboard,controllers)&gt;
+-&lt;!ELEMENT enhancements (attribute+)&gt;
+-&lt;!ELEMENT cd_dvd_drives (cd_drive)*&gt;
+-&lt;!ELEMENT users (active_user,wtmp_statistics)&gt;
+-&lt;!ELEMENT services (value+)&gt;
+-&lt;!ELEMENT battery (attribute*)&gt; &lt;!-- UNKNOWN --&gt;
+-&lt;!ELEMENT oem_information (attribute+)&gt;
+-
+-
+-
+-&lt;!-- system_ram_memory, system_memory --&gt;
+-&lt;!ELEMENT ram (attribute+)&gt;
+-
+-
+-&lt;!-- hard_drive_configuration --&gt;
+-&lt;!ELEMENT drive (attribute|partitions)*&gt;
+-&lt;!ELEMENT partitions (value+)&gt;
+-
+-
+-&lt;!-- network_information --&gt;
+-&lt;!-- &lt;!ELEMENT computer (attribute|iface)*&gt;
+-&lt;!ATTLIST computer name CDATA #REQUIRED&gt; --&gt;
+-&lt;!ELEMENT iface (attribute+)&gt;
+-&lt;!ATTLIST iface name CDATA #REQUIRED&gt;
+-
+-
+-&lt;!-- dmi_information, devices --&gt;
+-&lt;!ELEMENT motherboard (attribute+)&gt;
+-
+-
+-&lt;!-- dmi_information --&gt;
+-&lt;!ELEMENT bios (attribute+)&gt;
+-&lt;!ELEMENT system_info (attribute+)&gt;
+-&lt;!ELEMENT chassis (attribute*)&gt;
+-
+-
+-&lt;!-- devices --&gt;
+-&lt;!ELEMENT controllers (attribute+)&gt;
+-
+-
+-&lt;!-- cd_dvd_drives --&gt;
+-&lt;!ELEMENT cd_drive (attribute+)&gt;
+-&lt;!ATTLIST cd_drive name CDATA #REQUIRED&gt;
+-
+-
+-&lt;!-- users --&gt;
+-&lt;!ELEMENT active_user (value+)&gt;
+-&lt;!ATTLIST active_user unixname CDATA #REQUIRED&gt;
+-&lt;!ELEMENT wtmp_statistics (value+)&gt;
+-
+
+Modified: trunk/osinfo/scripts/upload_tarbz2.sh
+===================================================================
+--- trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 07:01:46 UTC (rev 666)
+@@ -2,4 +2,5 @@
+ # 1 : Username
+ user=&quot;$1&quot;
+ [ ! &quot;$user&quot; ] &amp;&amp; echo &quot;Please give username&quot; &amp;&amp; exit 1
+-/usr/bin/rsync --progress -t -e &quot;ssh -p 22&quot; ../dist/osinfo*tar.bz2 &quot;$user&quot;@shell.berlios.de:/home/groups/ftp/pub/osinfo/
++/usr/bin/rsync --progress -t -e &quot;ssh -p 22&quot; dist/osinfo*tar.bz2 &quot;$user&quot;@shell.berlios.de:/home/groups/ftp/pub/osinfo/
++[ $? -eq 1 ] &amp;&amp; echo &quot;Run this script from osinfo root&quot; &amp;&amp; exit 1
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000053.html">[Osinfo-commit] r665 - in trunk/osinfo: . ebuild html lib scripts
+</A></li>
+	<LI>Next message: <A HREF="000055.html">[Osinfo-commit] r667 - in trunk/osinfo: . html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#54">[ date ]</a>
+              <a href="thread.html#54">[ thread ]</a>
+              <a href="subject.html#54">[ subject ]</a>
+              <a href="author.html#54">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

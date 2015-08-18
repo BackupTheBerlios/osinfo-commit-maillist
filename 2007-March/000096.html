@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r708 - trunk/osinfo/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r708%20-%20trunk/osinfo/html&In-Reply-To=%3C200703231129.l2NBTRYV027499%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000095.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r708 - trunk/osinfo/html</H1>
+    <B>lamikae at mail.berlios.de</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r708%20-%20trunk/osinfo/html&In-Reply-To=%3C200703231129.l2NBTRYV027499%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r708 - trunk/osinfo/html">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Fri Mar 23 12:29:27 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000095.html">[Osinfo-commit] r707 - trunk/osinfo/html
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-23 12:29:25 +0100 (Fri, 23 Mar 2007)
+New Revision: 708
+
+Modified:
+   trunk/osinfo/html/index.php
+Log:
+p?\195?\164ivitys
+
+Modified: trunk/osinfo/html/index.php
+===================================================================
+--- trunk/osinfo/html/index.php	2007-03-12 13:43:23 UTC (rev 707)
++++ trunk/osinfo/html/index.php	2007-03-23 11:29:25 UTC (rev 708)
+@@ -38,6 +38,9 @@
+ 		$this-&gt;_fade_korkeus = $fade_korkeus;
+ 		$this-&gt;_clientteja_rivilla = $clientteja_rivilla;
+ 
++		// p&#228;ivitys- ja poistotoiminnot
++		$this-&gt;kasittele_lomakkeet();
++
+ 		// tarkistetaan, xmlparseri on olemassa ja luodaan siit&#228; olio
+ 
+ 		if(file_exists($this-&gt;_xmlparseri))
+@@ -426,20 +429,42 @@
+ 		$this-&gt;listaa_tiedostot(false);
+ 	}
+ 
+-	// t&#228;m&#228;n funktion alle tulisi xml-tiedostojen p&#228;ivitys
+ 	private function paivitys($tiedosto)
+ 	{
++		print &quot;&lt;form name=\&quot;formi\&quot; action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
++			&lt;input name=\&quot;paivitettava_client[&quot; . $tiedosto . &quot;]\&quot; type=\&quot;submit\&quot; value=\&quot;Update\&quot; /&gt;
++			&lt;input name=\&quot;poistettava_client[&quot; . $tiedosto . &quot;]\&quot; type=\&quot;submit\&quot; value=\&quot;Delete\&quot; /&gt;
++			&lt;/form&gt;&quot;;
++	}
++
++	private function kasittele_lomakkeet()
++	{
++		// $_POST-arvossa on tullut p&#228;ivitett&#228;v&#228;n clientin nimi
+ 		if($_POST['paivitettava_client'])
+ 		{
+-			// t&#228;h&#228;n tulee suoritettava osa sy&#246;tteest&#228;...
++			foreach($_POST['paivitettava_client'] as $avain =&gt; $arvo)
++			{
++				$tiedosto = $this-&gt;_xmlkansio . &quot;/&quot; . $avain;
+ 
+-			//print &quot;&lt;p&gt;-- update &quot; . $_POST['paivitettava_client'] . &quot; --&lt;/p&gt;&quot;;
++				// t&#228;h&#228;n tulee p&#228;ivitys
++				print &quot;update: &quot; . $tiedosto . &quot;&lt;br /&gt;&quot;;
++			}
+ 		}
+ 
+-		print &quot;&lt;form name=\&quot;paivitysformi[&quot; . $tiedosto . &quot;]\&quot; action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
+-			&lt;input type=\&quot;submit\&quot; value=\&quot;Update\&quot; /&gt;
+-			&lt;input type=\&quot;submit\&quot; value=\&quot;Delete\&quot; /&gt;
+-			&lt;/form&gt;&quot;;
++		// $_POST-arvossa on tullut poistettavan clientin nimi
++		if($_POST['poistettava_client'])
++		{
++			foreach($_POST['poistettava_client'] as $avain =&gt; $arvo)
++			{
++				$tiedosto = $this-&gt;_xmlkansio . &quot;/&quot; . $avain;
++
++				// jos tiedosto on olemassa, yritet&#228;&#228;n poistaa se
++				if(file_exists($tiedosto))
++					if(unlink($tiedosto))
++						print $tiedosto . &quot; deleted.&lt;br /&gt;&quot;;
++					else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Couldn't remove \&quot;&quot; . $tiedosto . &quot;\&quot;&lt;/p&gt;&quot;;
++			}
++		}
+ 	}
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000095.html">[Osinfo-commit] r707 - trunk/osinfo/html
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#96">[ date ]</a>
+              <a href="thread.html#96">[ thread ]</a>
+              <a href="subject.html#96">[ subject ]</a>
+              <a href="author.html#96">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

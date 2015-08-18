@@ -1,0 +1,1361 @@
+From lamikae at mail.berlios.de  Sun Dec 23 01:49:43 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sun, 23 Dec 2007 01:49:43 +0100
+Subject: [Osinfo-commit] r711 - trunk/osinfo/debug
+Message-ID: <200712230049.lBN0nhv0006587@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-23 01:49:43 +0100 (Sun, 23 Dec 2007)
+New Revision: 711
+
+Added:
+   trunk/osinfo/debug/nvidia
+Log:
+command to get nvidia info
+
+Added: trunk/osinfo/debug/nvidia
+===================================================================
+--- trunk/osinfo/debug/nvidia	2007-11-23 19:31:22 UTC (rev 710)
++++ trunk/osinfo/debug/nvidia	2007-12-23 00:49:43 UTC (rev 711)
+@@ -0,0 +1 @@
++nvidia-settings -q gpucoretemp |grep '):' | cut -c 47-48 = 52C
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 27 08:06:38 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 27 Dec 2007 08:06:38 +0100
+Subject: [Osinfo-commit] r712 - trunk/osinfo/docs
+Message-ID: <200712270706.lBR76cdX005003@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-27 08:06:37 +0100 (Thu, 27 Dec 2007)
+New Revision: 712
+
+Modified:
+   trunk/osinfo/docs/TODO
+Log:
+updated TODO
+
+Modified: trunk/osinfo/docs/TODO
+===================================================================
+--- trunk/osinfo/docs/TODO	2007-12-23 00:49:43 UTC (rev 711)
++++ trunk/osinfo/docs/TODO	2007-12-27 07:06:37 UTC (rev 712)
+@@ -1,28 +1,22 @@
+ FEATURES and FIXES for 0.3:
+ --------------------------
+ 
+-*	reorder some given information
+-*	fix meta modules?
+-*	"vv next line is header" dirty tag to workaround the column bug?
+-*	kernel src location
+-*	mod_hdd doesn't work on fedora!
+ *	custom <value> xml tags, <value name="foo">bar</value>
+-*	sensors output depends on LC_*, remove [:punct:] dependency
++?	sensors output depends on LC_*, remove [:punct:] dependency
+ *	info message from corresponding modules (eg hdd) when a program is missing (smartctl)
+ *	complete xsl/html support
+ *	checker to see if netcat is installed
++	check for netcat binary in daemon mode!
+ *	--checkdeps switch
+ *	don't leave osinfo.XXXXXX and <hostname>.x?? files around!
+-*	top 10 memory hoggers :)
+ *	apache interface requires osinfo cgi
+-*	pdf output sheet of the profile
+-*	check for netcat binary in daemon mode!
++*	include module pci
+ 
+ 
+ FEATURES and FIXES for 0.4:
+ ----------------
+ 
+-*	detect system encoding
++*	hdd: part mp size free free% free_inodes fs
+ *	fix: user/root problem
+ *	su_modules - run only su modules
+ *	std_modules - non-su modules
+@@ -30,6 +24,8 @@
+ *	gentoo: total system build time ;-)
+ *	mod_cpu: stepping
+ *	automatic output filename based on modules and timestamp
++*	top 10 memory hoggers :)
++*	pdf output sheet of the profile
+ 
+ 
+ FEATURES FOR 0.5:
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 27 08:07:30 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 27 Dec 2007 08:07:30 +0100
+Subject: [Osinfo-commit] r713 - trunk/osinfo/modules
+Message-ID: <200712270707.lBR77UDW005060@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-27 08:07:30 +0100 (Thu, 27 Dec 2007)
+New Revision: 713
+
+Modified:
+   trunk/osinfo/modules/applications
+Log:
+fixed indentation in Applications, added Mercurial + SVN
+
+Modified: trunk/osinfo/modules/applications
+===================================================================
+--- trunk/osinfo/modules/applications	2007-12-27 07:06:37 UTC (rev 712)
++++ trunk/osinfo/modules/applications	2007-12-27 07:07:30 UTC (rev 713)
+@@ -1,183 +1,190 @@
+ #!/bin/bash
+-#######################
++#####################################################################
+ # APPLICATIONS
+ #
+ # version information of standard *nix, dev, and dependency packages.
+-# probably should take an additional switch like --X, --server, etc.
++# TODO: take an additional switch like --X, --server, etc.
+ Module_applications() {
+-	local moduleName="Applications"
+-	module_header "${moduleName}"
++  local moduleName="Applications"
++  module_header "${moduleName}"
++  
++  local APPLICATIONS app versionstring category cat_print=0
++  local missing_ERRMSG="if you want to be able to use all modules of ${appname}"
++  
++  
++  ## Define the applications to look for
++  if [ "$SYSTEM" == "linux" ] ; then
++    APPLICATIONS="Graphical_interface: X kde-config gnome-about xfce4-session \
++                  fluxbox fvwm2 enlightenment \
++            Interpreters: perl python java-config ruby php \
++            Shells: bash csh dsh fish pdsh rrs tcsh zsh \
++            Compilers: gcc gcj icc \
++            System: udevinfo \
++            Userspace_tools: make unsermake awk sed grep ls gzip lspci lshw dmidecode smartctl hdparm hg svn \
++            Servers: apache2 mysql ssh smbd cups-config \
++            Miscellaneous: x11vnc nagios firefox thunderbird mozilla cdrecord"
+ 
+-	local APPLICATIONS app versionstring category cat_print=0
+-	local missing_ERRMSG="if you want to be able to use all modules of ${appname}"
++    UNTESTED="Graphical_interface: \
++            Compilers: ccc cxx cfal erlang fpc gforth ghc gnat \
++                        gnat-gcc gnat-gpl gpc icc ifc open-cobol \
++            Tools: mono"
+ 
++            # Shells: ash ccsh dash esh ksh mksh psh rssh sash shish
++            # don't take any version parameters
++            # Xvnc b0rks output
++  
++  elif [ "$(grep -i bsd <<< "$SYSTEM")" ]; then  
++    APPLICATIONS="Graphical_interface: X kde-config gnome-about \
++            Shells: bash csh dsh fish pdsh rrs tcsh zsh \
++            Compilers: gcc gcj icc \
++            Tools: awk grep gzip lshw dmidecode lspci lshw smartctl hdparm \
++            Languages: perl python java-config ruby php \
++            Servers: apache2 mysql ssh smbd cups-config \
++            Miscellaneous: x11vnc"  
++  fi
++  
++  
++  ## Write the header for output
++  if [ $usexml -eq 1 ]; then
++    add_attribute "Applications" 'software'
++  fi
++  
++  
++  ## Process all categories
++  for app in $APPLICATIONS; do
++    # if the variable $app is a category definition,
++    if [ $(grep \: <<< $app) ] && [ $usexml -eq 0 ]; then
+ 
+-	## Define the applications to look for
+-	if [ "$SYSTEM" == "linux" ] ; then
++      category="$(sed 's/\:// ; s/_/\ /g' <<< $app)"
+ 
+-		APPLICATIONS="Graphical_interface: X kde-config gnome-about xfce4-session \
+-		              fluxbox fvwm2 enlightenment \
+-			Shells: bash csh dsh fish pdsh rrs tcsh zsh \
+-			Compilers: gcc gcj icc \
+-			System: udevinfo \
+-			Userspace_tools: make unsermake awk sed grep ls gzip lspci lshw dmidecode smartctl hdparm \
+-			Languages: perl python java-config ruby php \
+-			Servers: apache2 mysql ssh smbd cups-config \
+-			Miscellaneous: x11vnc Xvnc nagios firefox thunderbird mozilla cdrecord"
++      # check verbosity level, do not print shells
++      # if verbosity is less than 1
++      if [ $isverbose -lt 1 ] && [ "$category" == "Shells" ]; then
++        cat_print=0
++      else
++        # print the category to stdout
++        cat_print=1
++        add_header "$category"
++      fi
+ 
+-		UNTESTED="Graphical_interface: \
+-			Compilers: ccc cxx cfal erlang fpc gforth ghc gnat \
+-			           gnat-gcc gnat-gpl gpc icc ifc open-cobol \
+-			Tools: mono"
++      flush_values
+ 
+-			# Shells: ash ccsh dash esh ksh mksh psh rssh sash shish
+-			# don't take any version parameters
++    # use the subfunction to get the version information
++    elif [ "$(type -p $app)" ] && [ $cat_print -eq 1 ]; then # it is installed
++      versionstring="$(get_version $app)"
++      # if the application doesn't tell what it is, echo it
++      if [ "$(grep -i ${app} <<< ${versionstring})" ]; then
++        add_values	"\t${versionstring}\n"
++      else
++        add_values	"\t${versionstring} ($app)\n"
++      fi
++    fi
++  done
++  
++  flush_values
++}
+ 
++###########################################
++# helper functions for applications module
++get_version() {
++  local app="${1}"
++  case "$app" in
++    'perl')
++      echo  "Perl" $($app --version 2>&1 | grep 'perl, v' | \
++                                  grep -Eo 'v[ A-Za-z0-9.-]*')
++      ;;
++    'python')
++      python -V 2>&1 | head -n 1
++      ;;
++    'X')
++      X -version 2>&1 | grep Revision
++      ;;
++    'kde-config')
++      kde-config -version 2>&1 | grep KDE
++      ;;
++    'gnome-about')
++      gnome-about --version 2>&1 | sed 's/gnome-about//'
++      ;;
++    'xfce4-session')
++      xfce4-session --version | head -n 1 | sed 's/xfce4-session/Xfce4/'
++      ;;
++    'fluxbox')
++      fluxbox -version 2> /dev/null | head -n 1
++      ;;
++    'apache2'|'apache')
++      $app -V | head -n 1 | awk -F': ' {'print $2'}
++      ;;
++    'cups-config')
++      echo  "Cups $($app --version 2>&1 )"
++      ;;
++    'smbd')
++      echo  "Samba $($app -V 2>&1 )"
++      ;;
++    'udevinfo')
++      $app -V 2>&1
++      ;;
++    'awk')
++      # awk is a bit tricky.. it can go into a captive cmd interpreter mode
++      if [ ! "$(awk -V 2> /dev/null)" ]; then
++        awk -W version 2>&1 | head -n 1
++      else
++        awk -V
++      fi
++      ;;
++    'dmidecode')
++      echo  "dmidecode $(dmidecode -V 2> /dev/null )"
++      ;;
++    'java-config')
++      echo "Java $(java-config -f)"
++      ;;
++    'ssh')
++      ssh -V 2>&1 /dev/null
++      ;;
++    'hg')
++      hg version 2> /dev/null | head -n 1
++      ;;
++    'svn')
++      svn --version 2> /dev/null | head -n 1
++      ;;
++    'icc')
++      icc 2>&1 -V | head -n 1
++      ;;
++    'ls')
++      ls --version | head -n 1 | sed 's/ls// ; s#(\|)\|^\ ##g'
++      ;;
++    'pdsh')
++      pdsh -V | head -n 1
++      ;;
++    'firefox')
++      firefox --version 2>/dev/null | head -n 1
++      ;;
++    'Xvnc')
++      Xvnc -version 2>&1
++      ;;
+ 
+-	elif [ "$(grep -i bsd <<< "$SYSTEM")" ]; then
++    # all the rest
++    *)
++      $app --version 2>&1 | grep '\w' | head -n 1
++      ;;
+ 
+-		APPLICATIONS="Graphical_interface: X kde-config gnome-about \
+-			Shells: bash csh dsh fish pdsh rrs tcsh zsh \
+-			Compilers: gcc gcj icc \
+-			Tools: awk grep gzip lshw dmidecode lspci lshw smartctl hdparm \
+-			Languages: perl python java-config ruby php \
+-			Servers: apache2 mysql ssh smbd cups-config \
+-			Miscellaneous: x11vnc"
+-
+-	fi
+-
+-
+-	## Write the header for output
+-	if [ $usexml -eq 1 ]; then
+-		add_attribute "Applications" 'software'
+-	fi
+-
+-
+-	## Process all categories
+-	for app in $APPLICATIONS; do
+-		# if the variable $app is a category definition,
+-		if [ $(grep \: <<< $app) ] && [ $usexml -eq 0 ]; then
+-
+-			category="$(sed 's/\:// ; s/_/\ /g' <<< $app)"
+-
+-			# check verbosity level, do not print shells
+-			# if verbosity is less than 1
+-			if [ $isverbose -lt 1 ] && [ "$category" == "Shells" ]; then
+-				cat_print=0
+-			else
+-				# print the category to stdout
+-				cat_print=1
+-				add_header "$category"
+-			fi
+-
+-			flush_values
+-
+-		# use the subfunction to get the version information
+-		elif [ "$(type -p $app)" ] && [ $cat_print -eq 1 ]; then # it is installed
+-			versionstring="$(get_version $app)"
+-			# if the application doesn't tell what it is, echo it
+-			if [ "$(grep -i ${app} <<< ${versionstring})" ]; then
+-				add_values	"\t${versionstring}\n"
+-			else
+-				add_values	"\t${versionstring} ($app)\n"
+-			fi
+-		fi
+-	done
+-
+-	flush_values
++    # missing something essential?
++    'lspci')
++      info "please install pciutils ${missing_ERRMSG}"
++      Missing=("${Missing[@]}" "lspci" )
++      ;;
++    'lshw')
++      info "please install lshw ${missing_ERRMSG}"
++      Missing=("${Missing[@]}" "lshw" )
++      ;;
++    'smartctl')
++      info "please install smartmontools ${missing_ERRMSG}"
++      Missing=("${Missing[@]}" "smartmontools" )
++      ;;
++    'dmidecode')
++      info "please install dmidecode ${missing_ERRMSG}"
++      Missing=("${Missing[@]}" "dmidecode" )
++      ;;
++  esac
+ }
++###########################################
+ 
+-	###########################################
+-	# helper functions for applications module
+-	get_version() {
+-		local app="${1}"
+-		case "$app" in
+-			'perl')
+-				echo  "Perl" $($app --version 2>&1 | grep 'perl, v' | \
+-							   grep -Eo 'v[ A-Za-z0-9.-]*')
+-				;;
+-			'python')
+-				python -V 2>&1 | head -n 1
+-				;;
+-			'X')
+-				X -version 2>&1 | grep Revision
+-				;;
+-			'kde-config')
+-				kde-config -version 2>&1 | grep KDE
+-				;;
+-			'gnome-about')
+-				gnome-about --version 2>&1 | sed 's/gnome-about//'
+-				;;
+-			'xfce4-session')
+-				xfce4-session --version | head -n 1 | sed 's/xfce4-session/Xfce4/'
+-				;;
+-			'fluxbox')
+-				fluxbox -version 2> /dev/null | head -n 1
+-				;;
+-			'apache2'|'apache')
+-				$app -V | head -n 1 | awk -F': ' {'print $2'}
+-				;;
+-			'cups-config')
+-				echo  "Cups $($app --version 2>&1 )"
+-				;;
+-			'smbd')
+-				echo  "Samba $($app -V 2>&1 )"
+-				;;
+-			'udevinfo')
+-				$app -V 2>&1
+-				;;
+-			'awk')
+-				# awk is a bit tricky.. it can go into a captive cmd interpreter mode
+-				if [ ! "$(awk -V 2> /dev/null)" ]; then
+-					awk -W version 2>&1 | head -n 1
+-				else
+-					awk -V
+-				fi
+-				;;
+-			'dmidecode')
+-				echo  "dmidecode $(dmidecode -V 2> /dev/null )"
+-				;;
+-			'java-config')
+-				echo "Java $(java-config -f)"
+-				;;
+-			'ssh')
+-				ssh -V 2>&1 /dev/null
+-				;;
+-			'icc')
+-				icc 2>&1 -V | head -n 1
+-				;;
+-			'ls')
+-				ls --version | head -n 1 | sed 's/ls// ; s#(\|)\|^\ ##g'
+-				;;
+-			'pdsh')
+-				pdsh -V | head -n 1
+-				;;
+-			'firefox')
+-				firefox --version 2>/dev/null | head -n 1
+-				;;
+-			'Xvnc')
+-				Xvnc -version 2>&1
+-				;;
+-			*)
+-				$app --version 2>&1 | grep '\w' | head -n 1
+-				;;
+-			'lspci')
+-				info "please install pciutils ${missing_ERRMSG}"
+-				Missing=("${Missing[@]}" "lspci" )
+-				;;
+-			'lshw')
+-				info "please install lshw ${missing_ERRMSG}"
+-				Missing=("${Missing[@]}" "lshw" )
+-				;;
+-			'smartctl')
+-				info "please install smartmontools ${missing_ERRMSG}"
+-				Missing=("${Missing[@]}" "smartmontools" )
+-				;;
+-			'dmidecode')
+-				info "please install dmidecode ${missing_ERRMSG}"
+-				Missing=("${Missing[@]}" "dmidecode" )
+-				;;
+-		esac
+-	}
+-	###########################################
+-
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 27 08:12:25 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 27 Dec 2007 08:12:25 +0100
+Subject: [Osinfo-commit] r714 - trunk/osinfo/lib
+Message-ID: <200712270712.lBR7CPm5005286@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-27 08:12:25 +0100 (Thu, 27 Dec 2007)
+New Revision: 714
+
+Modified:
+   trunk/osinfo/lib/cmdline
+Log:
+fixed indentation in cmdline
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2007-12-27 07:07:30 UTC (rev 713)
++++ trunk/osinfo/lib/cmdline	2007-12-27 07:12:25 UTC (rev 714)
+@@ -1,208 +1,208 @@
+ #!/bin/bash
+ ####### PARSE THE COMMAND LINE ARGUMENTS
+ function parse_arguments() {
+-	if [ "$#" -gt 0 ]; then
+-		while [ "$#" -gt 0 ]; do
+-			case "$1" in
+-				'--help'|'-help'|'--usage'|'-usage'|'-h'|'')
+-					PRINT_Version
+-					PRINT_Help
+-					PRINT_Debug
+-					exit 0
+-					;;
++  if [ "$#" -gt 0 ]; then
++    while [ "$#" -gt 0 ]; do
++      case "$1" in
++        '--help'|'-help'|'--usage'|'-usage'|'-h'|'')
++          PRINT_Version
++          PRINT_Help
++          PRINT_Debug
++          exit 0
++          ;;
+ 
+-				'--profile')
+-					# define the output profile
+-					if [ ! "$2" ]; then
+-						info "Profile not defined!"
+-						flush_values
+-						exit 1
+-					fi
+-					profile="${2}"
+-					shift 2
+-					;;
++        '--profile')
++          # define the output profile
++          if [ ! "$2" ]; then
++                  info "Profile not defined!"
++                  flush_values
++                  exit 1
++          fi
++          profile="${2}"
++          shift 2
++          ;;
+ 
+-				'--xml')
+-					# generate xml
+-					usexml=1
+-					output_mode="xml"
+-					shift 1
+-					;;
++        '--xml')
++          # generate xml
++          usexml=1
++          output_mode="xml"
++          shift 1
++          ;;
+ 
+-				'--html')
+-					# generate a html page of the output
+-					usexml=1
+-					output_mode="xml"
+-					makehtml=1
+-					quiet=1
+-					shift 1
+-					;;
++        '--html')
++          # generate a html page of the output
++          usexml=1
++          output_mode="xml"
++          makehtml=1
++          quiet=1
++          shift 1
++          ;;
+ 
+-				'-o'|'--output')
+-					# direct output to a named file
+-					if [ $2 ]; then
+-						usexml=1
+-						XMLFILE="${2}"
+-						shift 2
+-					else
+-						missing_arg "$1"
+-					fi
+-					;;
++        '-o'|'--output')
++          # direct output to a named file
++          if [ $2 ]; then
++                  usexml=1
++                  XMLFILE="${2}"
++                  shift 2
++          else
++                  missing_arg "$1"
++          fi
++          ;;
+ 
+-				'--lanforce')
+-					# use a special xml format
+-					usexml=1
+-					lanforce=1
+-					output_mode="lanforce_xml"
+-					shift 1
+-					;;
++        '--lanforce')
++          # use a special xml format
++          usexml=1
++          lanforce=1
++          output_mode="lanforce_xml"
++          shift 1
++          ;;
+ 
+-				'--tcpsend'|'--netcat')
+-					# send xml via tcp to remote osinfo daemon
+-					if [ "$2" ] && [ "$3" ]; then
+-						usexml=1
+-						makehtml=0
+-						tcpsend=1
+-						output_mode="xml"
+-						HOST="$2"
+-						PORT="$3"
+-						shift 3
+-					else
+-						echo "You must set the target host and port!"
+-						missing_arg "$1" 2
+-					fi
+-					;;
++        '--tcpsend'|'--netcat')
++          # send xml via tcp to remote osinfo daemon
++          if [ "$2" ] && [ "$3" ]; then
++                  usexml=1
++                  makehtml=0
++                  tcpsend=1
++                  output_mode="xml"
++                  HOST="$2"
++                  PORT="$3"
++                  shift 3
++          else
++                  echo "You must set the target host and port!"
++                  missing_arg "$1" 2
++          fi
++          ;;
+ 
+-				'--listen'|'daemon')
+-					# listen for incoming tcp connections,
+-					# receive xml sheet from osinfo clients
+-					tcpdaemon=1
++        '--listen'|'daemon')
++          # listen for incoming tcp connections,
++          # receive xml sheet from osinfo clients
++          tcpdaemon=1
+ 
+-					if [ "$2" ]; then
+-						tcp_listening_port="$2"
+-						shift 2
++          if [ "$2" ]; then
++                  tcp_listening_port="$2"
++                  shift 2
+ 
+-					elif [ ! "$tcp_listening_port" ]; then
+-						info "You must set the listening port!"
+-						flush_values
+-						exit 1
++          elif [ ! "$tcp_listening_port" ]; then
++                  info "You must set the listening port!"
++                  flush_values
++                  exit 1
+ 
+-					# the tcp port may be given at the conf file
+-					else
+-						shift 1
+-					fi
+-					;;
++          # the tcp port may be given at the conf file
++          else
++                  shift 1
++          fi
++          ;;
+ 
+-				'--Xorglog')
+-					# read Xorg detected values from this file
+-					# (by default /var/log/Xorg.0.log)
+-					if [ "$2" ]; then
+-						if [ ! -e "${2}" ]; then
+-							echo "File $2 does not exist!"
+-							exit 1
+-						fi
+-						XORG_LOG="${2}"
+-						shift 2
+-					else
+-						echo "Please give Xorg log input file!"
+-						missing_arg "$1" 1
+-					fi
+-					;;
++        '--Xorglog')
++          # read Xorg detected values from this file
++          # (by default /var/log/Xorg.0.log)
++          if [ "$2" ]; then
++                  if [ ! -e "${2}" ]; then
++                          echo "File $2 does not exist!"
++                          exit 1
++                  fi
++                  XORG_LOG="${2}"
++                  shift 2
++          else
++                  echo "Please give Xorg log input file!"
++                  missing_arg "$1" 1
++          fi
++          ;;
+ 
+-				'--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
+-					no_fancy=1
+-					# clear color codes; set empty values
+-					tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
+-					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
+-					shift 1
+-					;;
++        '--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
++          no_fancy=1
++          # clear color codes; set empty values
++          tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
++          tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
++          shift 1
++          ;;
+ 
+-				'-P'|'--prefix')
+-					# define the root dir
+-					if [ $2 ]; then
+-						# Make sure there is only one ending "/".
+-						prefix="$(echo $2 | sed 's/\/*$/\//')"
+-						shift 2
+-					else
+-						missing_arg "$1"
+-					fi
+-					;;
++        '-P'|'--prefix')
++          # define the root dir
++          if [ $2 ]; then
++                  # Make sure there is only one ending "/".
++                  prefix="$(echo $2 | sed 's/\/*$/\//')"
++                  shift 2
++          else
++                  missing_arg "$1"
++          fi
++          ;;
+ 
+-				'--kdialog')
+-					# print output in kdialog window
+-					usekdialog=1
+-					output_mode="kdialog"
+-					shift 1
+-					;;
++        '--kdialog')
++          # print output in kdialog window
++          usekdialog=1
++          output_mode="kdialog"
++          shift 1
++          ;;
+ 
+-				'-v'|'--verbose')
+-					isverbose=1
+-					shift 1
+-					;;
++        '-v'|'--verbose')
++          isverbose=1
++          shift 1
++          ;;
+ 
+-				'-vv'|'--very-verbose')
+-					isverbose=2
+-					shift 1
+-					;;
++        '-vv'|'--very-verbose')
++          isverbose=2
++          shift 1
++          ;;
+ 
+-				'-d'|'--debug')
+-					# standard debugging option
+-					export isdebug=1
+-					shift 1
+-					;;
++        '-d'|'--debug')
++          # standard debugging option
++          export isdebug=1
++          shift 1
++          ;;
+ 
+-				'-D'|'--fulldebug')
+-					# over-the-board debug option
+-					export isdebug=1
+-					set -x
+-					shift 1
+-					;;
++        '-D'|'--fulldebug')
++          # over-the-board debug option
++          export isdebug=1
++          set -x
++          shift 1
++          ;;
+ 
+-				'--dev')
+-					# the developement option to debug stuff
+-					export dev_code=1
+-					shift 1
+-					;;
++        '--dev')
++          # the developement option to debug stuff
++          export dev_code=1
++          shift 1
++          ;;
+ 
+-				'--fake')
+-					# for faking input from files to debug stuff, for example
+-					# LVM drives when no such drives are available
+-					export fake=1
+-					shift 1
+-					;;
++        '--fake')
++          # for faking input from files to debug stuff, for example
++          # LVM drives when no such drives are available
++          export fake=1
++          shift 1
++          ;;
+ 
+-				'--quiet'|'-q')
+-					# no not print anything to stdout
+-					quiet=1
+-					shift 1
+-					;;
++        '--quiet'|'-q')
++          # no not print anything to stdout
++          quiet=1
++          shift 1
++          ;;
+ 
+-				'-V'|'--version')
+-					PRINT_Version
+-					exit 0;
+-					;;
++        '-V'|'--version')
++          PRINT_Version
++          exit 0;
++          ;;
+ 
+-				'--checkdeps')
+-					check_dependencies
+-					exit 0
+-					;;
++        '--checkdeps')
++          check_dependencies
++          exit 0
++          ;;
+ 
+-				'--htmldebug')
+-					hostdir="html/hosts"
+-					usexml=1
+-					create_indexxml > "index.xml"
+-					update_sidebar > "sidebar.html"
+-					cat index.xml
+-					exit 0
+-					;;
++        '--htmldebug')
++          hostdir="html/hosts"
++          usexml=1
++          create_indexxml > "index.xml"
++          update_sidebar > "sidebar.html"
++          cat index.xml
++          exit 0
++          ;;
+ 
+-				*)
+-					module_cmds="$module_cmds $1"
+-					shift 1;
+-					;;
+-			esac
+-		done
+-	else
+-		PRINT_Usage
+-	fi
++        *)
++          module_cmds="$module_cmds $1"
++          shift 1;
++          ;;
++      esac
++    done
++  else
++    PRINT_Usage
++  fi
+ }
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 27 08:13:16 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 27 Dec 2007 08:13:16 +0100
+Subject: [Osinfo-commit] r715 - trunk/osinfo/lib
+Message-ID: <200712270713.lBR7DGK4005335@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-27 08:13:16 +0100 (Thu, 27 Dec 2007)
+New Revision: 715
+
+Modified:
+   trunk/osinfo/lib/cmdline
+Log:
+fixed indentation in cmdline
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2007-12-27 07:12:25 UTC (rev 714)
++++ trunk/osinfo/lib/cmdline	2007-12-27 07:13:16 UTC (rev 715)
+@@ -14,9 +14,9 @@
+         '--profile')
+           # define the output profile
+           if [ ! "$2" ]; then
+-                  info "Profile not defined!"
+-                  flush_values
+-                  exit 1
++            info "Profile not defined!"
++            flush_values
++            exit 1
+           fi
+           profile="${2}"
+           shift 2
+@@ -41,11 +41,11 @@
+         '-o'|'--output')
+           # direct output to a named file
+           if [ $2 ]; then
+-                  usexml=1
+-                  XMLFILE="${2}"
+-                  shift 2
++            usexml=1
++            XMLFILE="${2}"
++            shift 2
+           else
+-                  missing_arg "$1"
++            missing_arg "$1"
+           fi
+           ;;
+ 
+@@ -60,16 +60,16 @@
+         '--tcpsend'|'--netcat')
+           # send xml via tcp to remote osinfo daemon
+           if [ "$2" ] && [ "$3" ]; then
+-                  usexml=1
+-                  makehtml=0
+-                  tcpsend=1
+-                  output_mode="xml"
+-                  HOST="$2"
+-                  PORT="$3"
+-                  shift 3
++            usexml=1
++            makehtml=0
++            tcpsend=1
++            output_mode="xml"
++            HOST="$2"
++            PORT="$3"
++            shift 3
+           else
+-                  echo "You must set the target host and port!"
+-                  missing_arg "$1" 2
++            echo "You must set the target host and port!"
++            missing_arg "$1" 2
+           fi
+           ;;
+ 
+@@ -79,17 +79,17 @@
+           tcpdaemon=1
+ 
+           if [ "$2" ]; then
+-                  tcp_listening_port="$2"
+-                  shift 2
++            tcp_listening_port="$2"
++            shift 2
+ 
+           elif [ ! "$tcp_listening_port" ]; then
+-                  info "You must set the listening port!"
+-                  flush_values
+-                  exit 1
++            info "You must set the listening port!"
++            flush_values
++            exit 1
+ 
+           # the tcp port may be given at the conf file
+           else
+-                  shift 1
++            shift 1
+           fi
+           ;;
+ 
+@@ -97,15 +97,15 @@
+           # read Xorg detected values from this file
+           # (by default /var/log/Xorg.0.log)
+           if [ "$2" ]; then
+-                  if [ ! -e "${2}" ]; then
+-                          echo "File $2 does not exist!"
+-                          exit 1
+-                  fi
+-                  XORG_LOG="${2}"
+-                  shift 2
++            if [ ! -e "${2}" ]; then
++              echo "File $2 does not exist!"
++              exit 1
++            fi
++            XORG_LOG="${2}"
++            shift 2
+           else
+-                  echo "Please give Xorg log input file!"
+-                  missing_arg "$1" 1
++            echo "Please give Xorg log input file!"
++            missing_arg "$1" 1
+           fi
+           ;;
+ 
+@@ -120,11 +120,11 @@
+         '-P'|'--prefix')
+           # define the root dir
+           if [ $2 ]; then
+-                  # Make sure there is only one ending "/".
+-                  prefix="$(echo $2 | sed 's/\/*$/\//')"
+-                  shift 2
++            # Make sure there is only one ending "/".
++            prefix="$(echo $2 | sed 's/\/*$/\//')"
++            shift 2
+           else
+-                  missing_arg "$1"
++            missing_arg "$1"
+           fi
+           ;;
+ 
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 27 08:20:47 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 27 Dec 2007 08:20:47 +0100
+Subject: [Osinfo-commit] r716 - in trunk/osinfo: . lib
+Message-ID: <200712270720.lBR7Kl7L005739@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-27 08:20:47 +0100 (Thu, 27 Dec 2007)
+New Revision: 716
+
+Added:
+   trunk/osinfo/lib/PRINT_Copyright
+Modified:
+   trunk/osinfo/COPYRIGHT
+   trunk/osinfo/lib/PRINT_License
+   trunk/osinfo/lib/cmdline
+   trunk/osinfo/sources
+Log:
+output niceness + copyright update
+
+Modified: trunk/osinfo/COPYRIGHT
+===================================================================
+--- trunk/osinfo/COPYRIGHT	2007-12-27 07:13:16 UTC (rev 715)
++++ trunk/osinfo/COPYRIGHT	2007-12-27 07:20:47 UTC (rev 716)
+@@ -1,2 +1,4 @@
+ Copyright (C) 2005-2006 Arvid Norlander
+-Copyright (C) 2006 Mikael Lammentausta
++Copyright (C) 2006-2007 Mikael Lammentausta
++Copyright (C) 2007 Lauri Miettinen
++
+
+Copied: trunk/osinfo/lib/PRINT_Copyright (from rev 711, trunk/osinfo/lib/PRINT_License)
+===================================================================
+--- trunk/osinfo/lib/PRINT_License	2007-12-23 00:49:43 UTC (rev 711)
++++ trunk/osinfo/lib/PRINT_Copyright	2007-12-27 07:20:47 UTC (rev 716)
+@@ -0,0 +1,6 @@
++function PRINT_Copyright {
++  echo 'Copyright (C) 2005, 2006 Arvid Norlander'
++  echo '              2006, 2007 Mikael Lammentausta'
++  echo '                    2007 Lauri Miettinen'
++  echo
++}
+
+Modified: trunk/osinfo/lib/PRINT_License
+===================================================================
+--- trunk/osinfo/lib/PRINT_License	2007-12-27 07:13:16 UTC (rev 715)
++++ trunk/osinfo/lib/PRINT_License	2007-12-27 07:20:47 UTC (rev 716)
+@@ -1,8 +1,4 @@
+ function PRINT_License {
+-  echo 'Copyright (C) 2005, 2006 Arvid Norlander'
+-  echo '              2006, 2007 Mikael Lammentausta'
+-  echo '                    2007 Lauri Miettinen'
+-  echo
+   echo "This is free software; see the source for copying conditions."
+   echo
+   echo 'This program is distributed in the hope that it will be useful,'
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2007-12-27 07:13:16 UTC (rev 715)
++++ trunk/osinfo/lib/cmdline	2007-12-27 07:20:47 UTC (rev 716)
+@@ -7,7 +7,7 @@
+         '--help'|'-help'|'--usage'|'-usage'|'-h'|'')
+           PRINT_Version
+           PRINT_Help
+-          PRINT_Debug
++          #PRINT_Debug
+           exit 0
+           ;;
+ 
+@@ -203,6 +203,9 @@
+       esac
+     done
+   else
++    PRINT_Version
++    PRINT_License
++    PRINT_Copyright
+     PRINT_Usage
+   fi
+ }
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2007-12-27 07:13:16 UTC (rev 715)
++++ trunk/osinfo/sources	2007-12-27 07:20:47 UTC (rev 716)
+@@ -11,6 +11,8 @@
+ source lib/PRINT_Usage            # usage; if no parameters are given
+ source lib/PRINT_Version          # print --version
+ source lib/PRINT_UnknownOS
++source lib/PRINT_License
++source lib/PRINT_Copyright
+ source lib/PRINT_*
+ 
+ source lib/xml.functions          # xml tag codes
+
+
+
+From lamikae at mail.berlios.de  Sat Dec 29 16:35:12 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sat, 29 Dec 2007 16:35:12 +0100
+Subject: [Osinfo-commit] r718 - in trunk/osinfo: . debug examples
+Message-ID: <200712291535.lBTFZC3T027071@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-29 16:35:11 +0100 (Sat, 29 Dec 2007)
+New Revision: 718
+
+Added:
+   trunk/osinfo/debug/xml.dtd
+   trunk/osinfo/examples/
+   trunk/osinfo/examples/dtd.example
+Log:
+cleanup; some examples
+
+Added: trunk/osinfo/debug/xml.dtd
+===================================================================
+--- trunk/osinfo/debug/xml.dtd	2007-12-27 07:31:20 UTC (rev 717)
++++ trunk/osinfo/debug/xml.dtd	2007-12-29 15:35:11 UTC (rev 718)
+@@ -0,0 +1,120 @@
++#!/bin/bash
++####
++# XML functions for LanForce output.
++####
++
++
++function lanforce_dtd () {
++	echo "<!ELEMENT entityset (entity+)>"
++	echo "<!ELEMENT entity (template, attribute*, note*)>"
++	echo "<!ATTLIST entity id         CDATA #IMPLIED"
++	echo "                 name       CDATA #REQUIRED"
++	echo "                 ip         CDATA #IMPLIED>"
++	echo "<!ELEMENT template EMPTY>"
++	echo "<!ATTLIST template id       CDATA #IMPLIED"
++	echo "                    name    CDATA #IMPLIED"
++	echo "                    code    CDATA #REQUIRED>"
++	echo "<!ELEMENT attribute header?,(value | reference | embeddedreference |"
++	echo "                            externalreference)*, footer?>"
++	echo "<!ATTLIST attribute id      CDATA #IMPLIED"
++	echo "                     name   CDATA #IMPLIED"
++	echo "                     code   CDATA #REQUIRED>"
++	echo "<!ELEMENT header #PCDATA>"
++	echo "<!ELEMENT value #PCDATA>"
++	echo "<!ELEMENT reference EMPTY>"
++	echo "<!ATTLIST reference id      CDATA #IMPLIED"
++	echo "                     type   CDATA #IMPLIED>"
++	echo "<!ELEMENT embeddedreference EMPTY>"
++	echo "<!ATTLIST embeddedreference id         CDATA #IMPLIED"
++	echo "                            type       CDATA #IMPLIED>"
++	echo "<!ELEMENT externalreference EMPTY>"
++	echo "<!ATTLIST externalreference name       CDATA #IMPLIED"
++	echo "                            location   CDATA #IMPLIED>"
++	echo "<!ELEMENT footer #PCDATA>"
++	echo "<!ELEMENT note (name, text)>"
++	echo "<!ATTLIST note   creator               CDATA #REQUIRED"
++	echo "                 timestamp             CDATA #IMPLIED"
++	echo "                 follow-references     CDATA #REQUIRED>"
++	echo "<!ELEMENT name #PCDATA>"
++	echo "<!ELEMENT text #PCDATA>"
++}
++
++function lf_entityset () {
++	id="$1"
++	name="$2"
++	ip="$3"
++
++	echo "<!ELEMENT entityset (entity+)>"
++	echo "<!ELEMENT entity (template, attribute*, note*)>"
++	echo "<!ATTLIST entity id         $id #IMPLIED"
++	echo "                 name       $name #REQUIRED"
++	echo "                 ip         $ip #IMPLIED>"
++}
++
++function lf_entity_start () {
++	hostname="$1"
++	ip="$2"
++	timestamp="$(date +%Y-%m-%d\ %H:%M:%S)"
++
++
++	echo "<entityset>"
++	echo " <entity name=\"$hostname\">"
++	echo "  <template code=\"computer\"\>"
++	lf_attribute_value "computer_name" "${hostname}"
++	lf_attribute_value "scanning_date" "${timestamp}"
++}
++
++function lf_entity_stop () {
++	echo "</entityset>"
++}
++
++function lf_template () {
++	id="$1"
++	name="$2"
++	code="$3"
++
++	echo "<!ELEMENT template EMPTY>"
++	echo "<!ATTLIST template id      $id #IMPLIED"
++	echo "                   name    $name #IMPLIED"
++	echo "                   code    $code #REQUIRED>"
++}
++
++function lf_attributeset () {
++	id="$1"
++	name="$2"
++	code="$3"
++
++	echo "<!ELEMENT attribute header?,(value | reference | embeddedreference |"
++	echo "                            externalreference)*, footer?>"
++	echo "<!ATTLIST attribute id     $id #IMPLIED"
++	echo "                    name   $name #IMPLIED"
++	echo "                    code   $code #REQUIRED>"
++
++}
++
++function lf_attribute_value () {
++	code="$1"
++	value="$2"
++
++	echo "  <attribute code=\"$code\">"
++	echo "   <value>$value</value>"
++	echo "  </attribute>"
++}
++
++function lf_value () {
++	value="$1"
++
++	echo "<!ELEMENT value $value>"
++}
++
++function lf_note () {
++	creator="osinfo alpha"
++	timestamp="$(date +%Y%m%d\ %H:%M)"
++	ref="no"
++
++	echo "<!ELEMENT note (name, text)>"
++	echo "<!ATTLIST note   creator               $creator #REQUIRED"
++	echo "                 timestamp             $timestamp #IMPLIED"
++	echo "                 follow-references     $ref #REQUIRED>"
++#	echo "<!ELEMENT name #PCDATA>"
++}
+
+Added: trunk/osinfo/examples/dtd.example
+===================================================================
+--- trunk/osinfo/examples/dtd.example	2007-12-27 07:31:20 UTC (rev 717)
++++ trunk/osinfo/examples/dtd.example	2007-12-29 15:35:11 UTC (rev 718)
+@@ -0,0 +1,47 @@
++<?xml version="1.0" encoding="UTF-8" ?>
++<entityset>
++ <entity name="COMPUTER001">
++  <template code="computer"/>
++  <attribute code="computer_name">
++   <value>COMPUTER001</value>
++  </attribute>
++  <attribute code="scanning_date">
++   <value>2004-05-21 14:22:27</value>
++  </attribute>
++  <attribute code="ram">
++   <value>1023</value>
++   <footer>MB</footer>
++  </attribute>
++  <attribute code="software">
++   <value>ATI Display Driver</value>
++   <value>Java Web Start</value>
++  </attribute>
++  <attribute code="host_name">
++   <value>computer001</value>
++  </attribute>
++  <attribute code="hard_disk">
++   <value>Maxtor 6E040L0 (atapi)</value>
++  </attribute>
++  <attribute code="drive">
++   <value>C:\ 30.87 GB / 38.28 GB</value>
++  </attribute>
++  <attribute code="cdrom">
++   <value>HL-DT-ST DVD-ROM GDR8161B (atapi)</value>
++  </attribute>
++  <attribute code="drive_capacity">
++   <value>38.28</value>
++   <footer>GB</footer>
++  </attribute>
++  <attribute code="processor_speed">
++   <value>2407</value>
++   <footer>MHz</footer>
++  </attribute>
++  <attribute code="last_logged_user">
++   <value>Administrator</value>
++  </attribute>
++  <note>
++   <name>Agreement</name>
++   <text>Node founded by discovery.</text>
++  </note>
++ </entity>
++</entityset>
+
+
+
+From lamikae at mail.berlios.de  Sun Dec 30 16:25:05 2007
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sun, 30 Dec 2007 16:25:05 +0100
+Subject: [Osinfo-commit] r719 - trunk/osinfo/docs
+Message-ID: <200712301525.lBUFP5ua001486@sheep.berlios.de>
+
+Author: lamikae
+Date: 2007-12-30 16:25:04 +0100 (Sun, 30 Dec 2007)
+New Revision: 719
+
+Modified:
+   trunk/osinfo/docs/TODO
+Log:
+TODO
+
+Modified: trunk/osinfo/docs/TODO
+===================================================================
+--- trunk/osinfo/docs/TODO	2007-12-29 15:35:11 UTC (rev 718)
++++ trunk/osinfo/docs/TODO	2007-12-30 15:25:04 UTC (rev 719)
+@@ -26,8 +26,8 @@
+ *	automatic output filename based on modules and timestamp
+ *	top 10 memory hoggers :)
+ *	pdf output sheet of the profile
++*	osinfo hdd /dev/sda --report --pdf
+ 
+-
+ FEATURES FOR 0.5:
+ ----------------
+ 
+@@ -49,7 +49,6 @@
+ *	mod_applications: /dev/mem: Permission denied on RH9
+ 
+ 
+-
+ GENERAL NOTES:
+ -------------
+ 
+@@ -78,5 +77,5 @@
+ 
+ *	Get tabsize dynamically: "tput it"
+ 
+-*	sort a file reversely by:
++*	sort a file reversely with `tac`, or 
+ 	<stdin> | grep -n . | sort -rn | cut -d':' -f 2 | <stdout>
+
+
+

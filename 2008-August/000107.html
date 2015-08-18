@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r720 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2008-August/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r720%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291510.m7TFALAd002234%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000108.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r720 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r720%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291510.m7TFALAd002234%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r720 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Fri Aug 29 17:10:21 CEST 2008</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000108.html">[Osinfo-commit] r721 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#107">[ date ]</a>
+              <a href="thread.html#107">[ thread ]</a>
+              <a href="subject.html#107">[ subject ]</a>
+              <a href="author.html#107">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2008-08-29 17:10:21 +0200 (Fri, 29 Aug 2008)
+New Revision: 720
+
+Modified:
+   trunk/osinfo/modules/hdd
+Log:
+fixed some indentation
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2007-12-30 15:25:04 UTC (rev 719)
++++ trunk/osinfo/modules/hdd	2008-08-29 15:10:21 UTC (rev 720)
+@@ -543,98 +543,98 @@
+ #  (1) drive device
+ #
+ scan_hdd_partitions() {
+-        local dev_scan=&quot;${1}&quot; part_free=0
+-        partitions_on_drive=&quot;$(grep ^${dev_scan} ${fdisk_info} | wc -l)&quot;
+-        local ID=$hdd_pt_ID
+-        #local swap_color=&quot;${tcYELLOW}&quot;
+-        # marking partitions in different colours would be great, but
+-        # the 'column' tool does not allow that. we should rewrite the
+-        # column function.
++  local dev_scan=&quot;${1}&quot; part_free=0
++  partitions_on_drive=&quot;$(grep ^${dev_scan} ${fdisk_info} | wc -l)&quot;
++  local ID=$hdd_pt_ID
++  #local swap_color=&quot;${tcYELLOW}&quot;
++  # marking partitions in different colours would be great, but
++  # the 'column' tool does not allow that. we should rewrite the
++  # column function.
+ 
+-        #TODO for version 0.5 or so
+-        #hdd_fs_ID=[83] [7] [82] ... #which tells the FS type
+-        #hdd_fs_allocated=[1292372032] [28402202] [10284942]
++  #TODO for version 0.5 or so
++  #hdd_fs_ID=[83] [7] [82] ... #which tells the FS type
++  #hdd_fs_allocated=[1292372032] [28402202] [10284942]
+ 
+ 
+-        # loop all partitions detected by fdisk
+-        for PARTNR in $(seq 1 1 $partitions_on_drive); do
++  # loop all partitions detected by fdisk
++  for PARTNR in $(seq 1 1 $partitions_on_drive); do
+ 
+-                ((ID++)) # increase the array number
++    ((ID++)) # increase the array number
+ 
+-                # get the partition node
+-                hdd_pt_node[$ID]=&quot;$(grep ^${dev_scan} ${fdisk_info} | \
+-                        awk {'print $1'} | sed -n &quot;${PARTNR}{p;q;}&quot; )&quot;
++    # get the partition node
++    hdd_pt_node[$ID]=&quot;$(grep ^${dev_scan} ${fdisk_info} | \
++      awk {'print $1'} | sed -n &quot;${PARTNR}{p;q;}&quot; )&quot;
+ 
+ 
+-                # get the partition size in 1 kB blocks
+-                hdd_pt_blocks[$ID]=&quot;$(fdisk -s ${hdd_pt_node[$ID]})&quot;
++    # get the partition size in 1 kB blocks
++    hdd_pt_blocks[$ID]=&quot;$(fdisk -s ${hdd_pt_node[$ID]})&quot;
+ 
+ 
+-                # detect the filesystem
+-                #
+-                # fdisk uses spaces, not tabs for indentation.
+-                # awk's $NF does not work, as the filesystem name may have spaces.
+-                # awk is looped from field 6 onward. while the field 6 is the
+-                # FS type integer, it has to be included when fdisk adds a '*'
+-                # character to denote bootable partitions. the numbers are removed
+-                # from the beginning of string with sed.
+-                hdd_pt_fs[$ID]=&quot;$(grep ^${hdd_pt_node[$ID]} ${fdisk_info} | \
+-                                  awk '{for (i=6; i&lt;=NF; i++) printf(&quot;%s &quot;,$i);printf (&quot;\n&quot;)}' | \
+-                                  sed 's/^[0-9 ]*//')&quot;
++    # detect the filesystem
++    #
++    # fdisk uses spaces, not tabs for indentation.
++    # awk's $NF does not work, as the filesystem name may have spaces.
++    # awk is looped from field 6 onward. while the field 6 is the
++    # FS type integer, it has to be included when fdisk adds a '*'
++    # character to denote bootable partitions. the numbers are removed
++    # from the beginning of string with sed.
++    hdd_pt_fs[$ID]=&quot;$(grep ^${hdd_pt_node[$ID]} ${fdisk_info} | \
++      awk '{for (i=6; i&lt;=NF; i++) printf(&quot;%s &quot;,$i);printf (&quot;\n&quot;)}' | \
++      sed 's/^[0-9 ]*//')&quot;
+ 
+ 
+-                # if partition is mounted (=is in mtab)
+-                #
+-                # FIXME: submounted (=system for automounting usb sticks) partitions
+-                # may be considered unmounted, while they are not!
++    # if partition is mounted (=is in mtab)
++    #
++    # FIXME: submounted (=system for automounting usb sticks) partitions
++    # may be considered unmounted, while they are not!
+ 
+-                # the partition size is calculated from the value given by df,
+-                # and the float division is computed by bc.
+-                if [ &quot;$(df -Plk | grep ${hdd_pt_node[$ID]})&quot; ]; then
++    # the partition size is calculated from the value given by df,
++    # and the float division is computed by bc.
++    if [ &quot;$(df -Plk | grep ${hdd_pt_node[$ID]})&quot; ]; then
+ 
+-                        # locate the mountpoint
+-                        hdd_pt_mp[$ID]=&quot;$(df -PT ${hdd_pt_node[$ID]} | \
+-                                grep ^${hdd_pt_node[$ID]} | awk {'print $NF'})&quot;
++      # locate the mountpoint
++      hdd_pt_mp[$ID]=&quot;$(df -PT ${hdd_pt_node[$ID]} | \
++        grep ^${hdd_pt_node[$ID]} | awk {'print $NF'})&quot;
+ 
+-                        # get the partition capacity, used and free space in 1 kB blocks
+-                        local df_output=&quot;$(df -Plk | grep ${hdd_pt_node[$ID]})&quot;
+-                        hdd_pt_capacity[$ID]=&quot;$(awk {'print $2'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
+-                        hdd_pt_used[$ID]=&quot;$(awk {'print $3'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
+-                        hdd_pt_free[$ID]=&quot;$(awk {'print $4'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
+-                        hdd_pt_used_pc[$ID]=&quot;$(awk {'print $5'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
++      # get the partition capacity, used and free space in 1 kB blocks
++      local df_output=&quot;$(df -Plk | grep ${hdd_pt_node[$ID]})&quot;
++      hdd_pt_capacity[$ID]=&quot;$(awk {'print $2'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
++      hdd_pt_used[$ID]=&quot;$(awk {'print $3'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
++      hdd_pt_free[$ID]=&quot;$(awk {'print $4'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
++      hdd_pt_used_pc[$ID]=&quot;$(awk {'print $5'} &lt;&lt;&lt; &quot;$df_output&quot;)&quot;
+ 
+-                        # calculate the space allocated by the filesystem
+-                        hdd_pt_fs_size[$ID]=&quot;$(bc -s &lt;&lt;&lt; scale=1\;&quot; \
+-                                &quot;${hdd_pt_free[$ID]}-${hdd_pt_capacity[$ID]})&quot;
++      # calculate the space allocated by the filesystem
++      hdd_pt_fs_size[$ID]=&quot;$(bc -s &lt;&lt;&lt; scale=1\;&quot; \
++        &quot;${hdd_pt_free[$ID]}-${hdd_pt_capacity[$ID]})&quot;
+ 
+-                        # calculate the percentages of free and used space
+-                        hdd_pt_free_pc[$ID]=&quot;$(bc -s &lt;&lt;&lt; scale=1\;&quot; \
+-                                &quot;${hdd_pt_free[$ID]}/${hdd_pt_capacity[$ID]}*100)%&quot;
++      # calculate the percentages of free and used space
++      hdd_pt_free_pc[$ID]=&quot;$(bc -s &lt;&lt;&lt; scale=1\;&quot; \
++        &quot;${hdd_pt_free[$ID]}/${hdd_pt_capacity[$ID]}*100)%&quot;
+ 
+-                else # unmounted
++    else # unmounted
+ 
+-                        # it might be swap..
+-                        if [ &quot;$(swapon -s | grep ${hdd_pt_node[$ID]})&quot; ]; then
+-                        # mark 'swap' as mountpoint for swap partitions, if they're in use
+-                                #hdd_pt_mp[$ID]=&quot;${swap_color}swap${tSTD}&quot;
+-                                hdd_pt_mp[$ID]=&quot;swap&quot;
+-                                hdd_pt_used[$ID]=&quot;$(swapon -s | \
+-                                        grep ^${hdd_pt_node[$ID]} | awk {'print $4'})&quot;
++      # it might be swap..
++      if [ &quot;$(swapon -s | grep ${hdd_pt_node[$ID]})&quot; ]; then
++        # mark 'swap' as mountpoint for swap partitions, if they're in use
++        #hdd_pt_mp[$ID]=&quot;${swap_color}swap${tSTD}&quot;
++        hdd_pt_mp[$ID]=&quot;swap&quot;
++        hdd_pt_used[$ID]=&quot;$(swapon -s | \
++          grep ^${hdd_pt_node[$ID]} | awk {'print $4'})&quot;
+ 
+-                        else
+-                                hdd_pt_mp[$ID]=&quot;-&quot;
+-                                hdd_pt_used[$ID]=&quot;n/a&quot;
+-                        fi
++      else
++        hdd_pt_mp[$ID]=&quot;-&quot;
++        hdd_pt_used[$ID]=&quot;n/a&quot;
++      fi
+ 
+-                        # define the rest to empty values.
+-                        hdd_pt_capacity[$ID]=&quot;&quot;
+-                        hdd_pt_free[$ID]=&quot;&quot;
+-                        hdd_pt_used_pc[$ID]=&quot;&quot;
+-                        hdd_pt_fs_size[$ID]=&quot;&quot;
++      # define the rest to empty values.
++      hdd_pt_capacity[$ID]=&quot;&quot;
++      hdd_pt_free[$ID]=&quot;&quot;
++      hdd_pt_used_pc[$ID]=&quot;&quot;
++      hdd_pt_fs_size[$ID]=&quot;&quot;
+ 
+-                fi
++    fi
+ 
+-        done
++  done
+ }
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000108.html">[Osinfo-commit] r721 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#107">[ date ]</a>
+              <a href="thread.html#107">[ thread ]</a>
+              <a href="subject.html#107">[ subject ]</a>
+              <a href="author.html#107">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

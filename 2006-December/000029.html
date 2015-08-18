@@ -1,0 +1,327 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r641 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r641%20-%20trunk/osinfo/modules&In-Reply-To=%3C200612051517.kB5FHPBb013044%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000028.html">
+   <LINK REL="Next"  HREF="000030.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r641 - trunk/osinfo/modules</H1>
+    <B>anmaster at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r641%20-%20trunk/osinfo/modules&In-Reply-To=%3C200612051517.kB5FHPBb013044%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r641 - trunk/osinfo/modules">anmaster at mail.berlios.de
+       </A><BR>
+    <I>Tue Dec  5 16:17:25 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000028.html">[Osinfo-commit] r640 - in trunk/osinfo: debug/phpsysinfo	ebuild/files html/hosts
+</A></li>
+        <LI>Next message: <A HREF="000030.html">[Osinfo-commit] r642 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: anmaster
+Date: 2006-12-05 16:17:25 +0100 (Tue, 05 Dec 2006)
+New Revision: 641
+
+Modified:
+   trunk/osinfo/modules/hdd
+   trunk/osinfo/modules/memory
+   trunk/osinfo/modules/network
+   trunk/osinfo/modules/ram
+   trunk/osinfo/modules/system
+   trunk/osinfo/modules/wlan
+Log:
+Cleaned up trailing whitespaces
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/hdd	2006-12-05 15:17:25 UTC (rev 641)
+@@ -227,9 +227,9 @@
+ 					add_values      &quot;$hdd_ata_standard&quot;
+ 
+ 					add_attribute 'Driver'
+-					add_values    &quot;$hdd_driver&quot; 
++					add_values    &quot;$hdd_driver&quot;
+ 
+-					add_attribute 'Geometry' 
++					add_attribute 'Geometry'
+ 					add_values    &quot;$hdd_geometry&quot;
+ 				fi
+ 
+@@ -237,7 +237,7 @@
+ 				# SMART capability; more verbose
+ 				if [ $isverbose -ge 2 ]; then
+ 					# SMART capability
+-					add_attribute   'S.M.A.R.T.' 
++					add_attribute   'S.M.A.R.T.'
+ 					add_values      &quot;$hdd_smart&quot;
+ 				fi
+ 
+@@ -248,7 +248,7 @@
+ 					# TEMPERATURE
+ 					add_attribute   'Temperature'
+ 					add_values  &quot;$hdd_tempC&quot;
+-						[ &quot;$hdd_tempC&quot; ] 
++						[ &quot;$hdd_tempC&quot; ]
+ 
+ 					# verbose
+ 					if [ $isverbose -ge 1 ]; then
+@@ -595,7 +595,7 @@
+ 					&quot;${hdd_pt_free[$ID]}/${hdd_pt_capacity[$ID]}*100)%&quot;
+ 
+ 			else # unmounted
+-				
++
+ 				# it might be swap..
+ 				if [ &quot;$(swapon -s | grep ${hdd_pt_node[$ID]})&quot; ]; then
+ 				# mark 'swap' as mountpoint for swap partitions, if they're in use
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/memory	2006-12-05 15:17:25 UTC (rev 641)
+@@ -7,7 +7,7 @@
+ #
+ # lshw is used for RAM size evaluation. the size is reported by BIOS
+ # and is the most accurate way to detect the physical system memory.
+-# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly
+ # incorrectly, since they only detect total ram after kernel allocation.
+ #
+ # TODO: add support for memory type/speed detection thru lshw
+@@ -47,7 +47,7 @@
+ 			add_values        &quot;$(get_physical_ram_size ${ramnode})&quot;
+ 			add_value_footer  &quot;MB&quot;
+ 
+-			[ $usexml -ne 1 ] &amp;&amp; flush_values 
++			[ $usexml -ne 1 ] &amp;&amp; flush_values
+ 			# xml cannot flush here, as add_footer is defined below
+ 
+ 			# get specific membank info
+@@ -95,13 +95,13 @@
+ 
+ 					add_footer        &quot;Bank&quot;
+ 
+-					[ $usexml -ne 1 ] &amp;&amp; flush_values 
++					[ $usexml -ne 1 ] &amp;&amp; flush_values
+ 					# xml cannot flush here, as add_footer is defined below
+ 
+ 				done
+ 
+ 			fi
+-			
++
+ 			[ $usexml -eq 1 ] &amp;&amp; add_footer # RAM
+ 			flush_values
+ 		fi
+@@ -113,7 +113,7 @@
+ 
+ 	function get_physical_ram_size() {
+ 	# Parameters:
+-	#  1  lshw xml memory node file 
++	#  1  lshw xml memory node file
+ 	#     (output from `extr_lshw_node memory`)
+ 
+ 		ramnode=&quot;${1}&quot;
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/network	2006-12-05 15:17:25 UTC (rev 641)
+@@ -127,35 +127,35 @@
+ 		}
+ 
+ 	function get_nis_domain() {
+-		hostname -y 2&gt; /dev/null	
++		hostname -y 2&gt; /dev/null
+ 		}
+ 
+ 	function get_dns_domain() {
+-		hostname -d 2&gt; /dev/null	
++		hostname -d 2&gt; /dev/null
+ 		}
+ 
+ 	function get_fqdn() {
+-		hostname -f 2&gt; /dev/null	
++		hostname -f 2&gt; /dev/null
+ 		}
+ 
+ 	function get_ipv4() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+ 		grep -Eio 'inet[A-Za-z: ]*([0-9]{1,3}\.){3}[0-9]{1,3}' ${1} | \
+-	        grep -Eo '[0-9\.]+' 
++	        grep -Eo '[0-9\.]+'
+ 		}
+ 
+ 	function get_ipv6() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+ 		sed &quot;s/  /\n/g&quot; ${1} | grep -i inet6 | \
+-	        grep -Eio '([0-9a-f]{3,4}(\:){1,2}){4,8}([0-9a-f]{3,4})' 
++	        grep -Eio '([0-9a-f]{3,4}(\:){1,2}){4,8}([0-9a-f]{3,4})'
+ 		}
+ 
+ 	function get_enckey() {
+ 		# parameters:
+ 		#  1  output of iwconfig (file)
+-		grep -Eoi 'encryption key:[0-9A-Z\-]*' ${1} | awk -F\: {'print $2'}		
++		grep -Eoi 'encryption key:[0-9A-Z\-]*' ${1} | awk -F\: {'print $2'}
+ 	}
+ 
+ 	function get_mac_address() {
+
+Modified: trunk/osinfo/modules/ram
+===================================================================
+--- trunk/osinfo/modules/ram	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/ram	2006-12-05 15:17:25 UTC (rev 641)
+@@ -5,7 +5,7 @@
+ #
+ # lshw is used for RAM size evaluation. the size is reported by BIOS
+ # and is the most accurate way to detect the physical system memory.
+-# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly
+ # incorrectly, since they only detect total ram after kernel allocation.
+ #
+ Module_ram() {
+@@ -33,7 +33,7 @@
+ 			add_value_footer  &quot;MB&quot;
+ 
+ 			# xml cannot flush here, as add_footer is defined below
+-			[ $usexml -ne 1 ] &amp;&amp; flush_values 
++			[ $usexml -ne 1 ] &amp;&amp; flush_values
+ 
+ 			# get specific membank info
+ 			#if CheckReq_root more specific RAM information; then
+@@ -90,13 +90,13 @@
+ 
+ 					add_footer        &quot;Bank&quot;
+ 
+-					[ $usexml -ne 1 ] &amp;&amp; flush_values 
++					[ $usexml -ne 1 ] &amp;&amp; flush_values
+ 					# xml cannot flush here, as add_footer is defined below
+ 
+ 				done
+ 
+ 			fi
+-			
++
+ 			[ $usexml -eq 1 ] &amp;&amp; add_footer # RAM
+ 			flush_values
+ 		fi
+@@ -104,7 +104,7 @@
+ 
+ 	function get_physical_ram_size() {
+ 	# Parameters:
+-	#  1  lshw xml memory node file 
++	#  1  lshw xml memory node file
+ 	#     (output from `extr_lshw_node memory`)
+ 
+ 		ramnode=&quot;${1}&quot;
+
+Modified: trunk/osinfo/modules/system
+===================================================================
+--- trunk/osinfo/modules/system	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/system	2006-12-05 15:17:25 UTC (rev 641)
+@@ -62,7 +62,7 @@
+ 		add_attribute   &quot;Fan&quot;
+ 		local cpu_fan=&quot;$(sensors | grep -i 'cpu fan' | \
+ 		                 grep -Eo '[0-9]+ RPM')&quot;
+-		add_values       &quot;$(awk  {'print $1'} &lt;&lt;&lt; $cpu_fan )&quot; 
++		add_values       &quot;$(awk  {'print $1'} &lt;&lt;&lt; $cpu_fan )&quot;
+ 		[ &quot;$cpu_fan&quot; ] &amp;&amp; add_value_footer &quot;RPM&quot;
+ 	}
+ 
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/wlan	2006-12-05 15:17:25 UTC (rev 641)
+@@ -60,7 +60,7 @@
+ 			               sed 's/\&quot;//g')&quot;
+ 
+ 			add_header   &quot;$essid&quot;
+-			
++
+ 			# if the interface is associated to this ESSID
+ 			if [ $accociated ]; then
+ 				#access_points[${access_points[@]}]=&quot;$(grep -A 1 -i ${access_point}&quot; \
+@@ -82,7 +82,7 @@
+ 			add_attribute   'link quality'
+ 			add_values      &quot;$(grep -Eo 'Quality[\=:][a-zA-Z0-9\/]+' $cell_tmp | \
+ 			                   awk -F&quot;=|:&quot; '{print $2}')&quot;
+-							   
++
+ 			add_attribute   'address'
+ 			add_values      &quot;$(awk -F&quot;Address:&quot; '{print $2}' $cell_tmp )&quot;
+ 
+@@ -94,7 +94,7 @@
+ 			add_values      &quot;$(grep -i $essid -A 2 $iw_src | \
+ 			                   grep -Eo 'Frequency[:0-9\.\ MGTP]*Hz' | \
+ 							   awk -F':' {'print $2'})&quot;
+-							   
++
+ 			add_attribute   'bit rate'
+ 			add_values      &quot;$(grep -i $essid -A 2 $iw_src | \
+ 			                   grep -iEo 'bit rate[:0-9\.\ MGTP]*b\/s' | \
+@@ -119,7 +119,7 @@
+ 				add_attribute   'group cipher'
+ 				add_values      &quot;$(grep -i 'group cipher' $cell_tmp | \
+ 					               awk -F&quot;=|:&quot; '{print $2}')&quot;
+-			
++
+ 				add_attribute   'pairwise cipher'
+ 				add_values      &quot;$(grep -i 'pairwise cipher' $cell_tmp | \
+ 				                   awk -F&quot;=|:&quot; '{print $2}')&quot;
+@@ -131,8 +131,8 @@
+ 
+ 
+ 			#add_attribute   'security mode'
+-			
+ 
++
+ 			add_attribute   'signal level'
+ 			add_values      &quot;$(grep  'Signal level[\=:][-a-zA-Z0-9\/ ]+' $cell_tmp | \
+ 			                   awk -F&quot;=|:&quot; '{print $2}')&quot;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000028.html">[Osinfo-commit] r640 - in trunk/osinfo: debug/phpsysinfo	ebuild/files html/hosts
+</A></li>
+	<LI>Next message: <A HREF="000030.html">[Osinfo-commit] r642 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

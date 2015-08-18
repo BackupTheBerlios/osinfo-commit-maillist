@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r658 - trunk/osinfo/lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r658%20-%20trunk/osinfo/lib&In-Reply-To=%3C200612181004.kBIA4Cui006032%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000045.html">
+   <LINK REL="Next"  HREF="000047.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r658 - trunk/osinfo/lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r658%20-%20trunk/osinfo/lib&In-Reply-To=%3C200612181004.kBIA4Cui006032%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r658 - trunk/osinfo/lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Dec 18 11:04:12 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000045.html">[Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib
+</A></li>
+        <LI>Next message: <A HREF="000047.html">[Osinfo-commit] r659 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-18 11:04:12 +0100 (Mon, 18 Dec 2006)
+New Revision: 658
+
+Modified:
+   trunk/osinfo/lib/global_variables
+Log:
+prevented the ugly xsl file to be written
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2006-12-18 10:00:53 UTC (rev 657)
++++ trunk/osinfo/lib/global_variables	2006-12-18 10:04:12 UTC (rev 658)
+@@ -50,7 +50,8 @@
+ INDEXXMLFILE=&quot;${rundir}/index.xml&quot;
+ XMLFILE=&quot;$(get_hostname).xml&quot;
+ XSLDEBUGFILE=&quot;osinfo.xsl&quot;
+-XSLFILE=&quot;$(get_hostname).xsl&quot; ; rm &quot;$XSLFILE&quot; -f
++#XSLFILE=&quot;$(get_hostname).xsl&quot; ; rm &quot;$XSLFILE&quot; -f
++XSLFILE=&quot;/dev/null&quot;
+ HTMLFILE=&quot;$(get_hostname).html&quot;
+ 
+ rel_hostdir='./hosts'
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000045.html">[Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib
+</A></li>
+	<LI>Next message: <A HREF="000047.html">[Osinfo-commit] r659 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

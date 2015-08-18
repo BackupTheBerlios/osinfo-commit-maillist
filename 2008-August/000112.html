@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r725 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2008-August/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r725%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808311230.m7VCUsQs026781%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000111.html">
+   <LINK REL="Next"  HREF="000113.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r725 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r725%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808311230.m7VCUsQs026781%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r725 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Sun Aug 31 14:30:54 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000111.html">[Osinfo-commit] r724 - trunk/osinfo/modules
+</A></li>
+        <LI>Next message: <A HREF="000113.html">[Osinfo-commit] r726 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#112">[ date ]</a>
+              <a href="thread.html#112">[ thread ]</a>
+              <a href="subject.html#112">[ subject ]</a>
+              <a href="author.html#112">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2008-08-31 14:30:54 +0200 (Sun, 31 Aug 2008)
+New Revision: 725
+
+Modified:
+   trunk/osinfo/modules/hdd
+Log:
+fixed filesystem detection, columnation and unused columns if SMART is not available
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2008-08-29 16:01:24 UTC (rev 724)
++++ trunk/osinfo/modules/hdd	2008-08-31 12:30:54 UTC (rev 725)
+@@ -9,7 +9,7 @@
+ # due to support in recent smartmontools (version 5.36).
+ #
+ # used tools:
+-# fdisk, df, udev, /proc (deprecated), smartmontools, hdparm, bc, tune2fs
++# fdisk, df, udev, /proc (deprecated), smartmontools, hdparm, bc, tune2fs, file
+ Module_hdd() {
+   local moduleName=&quot;Hard drive configuration&quot;
+   local moduleDescription=&quot;Information of the hard drives in the system&quot;
+@@ -252,13 +252,14 @@
+       # SMART capability; more verbose
+       if [ $isverbose -ge 2 ]; then
+         # SMART capability
++        [[ &quot;$hdd_smart&quot; == &quot;&quot; ]] &amp;&amp; hdd_smart=&quot;Device does not support SMART&quot;
+         add_attribute   'S.M.A.R.T.'
+         add_values      &quot;$hdd_smart&quot;
+       fi
+ 
+       # S.M.A.R.T DATA
+       # TODO: use add_subheader
+-      if [ &quot;$(type -p smartctl)&quot; ]; then
++      if [ &quot;$(type -p smartctl)&quot; ] &amp;&amp; [ &quot;$hdd_smart&quot; ]; then
+ 
+         # TEMPERATURE
+         add_attribute   'Temperature'
+@@ -314,16 +315,15 @@
+   
+             # blocks
+             add_values    &quot;$(hdd_human_readable ${hdd_pt_blocks[$hdd_pt]})&quot;
++
+             # free
+-            if [ &quot;${hdd_pt_free[$hdd_pt]}&quot; != &quot;&quot; ]; then
+             add_values    &quot;$(hdd_human_readable ${hdd_pt_free[$hdd_pt]})&quot;
+-            #add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
+-            else
+-              add_values '-'
+-            fi
+ 
+-            # fs type
+-            add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
++            # filesystem
++            fs=&quot;$(file -sL ${hdd_pt_node[$hdd_pt]} 2&gt;/dev/null | awk -F': |\(' {'print $2'})&quot;
++            [[ &quot;$(grep ^ERROR &lt;&lt;&lt; $fs)&quot; ]] &amp;&amp; \
++              fs=&quot;${hdd_pt_fs[$hdd_pt]}&quot; # detection failed, use fdisk's value
++            add_values &quot;$fs&quot;
+ 
+           else
+ 
+@@ -698,6 +698,8 @@
+                 fi
+ 
+                 echo &quot;${hdd_val}&quot;
++        else
++          echo &quot;n/a&quot;
+         fi
+ }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000111.html">[Osinfo-commit] r724 - trunk/osinfo/modules
+</A></li>
+	<LI>Next message: <A HREF="000113.html">[Osinfo-commit] r726 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#112">[ date ]</a>
+              <a href="thread.html#112">[ thread ]</a>
+              <a href="subject.html#112">[ subject ]</a>
+              <a href="author.html#112">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

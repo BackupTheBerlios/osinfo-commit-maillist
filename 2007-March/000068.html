@@ -1,0 +1,231 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r680 - in trunk/osinfo: lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r680%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703061306.l26D6b84009551%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000067.html">
+   <LINK REL="Next"  HREF="000069.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r680 - in trunk/osinfo: lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r680%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703061306.l26D6b84009551%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r680 - in trunk/osinfo: lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar  6 14:06:37 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000067.html">[Osinfo-commit] r679 - in trunk/osinfo: . modules profiles
+</A></li>
+        <LI>Next message: <A HREF="000069.html">[Osinfo-commit] r681 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-06 14:06:37 +0100 (Tue, 06 Mar 2007)
+New Revision: 680
+
+Modified:
+   trunk/osinfo/lib/PRINT_Version
+   trunk/osinfo/lib/print.functions
+   trunk/osinfo/lib/xml.functions
+   trunk/osinfo/modules/devices
+Log:
+device xml is now fairly clean
+
+Modified: trunk/osinfo/lib/PRINT_Version
+===================================================================
+--- trunk/osinfo/lib/PRINT_Version	2007-03-06 12:48:27 UTC (rev 679)
++++ trunk/osinfo/lib/PRINT_Version	2007-03-06 13:06:37 UTC (rev 680)
+@@ -2,8 +2,9 @@
+ 	echo &quot;${tBOLD}${appname}${tSTD}-${major_version}.${minor_version}.${micro_version}-${patch_version} ${dev_status}&quot;
+ 	#[ &quot;$dev_status&quot; == &quot;stable&quot; ] &amp;&amp; \
+ 	echo &quot;Release date: &quot;$(date -d $release_date +%A\ %e\ %B\ %Y)
+-	echo 'Copyright (C) 2005-2006 Arvid Norlander'
+-	echo 'Copyright (C) 2006 Mikael Lammentausta'
++	echo 'Copyright (C) 2005, 2006 Arvid Norlander'
++	echo '              2006, 2007 Mikael Lammentausta'
++	echo '                    2007 Lauri Miettinen'
+ 	echo
+ 	echo &quot;This is free software; see the source for copying conditions.&quot;
+ 	echo
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2007-03-06 12:48:27 UTC (rev 679)
++++ trunk/osinfo/lib/print.functions	2007-03-06 13:06:37 UTC (rev 680)
+@@ -228,7 +228,7 @@
+ 		idtag=&quot;$(awk -F% {'print $2'} &lt;&lt;&lt; ${item})&quot;
+ 
+ 		# nice debugging tool
+-		echo $item
++		# echo $item
+ 
+ 		# case by the &quot;%identifier%&quot; tag
+ 		case $idtag in
+@@ -242,7 +242,7 @@
+ 				# send the preceding value and the footer to xmlfile.
+ 				xml_value &quot;$value_item ${item}&quot;
+ 				unset value_item
+-			;;
++				;;
+ 
+ 			# add everything else but the footer
+ 			*)
+@@ -264,7 +264,7 @@
+ 					value_item=&quot;$(sed 's/%value%// ; s/\\[a-z]//g;s/^ *//' &lt;&lt;&lt; &quot;${item}&quot;)&quot;
+ 
+ 					#xml_value &quot;${item}&quot; &gt;&gt; &quot;${XMLFILE}&quot;
+-				;;
++					;;
+ 
+ 				*)
+ 
+@@ -276,14 +276,15 @@
+ 					case $idtag in
+ 
+ 						'attribute')
++							# extract the XML &lt;description&gt; tag
+ 							iddesc=&quot;$(awk -F% {'print $3'} &lt;&lt;&lt; ${item})&quot;
+ 							iddesc=&quot;$(awk -F\; {'print $1'} &lt;&lt;&lt; ${iddesc})&quot;
+-							item=&quot;$(validate_xml_item &quot;${item}&quot;)&quot;
++
+ 							open_attribute_tag &quot;$item&quot;
+ 
+ 							add_indentation
+ 							xml_description &quot;$iddesc&quot;
+-						;;
++							;;
+ 
+ 						'header'|'subheader')
+ 							## add indentation
+@@ -304,7 +305,7 @@
+ 
+ 							unset code
+ 							((XML_INDENT++))
+-						;;
++							;;
+ 
+ 						'footer')
+ 							((XML_INDENT--))
+@@ -314,7 +315,7 @@
+ 							item=&quot;$(sed s/%footer%// &lt;&lt;&lt; &quot;${item}&quot;)&quot;
+ 							item=&quot;$(validate_xml_item &quot;${item}&quot;)&quot;
+ 							xml_tag_stop &quot;${item}&quot;
+-						;;
++							;;
+ 					esac
+ 				esac
+ 			;;
+@@ -343,21 +344,23 @@
+ 
+ 	open_attribute_tag() {
+ 		add_indentation
+-
+ 		# parse item
+ 		item=&quot;$(sed s/%attribute%// &lt;&lt;&lt; &quot;${item}&quot;)&quot;
+ 		code=$(awk -F\; {'print $2'} &lt;&lt;&lt; &quot;${item}&quot;)
++
+ 		# item validation strips away the code
+ 		item=&quot;$(validate_xml_item &quot;${item}&quot;)&quot;
+-		xml_attribute_start &quot;${item}&quot; &quot;${code}&quot;
++		local tag=&quot;$(awk -F\; {'print $1'} &lt;&lt;&lt; &quot;${item}&quot;)&quot;
++
++		xml_attribute_start &quot;${tag}&quot; &quot;${code}&quot;
+ 		((XML_INDENT++))
+ 		attrib_status=&quot;open&quot;
+ 	}
+ 
+ 	validate_xml_item() {
+-		# uppercase to lowercase ; spaces to downscores ; trim all leading spaces
+-		awk -F\; {'print $1'} &lt;&lt;&lt; &quot;${1}&quot; | \
+-			sed 's/\\[a-z]//g; s/\ \|\//_/g ; s/^\ *//' | tr 'A-Z' 'a-z'
++		# trim all leading spaces ; trim all non-alphabetical characters ;
++		# spaces to downscores ; uppercase to lowercase
++		sed 's/^\ *// ; s/\\[a-z]//g; s/\ \|\//_/g ' &lt;&lt;&lt; &quot;${@}&quot;| tr 'A-Z' 'a-z'
+ 	}
+ #######
+ 
+
+Modified: trunk/osinfo/lib/xml.functions
+===================================================================
+--- trunk/osinfo/lib/xml.functions	2007-03-06 12:48:27 UTC (rev 679)
++++ trunk/osinfo/lib/xml.functions	2007-03-06 13:06:37 UTC (rev 680)
+@@ -2,7 +2,7 @@
+ #######
+ # xml.functions - shared functions for XML output.
+ # Copyright (C) 2006 Arvid Norlander
+-# Copyright (C) 2006 Mikael Lammentausta
++# Copyright (C) 2006, 2007 Mikael Lammentausta
+ # All rights reserved.
+ #
+ # Redistribution and use in source and binary forms, with or without
+
+Modified: trunk/osinfo/modules/devices
+===================================================================
+--- trunk/osinfo/modules/devices	2007-03-06 12:48:27 UTC (rev 679)
++++ trunk/osinfo/modules/devices	2007-03-06 13:06:37 UTC (rev 680)
+@@ -115,21 +115,19 @@
+ 		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+ 		add_header    &quot;Motherboard&quot;
++		add_attribute 'Manufacturer' 'mother_board_manufacturer'
+ 
+-		add_attribute ' Manufacturer' \
+-				  'mother_board_manufacturer'
+ 		add_values    &quot;$(get_mobo_manufacturer)&quot;
+ 		              # these functions are inherited from module_dmi
+ 
+-		add_attribute ' Model' \
+-				  'mother_board_model'
++		add_attribute 'Model' 'mother_board_model'
+ 		add_values    &quot;$(get_mobo_model)&quot;
+ 
+ 		# load BIOS info from dmi
+ 		local handle_desc='BIOS Information'
+ 		extract_dmi ${handle_desc} &gt; ${osinfo_tmp}
+ 
+-		add_attribute ' BIOS revision'	'bios_version'
++		add_attribute 'BIOS revision' 'bios_version'
+ 		add_values    &quot;$(get_bios_revision)&quot;
+ 
+ 		print_bridges;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000067.html">[Osinfo-commit] r679 - in trunk/osinfo: . modules profiles
+</A></li>
+	<LI>Next message: <A HREF="000069.html">[Osinfo-commit] r681 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

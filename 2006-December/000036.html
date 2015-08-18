@@ -1,0 +1,280 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r648 - in trunk/osinfo: . debug debug/bugs lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r648%20-%20in%20trunk/osinfo%3A%20.%20debug%20debug/bugs%20lib&In-Reply-To=%3C200612070744.kB77i6GK020613%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000035.html">
+   <LINK REL="Next"  HREF="000037.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r648 - in trunk/osinfo: . debug debug/bugs lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r648%20-%20in%20trunk/osinfo%3A%20.%20debug%20debug/bugs%20lib&In-Reply-To=%3C200612070744.kB77i6GK020613%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r648 - in trunk/osinfo: . debug debug/bugs lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Dec  7 08:44:06 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000035.html">[Osinfo-commit] r647 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000037.html">[Osinfo-commit] r649 - in trunk/osinfo: . modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-07 08:44:06 +0100 (Thu, 07 Dec 2006)
+New Revision: 648
+
+Added:
+   trunk/osinfo/debug/bugs/
+   trunk/osinfo/debug/bugs/9626.wlan
+Modified:
+   trunk/osinfo/lib/infostring.functions
+   trunk/osinfo/sources
+Log:
+fixed a small bug (probably a typo) that broke everything :)
+
+Added: trunk/osinfo/debug/bugs/9626.wlan
+===================================================================
+--- trunk/osinfo/debug/bugs/9626.wlan	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/debug/bugs/9626.wlan	2006-12-07 07:44:06 UTC (rev 648)
+@@ -0,0 +1,147 @@
++++ shift 1
++++ '[' 1 -gt 0 ']'
++++ case &quot;$1&quot; in
++++ module_cmds=' wlan'
++++ shift 1
++++ '[' 0 -gt 0 ']'
++++ Check_logfile
++++ touch /var/log/osinfo.log
++++ '[' 0 -eq 0 ']'
++++ chmod a+rwx /var/log/osinfo.log
++++ flush_values
++++ local hdr
+++++ seq 0 -1 1
++++ '[' 0 -eq 0 ']'
++++ print_stdout
++++ local 'header_color='
++++ local 'info_color='
++++ local item itemnr value_string=
+++++ seq 1 1 0
+++++ sed 's/%value%/\?/g ; s/%col%/\?/g'
++++ column -t '-s?'
++++ echo -e
++++ echo
++
++++ unset infostring
++++ '[' 0 -eq 0 ']'
++++ select_profile
++++ case $profile in
++++ default_profile
++++ for module in '$module_cmds'
++++ local GOOD_MODULES
++++ '[' linux == linux ']'
++++ GOOD_MODULES='system distro kernel processor ram memory hdd network wlan dmi applications terminal devices cdrom users services battery oem'
++++ break
++++ '[' / '!=' / ']'
++++ '[' 0 -eq 1 ']'
++++ for module in '$module_cmds'
++++ case $module in
+++++ grep -o wlan
++++ Module_wlan
++++ local 'moduleName=Wlan information'
++++ local 'moduleDescription=detects wireless network access points'
++++ Modules=(&quot;${Modules[@]}&quot; &quot;$moduleName;$moduleDescription&quot;)
++++ module_header 'Wlan information'
++++ case &quot;$output_mode&quot; in
++++ print_line
++++ local sup_ext=0
++++ tput enacs
++++ '[' 0 -eq 0 ']'
++++ tput enacs
++++ tput smacs
++++ '[' 0 -eq 0 ']'
++++ sup_ext=1
++++ '[' 1 -eq 1 ']'
++++ sup_ext=1
++++ '[' -z rxvt-unicode ']'
++++ '[' 0 -eq 1 ']'
++++ '[' 1 -eq 1 ']'
++++ tput enacs
++++ tput smacs
++++ &#8804;&#9226;&#9149; &#9472;
++++ &#9500;&#9148; -&#9229; '\012'
+++++ &#177;&#9226;&#9500; &#9228;&#9146;&#9484;&#9149;
++++++ &#9500;&#9147;&#9508;&#9500; &#9228;&#9146;&#9484;&#9149;
+++++ &#9226;&#9228;&#9252;&#9146; -&#9532; 80
++++ &#9252;&#9226;&#9618;&#9229; -&#9532; 80
++&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;++ &#9500;&#9147;&#9508;&#9500; &#9148;&#9492;&#9618;&#9228;&#9149;
++++ echo 'Wlan information:'
++Wlan information:
++++ print_line
++++ local sup_ext=0
++++ tput enacs
++++ '[' 0 -eq 0 ']'
++++ tput enacs
++++ tput smacs
++++ '[' 0 -eq 0 ']'
++++ sup_ext=1
++++ '[' 1 -eq 1 ']'
++++ sup_ext=1
++++ '[' -z rxvt-unicode ']'
++++ '[' 0 -eq 1 ']'
++++ '[' 1 -eq 1 ']'
++++ tput enacs
++++ tput smacs
++++ &#8804;&#9226;&#9149; &#9472;
+++++ &#177;&#9226;&#9500; &#9228;&#9146;&#9484;&#9149;
++++++ &#9500;&#9147;&#9508;&#9500; &#9228;&#9146;&#9484;&#9149;
++++ &#9500;&#9148; -&#9229; '\012'
+++++ &#9226;&#9228;&#9252;&#9146; -&#9532; 80
++++ &#9252;&#9226;&#9618;&#9229; -&#9532; 80
++&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;++ &#9500;&#9147;&#9508;&#9500; &#9148;&#9492;&#9618;&#9228;&#9149;
+++++ mktemp /tmp/osinfo.XXXXXX
++++ iw_src=/tmp/osinfo.VDEPRJ
+++++ mktemp /tmp/osinfo.XXXXXX
++++ ap_src=/tmp/osinfo.A0ZtZJ
+++++ mktemp /tmp/osinfo.XXXXXX
++++ cell_tmp=/tmp/osinfo.pWcU9J
++++ TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$iw_src&quot; &quot;$ap_src&quot; &quot;$cell_tmp&quot;)
+++++ type -p iwconfig
++++ '[' '!' /sbin/iwconfig ']'
++++ '[' linux == linux ']'
++++ iwconfig
+++++ grep 'IEEE 802' /tmp/osinfo.VDEPRJ
+++++ awk '{print $1}'
++++ local wlan_devices=
++++ iwlist scan
++++ '[' 0 == 1 ']'
+++++ grep -i cell /tmp/osinfo.A0ZtZJ
+++++ wc -l
++++ local ap_count=12
++++ '[' 12 -ge 1 ']'
++++ info '12 access points found by device '
++++ echo -e '12 access points found by device '
++12 access points found by device 
++++ IFS_bak=' hift
++'
++++ IFS='
++'
+++++ grep -i cell /tmp/osinfo.A0ZtZJ
++++ for access_point in '$(grep -i cell ${ap_src})'
++++ extr_node '          Cell 01 - Address: 00:09:5B:6C:DF:BC' /tmp/osinfo.A0ZtZJ Cell
++++ local 'node_id=          Cell 01 - Address: 00:09:5B:6C:DF:BC'
++++ local input_file=/tmp/osinfo.A0ZtZJ
++++ local node_closer=Cell
++++ local nr node
++++ local all_nodes=
++++ local node_count=0
+++++ mktemp /tmp/osinfo.XXXXXX
++++ input_tmp=/tmp/osinfo.UHufMH
++++ TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$input_tmp&quot;)
++++ grep -n . /tmp/osinfo.A0ZtZJ
++++ '[' '!' Cell ']'
+++++ grep -i '          Cell 01 - Address: 00:09:5B:6C:DF:BC' /tmp/osinfo.UHufMH
++++ all_nodes='2:          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ grep -i '          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ wc -l
++++ node_count=1
++++ '[' 1 -ge 1 ']'
+++++ seq 1 1 1
++++ for nr in '$(seq 1 1 $node_count)'
+++++ sed -n '1{p;q;}'
++++ this_node='2:          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ awk -F: '{print $1}'
++++ local begin=2
+++++ awk -F: '{print $2}'
+++++ grep -Eo '^[ ]*'
+++++ wc -m
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/lib/infostring.functions	2006-12-07 07:44:06 UTC (rev 648)
+@@ -126,17 +126,20 @@
+ #
+ # This function inserts the input strings into the $infostring[] array.
+ #
+-# if the value is empty, or just whitespaces, remove the preceding attribute,
+-# if verbosity does not require extreme explicity (-vv)
+ function add_values {
++	# if the value is empty, or just whitespaces, remove the preceding attribute
+ 	if [ ! &quot;$@&quot; ] || \
+ 	   [ ! &quot;$(grep '[^\ *]' &lt;&lt;&lt; &quot;${@}&quot;)&quot; ]; then
+-#	   [ $isverbose -lt 2 ]; then
+-		# if the last non-empty item (second to last)
+-		# is an attribute or a header, unset it
+-#		if [ &quot;$(grep 'attribute\|header' &lt;&lt;&lt; ${infostring[$((${#infostring[@]}-1))]} )&quot; ]; then
+-			unset infostring[$((${#infostring[@]}-1))]
+-			# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: &quot;
++
++		# but only if verbosity does not require extreme explicity (-vv)
++		if [ $isverbose -ge 2 ]; then
++
++			# if the last non-empty item (second to last)
++			# is an attribute or a header, unset it
++			if [ &quot;$(grep 'attribute\|header' &lt;&lt;&lt; ${infostring[$((${#infostring[@]}-1))]} )&quot; ]; then
++				unset infostring[$((${#infostring[@]}-1))]
++				# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: &quot;
++			fi
+ 		fi
+ 	else # there is an input value
+ 		# clear leading whitespaces
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/sources	2006-12-07 07:44:06 UTC (rev 648)
+@@ -14,12 +14,12 @@
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+ 
+-source lib/bash.functions         # colour &amp; line functions
+ source lib/infostring.functions   # infostring handler functions
+ source lib/print.functions        # format output
+ source lib/helper.functions       # helperts
+ source lib/daemon.functions       # daemon mode functions
+ source lib/lanforce.functions     # lanforce xml tag codes
++source lib/bash.functions         # colour &amp; line functions
+ 
+ source lib/update_sidebar         # html function
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000035.html">[Osinfo-commit] r647 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000037.html">[Osinfo-commit] r649 - in trunk/osinfo: . modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#36">[ date ]</a>
+              <a href="thread.html#36">[ thread ]</a>
+              <a href="subject.html#36">[ subject ]</a>
+              <a href="author.html#36">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

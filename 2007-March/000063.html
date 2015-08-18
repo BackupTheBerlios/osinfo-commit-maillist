@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r675 - in trunk/osinfo: lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r675%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703061049.l26Andx5020012%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000062.html">
+   <LINK REL="Next"  HREF="000064.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r675 - in trunk/osinfo: lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r675%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200703061049.l26Andx5020012%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r675 - in trunk/osinfo: lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Tue Mar  6 11:49:39 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000062.html">[Osinfo-commit] r674 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000064.html">[Osinfo-commit] r676 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-06 11:49:38 +0100 (Tue, 06 Mar 2007)
+New Revision: 675
+
+Modified:
+   trunk/osinfo/lib/print.functions
+   trunk/osinfo/modules/devices
+Log:
+fixed another ugly bug in module devices
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2007-03-06 10:28:06 UTC (rev 674)
++++ trunk/osinfo/lib/print.functions	2007-03-06 10:49:38 UTC (rev 675)
+@@ -228,7 +228,7 @@
+ 		idtag=&quot;$(awk -F% {'print $2'} &lt;&lt;&lt; ${item})&quot;
+ 
+ 		# nice debugging tool
+-		#echo $item
++		echo $item
+ 
+ 		# case by the &quot;%identifier%&quot; tag
+ 		case $idtag in
+
+Modified: trunk/osinfo/modules/devices
+===================================================================
+--- trunk/osinfo/modules/devices	2007-03-06 10:28:06 UTC (rev 674)
++++ trunk/osinfo/modules/devices	2007-03-06 10:49:38 UTC (rev 675)
+@@ -54,7 +54,7 @@
+ 	fi
+ 
+ 	# output by category
+-	print_categories
++#	print_categories
+ 
+ 	flush_values
+ }
+@@ -144,20 +144,20 @@
+ 
+ 	print_bridges(){
+ 		add_subheader 'Bridges'
+-		add_attribute 'foo'
+-		add_values 'bar'
++		grep_lspci_array &quot;bridge&quot;
+ 		add_footer 'Bridges'
+ 	}
+ 
+ 	print_controllers(){
+ 		add_subheader 'Controllers'
++		grep_lspci_array &quot;controller&quot;
+ 		add_footer 'Controllers'
+ 	}
+ 
+ 	print_interfaces(){
+ 		add_subheader 'Interfaces'
++		grep_lspci_array &quot;interface&quot;
+ 		add_footer 'Interfaces'
+-
+ 	}
+ 
+ 	#####################
+@@ -193,34 +193,22 @@
+ 		# grep the wanted nodes from the array into another array
+ 		for arraynr in $(seq 1 1 ${#devices[@]}); do
+ 
+-			# if we have a hit (grep matches the device_id and we don't
+-			# match the DO_NOT_PRINT expressions)
+-				if [ &quot;$(grep -i $device_id  &lt;&lt;&lt; ${devices[$arraynr]} )&quot; ] &amp;&amp;
+-				[ -z &quot;$(grep -i $DO_NOT_OUTPUT &lt;&lt;&lt; ${devices[$arraynr]} )&quot; ]; then
++			# if we have a hit (grep matches the device_id)
++			if [ &quot;$(grep -i $device_id  &lt;&lt;&lt; ${devices[$arraynr]} )&quot; ]; then
+ 
+-				description[${#description[@]}]=&quot;$(
+-					awk  '{ print $1 }' &lt;&lt;&lt; ${devices[$arraynr]} | \
+-					sed 's/^.// ; s/^ *// ; s/_/ /g')&quot;
++				# if the DO_NOT_OUTPUT is defined, go through the array
++				if [ $DO_NOT_OUTPUT ]; then
++					if [ -z &quot;$(grep -i $DO_NOT_OUTPUT &lt;&lt;&lt; ${devices[$arraynr]} )&quot; ]; then
+ 
+-				found_devices[${#found_devices[@]}]=&quot;$(
+-					awk  '{ print $2&quot; &quot;$3 }' &lt;&lt;&lt; ${devices[$arraynr]} | \
+-					tr '_' ' ')&quot;
++						catch_device
++					
++					fi
++				else
+ 
++					catch_device
+ 
+-#				if [ &quot;$(grep -i 'network\|ethernet' &lt;&lt;&lt; &quot;$description&quot;)&quot; ]; then
+-#
+-#					# these values should not be local,
+-#					# older bash fails there
+-#					eth_adapter[${#eth_adapter[@]}]=&quot;$device&quot;
+-#
+-#				elif [ &quot;$(grep -i 'vga\|display' &lt;&lt;&lt; &quot;$description&quot;)&quot; ]; then
+-#
+-#					video_adapter[${#video_adapter[@]}]=&quot;$device&quot;
+-#
+-#				else
+-#					found_devices[${#found_devices[@]}]=&quot;$found_device&quot;
+-#					unset found_device
+-#				fi
++				fi
++
+ 			fi
+ 		done
+ 
+@@ -258,11 +246,40 @@
+ #			done
+ #		fi
+ 
+-#set -x
+-		flush_values
+ 	}
+ 
+ 	#######################
++	# catch_device
++	#
++	# subroutine used by grep_lspci_array
++	catch_device() {
++		description[${#description[@]}]=&quot;$(
++			awk  '{ print $1 }' &lt;&lt;&lt; ${devices[$arraynr]} | \
++			sed 's/^.// ; s/^ *// ; s/_/ /g')&quot;
++
++		found_devices[${#found_devices[@]}]=&quot;$(
++			awk  '{ print $2&quot; &quot;$3 }' &lt;&lt;&lt; ${devices[$arraynr]} | \
++			tr '_' ' ')&quot;
++
++
++# 		if [ &quot;$(grep -i 'network\|ethernet' &lt;&lt;&lt; &quot;$description&quot;)&quot; ]; then
++# 
++# 			# these values should not be local,
++# 			# older bash fails there
++# 			eth_adapter[${#eth_adapter[@]}]=&quot;$device&quot;
++# 
++# 		elif [ &quot;$(grep -i 'vga\|display' &lt;&lt;&lt; &quot;$description&quot;)&quot; ]; then
++# 
++# 			video_adapter[${#video_adapter[@]}]=&quot;$device&quot;
++# 
++# 		else
++# 			found_devices[${#found_devices[@]}]=&quot;$found_device&quot;
++# 			unset found_device
++# 		fi
++
++	}
++
++	#######################
+ 	## print_usb_devices
+ 	#
+ 	# prints the usb devices in the system's usb bus seen by lsusb
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000062.html">[Osinfo-commit] r674 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000064.html">[Osinfo-commit] r676 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#63">[ date ]</a>
+              <a href="thread.html#63">[ thread ]</a>
+              <a href="subject.html#63">[ subject ]</a>
+              <a href="author.html#63">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

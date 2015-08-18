@@ -1,0 +1,620 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r686 - in trunk/osinfo: html lib	modules/experimental
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r686%20-%20in%20trunk/osinfo%3A%20html%20lib%0A%09modules/experimental&In-Reply-To=%3C200703080710.l287Aius025896%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r686 - in trunk/osinfo: html lib	modules/experimental</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r686%20-%20in%20trunk/osinfo%3A%20html%20lib%0A%09modules/experimental&In-Reply-To=%3C200703080710.l287Aius025896%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r686 - in trunk/osinfo: html lib	modules/experimental">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Mar  8 08:10:44 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Osinfo-commit] r685 - in trunk/osinfo: docs html lib
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Osinfo-commit] r687 - trunk/osinfo
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-08 08:10:43 +0100 (Thu, 08 Mar 2007)
+New Revision: 686
+
+Modified:
+   trunk/osinfo/html/index3.php
+   trunk/osinfo/html/xml-parseri.php
+   trunk/osinfo/html/xmltyyli.css
+   trunk/osinfo/lib/daemon.functions
+   trunk/osinfo/modules/experimental/video
+Log:
+netcat -q strikes again
+
+Modified: trunk/osinfo/html/index3.php
+===================================================================
+--- trunk/osinfo/html/index3.php	2007-03-07 07:42:15 UTC (rev 685)
++++ trunk/osinfo/html/index3.php	2007-03-08 07:10:43 UTC (rev 686)
+@@ -98,7 +98,7 @@
+ 		{
+ 			border: 1px solid black;
+ 			padding: 5px;
+-			padding: 10px;
++			padding: 0px 10px 10px 10px;
+ 			margin-left: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][0] . &quot;;
+ 			margin-top: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
+ 			margin-bottom: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
+@@ -176,7 +176,9 @@
+ 						&quot;cpu&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;cpu&quot;),
+ 						&quot;script_version&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;),
+ 						&quot;ram&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;ram&quot;, &quot;Physical RAM&quot;),
+-						&quot;drive&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;drive&quot;, &quot;SATA/SCSI drive&quot;)
++						&quot;drive&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;drive&quot;, &quot;SATA/SCSI drive&quot;),
++						&quot;device&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;Device&quot;),
++						&quot;ip&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;iface&quot;, &quot;IPv4&quot;)
+ 						);
+ 					}
+ 
+@@ -250,7 +252,7 @@
+ 							elseif($laskuri % $this-&gt;_clientteja_rivilla == 0)
+  								print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
+ 
+-							print &quot;&lt;td class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_clientteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
++							print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_clientteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
+ 
+ 							print &quot;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
+ 								$arvot[&quot;hostname&quot;] . &quot;&lt;/a&gt;&lt;/b&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
+@@ -420,8 +422,6 @@
+ 		}
+ 		else
+ 		{
+-			//if(file_exists($this-&gt;_index_view))
+-			//	include($this-&gt;_index_view);
+ 			$this-&gt;nayta_index_view();
+ 		}
+ 
+@@ -430,7 +430,7 @@
+ 
+ 	private function nayta_index_view()
+ 	{
+-		print &quot;index view&quot;;
++		print &quot;&lt;h3&gt;index view&lt;/h3&gt;&quot;;
+ 
+ 		$this-&gt;listaa_tiedostot(false);
+ 	}
+
+Modified: trunk/osinfo/html/xml-parseri.php
+===================================================================
+--- trunk/osinfo/html/xml-parseri.php	2007-03-07 07:42:15 UTC (rev 685)
++++ trunk/osinfo/html/xml-parseri.php	2007-03-08 07:10:43 UTC (rev 686)
+@@ -13,24 +13,9 @@
+     private $_tyyppi = &quot;--tyyppi--&quot;;
+     private $_sisalto = &quot;--sisalto--&quot;;
+ 
+-    // listan tunnistin
+-    private $_lista = &quot;lista&quot;;
+-
+     public function __construct()
+     {
+-/*
+-	if(file_exists($tiedoston_nimi))
+-	{
+-		$this-&gt;_parsittava_tiedosto = $tiedoston_nimi;
+-		$this-&gt;lue_tiedoston_sisalto();
+-	
+-		$this-&gt;_tietotaulu = $this-&gt;etsi_tagi(&quot;&quot;, 0);
+-	}
+-	else
+-	{
+-		print &quot;&lt;p&gt;File &quot; . $tiedoston_nimi . &quot; not found&lt;/p&gt;&quot;;
+-	}
+-*/
++
+     }
+ 
+     public function parsi_tiedosto($tiedoston_nimi)
+@@ -263,11 +248,11 @@
+ 	print &quot;&lt;table style=\&quot;width: 100%\&quot;&gt;
+ 		&lt;tr&gt;
+ 		&lt;td&gt;&lt;h2&gt;&quot; . $this-&gt;parsi_nimi($this-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;)) . &quot;&lt;/h2&gt;&lt;/td&gt;
+-		&lt;td&gt;Quick jump: &quot;;
++		&lt;td&gt;&quot;;
+ 
+ 	$this-&gt;nayta_quick_jump_valikko();
+ 
+-	print &quot;&lt;/td&gt;&lt;td&gt;&lt;p&gt;Script version: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;) . &quot;&lt;/i&gt;&lt;br /&gt;&quot; .
++	print &quot;&lt;/td&gt;&lt;td style=\&quot;text-align: right\&quot;&gt;&lt;p&gt;Script version: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;) . &quot;&lt;/i&gt;&lt;br /&gt;&quot; .
+ 		&quot;Scanning date: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;scanning&quot;, &quot;date&quot;) . &quot;&lt;/i&gt;&lt;/p&gt;&lt;/td&gt;&quot;;
+ 
+ 	print &quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;;
+@@ -277,8 +262,7 @@
+ 
+ 	if(is_array($array))
+ 	{
+-		if($array[$this-&gt;_lista] == &quot;true&quot;) $listatyyppi = true;
+-		else $listatyyppi = false;
++		$listatyyppi = false;
+ 
+ 		// k&#228;y l&#228;pi p&#228;&#228;taulun kannasta l&#228;htien
+ 		foreach($array as $avain =&gt; $arvo)
+@@ -297,14 +281,14 @@
+ 	$div_avattu = false;
+ 	$attribuutti_suljettu = false;
+ 	$atrb = false;
+-
++/*
+ 	if(is_array($array[$this-&gt;_parametrit]))
+ 	{
+ 		$temp_array = $array[$this-&gt;_parametrit];
+ 		if($temp_array[$this-&gt;_lista] == &quot;true&quot;)
+ 			$listatyyppi = true;
+ 	}
+-
++*/
+ 	$listatyyppi = true;
+ 
+ 	foreach($array as $avain =&gt; $arvo)
+@@ -362,7 +346,7 @@
+ 			}
+ 			else
+ 			{	
+-				if($avain != $this-&gt;_tyyppi &amp;&amp; !is_array($avain) &amp;&amp; !is_array($arvo) &amp;&amp; $avain!= $this-&gt;_lista &amp;&amp; $arvo != &quot;scanning&quot; &amp;&amp; $arvo != &quot;script&quot;)
++				if($avain != $this-&gt;_tyyppi &amp;&amp; !is_array($avain) &amp;&amp; !is_array($arvo) &amp;&amp; $arvo != &quot;scanning&quot; &amp;&amp; $arvo != &quot;script&quot;)
+ 				{	
+ 					if($avain == $this-&gt;_nimi)
+ 					{	
+@@ -386,7 +370,8 @@
+ 				}
+ 				elseif($arvo == &quot;scanning&quot; || $arvo == &quot;script&quot;) break;
+ 
+-				$this-&gt;esita_sisatiedot($arvo, $avain);
++				if($arvo[$this-&gt;_nimi] == &quot;value&quot;)
++					$this-&gt;esita_sisatiedot($listatyyppi, false, $arvo[$this-&gt;_sisalto]);
+ 				
+ 				if(is_array($arvo) &amp;&amp; $arvo[$this-&gt;_nimi] != &quot;value&quot;)
+ 				{
+@@ -416,57 +401,87 @@
+ 
+     private function esita_attribuutit(&amp;$palautus_array, $array, $listatyyppi = false)
+     {
+-	$description = false;
+-	$sisalto = false;
++	$description_str = &quot;&quot;;
++	$code_str = &quot;&quot;;
++	$name_str = &quot;&quot;;
++	$values = array();
+ 
+ 	foreach($array as $avain =&gt; $arvo)
+ 	{
+ 		if($avain === $this-&gt;_parametrit)
+-			if($arvo['code'] != &quot;&quot;) print &quot;koodi&quot;;
+-			else
+-			{
+-			if(!$listatyyppi)
+-				print &quot;&lt;h3&gt;&quot; . $arvo['name'] . &quot;&lt;/h3&gt;&quot;;
+-			else 
+-				print &quot;&lt;td&gt;&lt;b&gt;&quot; . $arvo['name'] . &quot;&lt;/b&gt;&lt;/td&gt;&quot;; }
++		{
++			if($arvo['code'] != &quot;&quot;) $code_str = $arvo['code'];
++			if($arvo['name'] != &quot;&quot;) $name_str = $arvo['name'];
++		}
+ 
+-		$value = $this-&gt;esita_sisatiedot($arvo, $avain, $listatyyppi);
++		$paluutaulu = $this-&gt;hae_sisatiedot($arvo, $avain);
++		if($paluutaulu['description'] != &quot;&quot;) 
++			$description_str = $paluutaulu['description'];
+ 
+-		if($value == 2) $sisalto = true;
+-		elseif($value == 1) $description = true;
++		if($paluutaulu['value'] != &quot;&quot;) {
++			array_push($values, $paluutaulu['value']);
++		}
++	}
+ 
+-		if($listatyyppi &amp;&amp; $description &amp;&amp; !$sisalto)
+-		{
+-			print &quot;&lt;td class=\&quot;lista_value\&quot;&gt;&lt;table class=\&quot;value\&quot;&gt;&quot;;
++	if($code_str != &quot;&quot;)
++		$this-&gt;esita_sisatiedot($listatyyppi, $code_str, $values);
++	else {
++		if($description_str != &quot;&quot;)
++			$this-&gt;esita_sisatiedot($listatyyppi, $description_str, $values);
++		else {
++			if($name_str != &quot;&quot;)
++				$this-&gt;esita_sisatiedot($listatyyppi, $name_str, $values);
+ 		}
+-
+ 	}
++    }
+ 
+-	//if(!$sisalto) print &quot;&lt;td&gt;nbsp;&lt;/td&gt;&quot;;
++    private function esita_sisatiedot($listatyyppi, $eka_kentta = false, $arvot)
++    {
++	if($listatyyppi)
++	{	
++		if(is_array($arvot))
++		{
++			if($eka_kentta)
++				print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;lista_description\&quot;&gt;&lt;b&gt;&quot; . $eka_kentta . &quot;&lt;/b&gt;&lt;/td&gt;&quot;;
+ 	
+-	if($listatyyppi &amp;&amp; $description &amp;&amp; !$sisalto) print &quot;&lt;tr&gt;&lt;td&gt;&nbsp;&lt;/td&gt;&lt;/tr&gt;&quot;;
++			print &quot;&lt;td class=\&quot;lista_value\&quot;&gt;&quot;;
+ 
+-	if($listatyyppi &amp;&amp; $description) print &quot;&lt;/table&gt;&lt;/td&gt;&quot;;
+-    }
++			if(sizeof($arvot) &gt; 0) 
++			{
++				print &quot;&lt;table class=\&quot;value\&quot;&gt;&quot;;
++	
++				foreach($arvot as $avain =&gt; $arvo)
++					print &quot;&lt;tr&gt;&lt;td&gt;&quot; . $arvo . &quot;&lt;/td&gt;&lt;/tr&gt;&quot;;
++	
++				print &quot;&lt;/table&gt;&quot;;
++			}
++			else print &quot;&nbsp;&quot;;
++		}
++		else print &quot;&lt;table&gt;&lt;tr&gt;&lt;td&gt;&quot; . $arvot . &quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;;
+ 
+-    private function sulje_attribuutti($listatyyppi = false, $attribuuttilaskuri = 0)
+-    {
+-	if(!$listatyyppi)
+-	{
+-		for(; $attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla != 0; $attribuuttilaskuri++)
+-			print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
+-
+-		print &quot;&lt;/tr&gt;&lt;/table&gt;&quot;;
++		if($eka_kentta) print &quot;&lt;/td&gt;&quot;;
+ 	}
+ 	else
+-	{		
+-		print &quot;&lt;/table&gt;&quot;;
++	{	
++		if(is_array($arvot))
++		{
++			if($eka_kentta)
++				print &quot;&lt;h3&gt;&quot; . $eka_kentta . &quot;&lt;/h3&gt;&quot;;
++	
++			foreach($arvot as $avain =&gt; $arvo)
++				print &quot;&lt;p&gt;&quot; . $arvo . &quot;&lt;/p&gt;&quot;;
++	
++		}
++		else print &quot;&lt;p&gt;&quot; . $arvot . &quot;&lt;/p&gt;&quot;;
++
++		if($eka_kentta) print &quot;&lt;/td&gt;&quot;;
+ 	}
+     }
+ 
+-    private function esita_sisatiedot($array, $avain, $listatyyppi = false)
++    private function hae_sisatiedot($array, $avain)
+     {
+-	$arvo = 0;
++	$description = &quot;&quot;;
++	$value = &quot;&quot;;
+ 
+ 	if(is_array($array) &amp;&amp; $avain !== $this-&gt;_parametrit)
+ 	{
+@@ -476,28 +491,12 @@
+ 		{
+ 			if(!is_array($arvo2))
+ 			{
+-				if(!$listatyyppi)
+-				{
+-					if($edellinen_arvo == &quot;description&quot;)
+-						//print &quot;&lt;p&gt;&lt;i&gt;&quot; . $arvo2 . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
+-						print &quot;&lt;h3&gt;&quot; . $arvo2 . &quot;&lt;/h3&gt;&quot;;
+-					else
+-						if($avain2 == $this-&gt;_sisalto)
+-							print &quot;&lt;p&gt;&quot; . $arvo2 . &quot;&lt;/p&gt;&quot;;
+-				}
++				if($edellinen_arvo == &quot;description&quot;)
++					$description = $arvo2;
+ 				else
+ 				{
+-					if($edellinen_arvo == &quot;description&quot;)
+-					{
+-						print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;lista_description\&quot;&gt;&lt;b&gt;&quot; . $arvo2 . &quot;&lt;/b&gt;&lt;/td&gt;&quot;;
+-						$arvo = 1;
+-					}
+-					else
+-						if($avain2 == $this-&gt;_sisalto)
+-						{
+-							print &quot;&lt;tr&gt;&lt;td&gt;&quot; . $arvo2 . &quot;&lt;/td&gt;&lt;/tr&gt;&quot;;
+-							$arvo = 2;
+-						}
++					if($avain2 == $this-&gt;_sisalto)
++						$value = $arvo2;
+ 				}
+ 
+ 				$edellinen_arvo = $arvo2;
+@@ -505,9 +504,26 @@
+ 		}
+ 	}
+ 
+-	return $arvo;
++	$palautus = array(&quot;value&quot; =&gt; $value, &quot;description&quot; =&gt; $description);
++
++	return $palautus;
+     }
+ 
++    private function sulje_attribuutti($listatyyppi = false, $attribuuttilaskuri = 0)
++    {
++	if(!$listatyyppi)
++	{
++		for(; $attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla != 0; $attribuuttilaskuri++)
++			print &quot;&lt;td&gt;&nbsp;&lt;/td&gt;&quot;;
++
++		print &quot;&lt;/tr&gt;&lt;/table&gt;&quot;;
++	}
++	else
++	{		
++		print &quot;&lt;/table&gt;&quot;;
++	}
++    }
++
+     private function hae_array($array, $etsittava, &amp;$pal_array)
+     {
+    	foreach($array as $avain =&gt; $arvo)
+@@ -560,7 +576,7 @@
+ 							if($edellinen == &quot;value&quot; &amp;&amp; $avain3 == $this-&gt;_sisalto)
+ 								if($loytyi) return $arvo3;
+ 
+-							if($avain3 == $this-&gt;_sisalto &amp;&amp; $arvo3 == $etsittava_arvo)
++							if($avain3 == $this-&gt;_sisalto &amp;&amp; $arvo3 === $etsittava_arvo)
+ 								$loytyi = 1;
+ 
+ 							$edellinen = $arvo3;
+@@ -578,8 +594,6 @@
+ 		}
+ 		else
+ 		{
+-			$haettava_paikallistettu = false;
+-
+ 			if(is_array($arvo)) 
+ 			{
+ 				$palautus = $this-&gt;hae_array2($arvo, $etsittava_nimi, $etsittava_arvo);
+@@ -608,10 +622,12 @@
+     private function nayta_quick_jump_valikko()
+     {
+ 	$taulut = $this-&gt;hae_paataulut();
+-	
++		
+ 	print &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;
+ 		&lt;!--
+ 
++		document.write(\&quot;Quick jump:\&quot;)
++
+ 		function loadPage(pageURL)
+ 		{
+ 			if(pageURL.selectedIndex &gt; 0)
+@@ -622,7 +638,10 @@
+ 		}
+ 
+ 		//--&gt;
+-		&lt;/script&gt;&quot;;
++		&lt;/script&gt;
++		&lt;noscript&gt;	
++		This feature requires JavaScript.
++		&lt;/noscript&gt;&quot;;
+ 
+ 	print &quot;&lt;form name=\&quot;qj_form\&quot;&gt;
+ 		&lt;select name=\&quot;quick_jump\&quot;&gt;&quot;;
+
+Modified: trunk/osinfo/html/xmltyyli.css
+===================================================================
+--- trunk/osinfo/html/xmltyyli.css	2007-03-07 07:42:15 UTC (rev 685)
++++ trunk/osinfo/html/xmltyyli.css	2007-03-08 07:10:43 UTC (rev 686)
+@@ -1,27 +1,40 @@
+-div.kentta
++td.lista_description, td.lista_value, div.kentta
+ {
+-	border: 1px dashed black;
+-	margin-top: 10px;
+-	padding: 0px 10px 10px 10px;
+-
+ 	background-color: #e9fbf7;
+ }
+ 
+-table.attribuutti
++td.attribuutti_td, table.lista_attribuutti
+ {
+-	width: 100%;	
++	background-color: #8db7ae;
+ }
+ 
+-tr.jepaa
++div.kentta
+ {
++	font-size: 13px;
+ 	border: 1px dashed black;
+-	width: 100%;	
++	margin-top: 10px;
++	padding: 0px 10px 10px 10px;
+ }
+ 
++table.attribuutti, table.lista_attribuutti
++{
++	width: 100%;
++}
++
+ td.attribuutti_td
+ {
+ 	margin: 5px 5px 5px 5px;
+ 	border: 1px dotted black;
+ 	padding: 7px;
+-	background-color: #8db7ae;
+ }
++
++td.lista_description
++{
++	width: 30%;
++}
++
++table.value
++{
++	padding: 0px;
++	margin: 0px;
++}
+
+Modified: trunk/osinfo/lib/daemon.functions
+===================================================================
+--- trunk/osinfo/lib/daemon.functions	2007-03-07 07:42:15 UTC (rev 685)
++++ trunk/osinfo/lib/daemon.functions	2007-03-08 07:10:43 UTC (rev 686)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ################################################################################
+ ################################################################################
+ ## osinfo daemon functions                                                    ##
+
+Modified: trunk/osinfo/modules/experimental/video
+===================================================================
+--- trunk/osinfo/modules/experimental/video	2007-03-07 07:42:15 UTC (rev 685)
++++ trunk/osinfo/modules/experimental/video	2007-03-08 07:10:43 UTC (rev 686)
+@@ -15,6 +15,9 @@
+ 	flush_values
+ }
+ 
++	# list of known graphics drivers
++	KNOWN_GPU_DRIVERS=&quot;nvidia\|nv\|fglrx\|radeon\|ati&quot;
++
+ 	print_X_info() {
+ 		add_header         'Windowing system'
+ 
+@@ -42,8 +45,7 @@
+ 		add_footer
+ 
+ 		add_subheader      'Capabilities'
+-		 add_attribute      'AGP speed'
+-		 add_values         &quot;$(get_agp_mode)&quot;
++		 get_agp_rate
+ 		add_footer
+ 
+ 		add_footer
+@@ -51,10 +53,37 @@
+ 
+ 	print_setup() {
+ 		add_header         'Setup'
+-		
++
++		# print GPU driver info
++		add_subheader      'GPU driver for X11'
++		 # vendor string
++		 add_attribute      &quot;Vendor&quot;
++		 add_values         &quot;$(grep ' Module' ${XORG_LOG} | \
++		                       grep ${KNOWN_GPU_DRIVERS}: | \
++		                       sed 's/[^\&quot;]*\&quot;\([^\&quot;]*\)\&quot;[^.]*/\1/')&quot;
++		add_footer         'GPU driver'
++
++		print_extensions
++
++
++		add_subheader      'Errors'
++		 add_attribute      'X'
++		 #add_values         &quot;$(get_xorg_errors)&quot;
++		add_footer
++
++		add_footer
++	}
++
++	print_extensions(){
++		add_subheader      'Extensions'
++		#print_glx_info
++		add_attribute      &quot;GLX extension&quot;
++		add_values         &quot;$(get_glx)&quot;
++
++		#print_dri
+ 		add_attribute      'Direct rendering'
+ 		add_values         &quot;Enabled: $(glxinfo 2&gt; /dev/null | grep -i 'direct rendering' | \
+-		                               awk -F: {'print $2'})&quot;
++					awk -F: {'print $2'})&quot;
+ 
+ 		add_attribute      &quot;OpenGL renderer&quot;
+ 		add_values         &quot;$(get_opengl_renderer)&quot;
+@@ -68,18 +97,10 @@
+ 		add_attribute      &quot;GLX vendor&quot;
+ 		add_values         &quot;$(get_glx_vendor)&quot;
+ 
+-		add_attribute      &quot;GLX&quot;
+-		add_values         &quot;$(get_glx)&quot;
+-
+ 		add_attribute      &quot;AIGLX&quot;
+ 		add_values         &quot;$(get_aiglx)&quot;
+-
+-		add_subheader      'Errors'
+-		 add_attribute      'X'
+-		 #add_values         &quot;$(get_xorg_errors)&quot;
+-		add_footer
+-
+-		add_footer
++		
++		add_footer         'Extensions'
+ 	}
+ 
+ 	function get_videodev_name () {
+@@ -105,11 +126,11 @@
+ 		}
+ 
+ 	function get_aiglx () {
+-		grep ') AIGLX' ${XORG_LOG}
++		grep ') AIGLX' ${XORG_LOG} | awk -F':' {'print $2'}
+ 		}
+ 
+ 	function get_glx () {
+-		grep ') GLX' ${XORG_LOG}
++		grep ') GLX' ${XORG_LOG} | awk -F':' {'print $2'}
+ 		}
+ 
+ 	function get_found_chipset () {
+@@ -124,8 +145,9 @@
+ 		echo ${found_chipsets[0]}
+ 		}
+ 
+-	function get_agp_mode () {
+-		grep 'Using AGP [0-9]*x mode' ${XORG_LOG}
++	function get_agp_rate () {
++		add_attribute &quot;$(grep 'AGP' ${XORG_LOG} | awk -F':' {'print $2'} )&quot;
++		add_values    &quot;$(grep 'AGP' ${XORG_LOG} | awk -F':' {'print $3'} )&quot;
+ 		}
+ 
+ 	function get_xorg_errors () {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Osinfo-commit] r685 - in trunk/osinfo: docs html lib
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Osinfo-commit] r687 - trunk/osinfo
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

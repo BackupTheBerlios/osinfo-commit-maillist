@@ -1,0 +1,425 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r638 - in trunk/osinfo: lib modules	modules/experimental
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r638%20-%20in%20trunk/osinfo%3A%20lib%20modules%0A%09modules/experimental&In-Reply-To=%3C200612051506.kB5F6Y55011673%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   <LINK REL="Next"  HREF="000027.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r638 - in trunk/osinfo: lib modules	modules/experimental</H1>
+    <B>anmaster at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r638%20-%20in%20trunk/osinfo%3A%20lib%20modules%0A%09modules/experimental&In-Reply-To=%3C200612051506.kB5F6Y55011673%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r638 - in trunk/osinfo: lib modules	modules/experimental">anmaster at mail.berlios.de
+       </A><BR>
+    <I>Tue Dec  5 16:06:34 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[Osinfo-commit] r637 - trunk/osinfo/ebuild
+</A></li>
+        <LI>Next message: <A HREF="000027.html">[Osinfo-commit] r639 - in trunk/osinfo: conf ebuild html include	man profiles scripts xslt
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: anmaster
+Date: 2006-12-05 16:06:33 +0100 (Tue, 05 Dec 2006)
+New Revision: 638
+
+Removed:
+   trunk/osinfo/lib/bash.functions~
+Modified:
+   trunk/osinfo/lib/
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/modules/
+   trunk/osinfo/modules/experimental/
+Log:
+Removed stray *~ and fixed print_line to work on terminal as well
+
+
+Property changes on: trunk/osinfo/lib
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 12:32:14 UTC (rev 637)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 15:06:33 UTC (rev 638)
+@@ -52,7 +52,7 @@
+ 	return $sup_cap
+ }
+ 
+-
++graph_got_q=0
+ if [ &quot;$TERM&quot; ]; then
+ 	tput cols &amp;&gt;/dev/null
+ 	if [ $? -eq 0 ]; then
+@@ -60,6 +60,13 @@
+ 	else
+ 		get_cols() { echo -n '80'; }
+ 	fi
++	altchars=&quot;$(tput acsc)&quot;
++	while read -rn 2 chpair; do
++		if [ &quot;${chpair:0:1}&quot; == &quot;q&quot; ]; then
++			graph_got_q=1
++			graph_q=&quot;${chpair:1:1}&quot;
++		fi
++	done &lt; &lt;(tput acsc)
+ else
+ 	# Bleh, no $TERM...
+ 	get_cols() { echo -n '80'; }
+@@ -120,14 +127,14 @@
+ 	tput enacs &amp;&gt;/dev/null
+ 	[ $? -eq 0 ] &amp;&amp; tput enacs
+ 	tput smacs &amp;&gt;/dev/null
+-	[ $? -ne 0 ] &amp;&amp; sup_ext=1
+-	[ -z &quot;$TERM&quot; ] &amp;&amp; sup_ext=1
+-	[ $no_fancy -eq 1 ] &amp;&amp; sup_ext=1
+-	[ &quot;$TERM&quot; == 'linux' ] &amp;&amp; sup_ext=1
+-	if [ $sup_ext -eq 0 ]; then
++	[ $? -eq 0 ] &amp;&amp; sup_ext=1
++	[ $graph_got_q -eq 1 ] &amp;&amp; sup_ext=1
++	[ -z &quot;$TERM&quot; ] &amp;&amp; sup_ext=0
++	[ $no_fancy -eq 1 ] &amp;&amp; sup_ext=0
++	if [ $sup_ext -eq 1 ]; then
+ 		tput enacs
+ 		tput smacs
+-		yes 'q' | head -n &quot;$(get_cols)&quot; | tr -d '\012'
++		yes &quot;$graph_q&quot; | head -n &quot;$(get_cols)&quot; | tr -d '\012'
+ 		tput rmacs
+ 	else
+ 		yes '-' | head -n &quot;$(get_cols)&quot; | tr -d '\012'
+
+Deleted: trunk/osinfo/lib/bash.functions~
+===================================================================
+--- trunk/osinfo/lib/bash.functions~	2006-12-05 12:32:14 UTC (rev 637)
++++ trunk/osinfo/lib/bash.functions~	2006-12-05 15:06:33 UTC (rev 638)
+@@ -1,274 +0,0 @@
+-#!/bin/bash
+-#######
+-# bash.functions - shared functions used by some apps.
+-# Copyright (C) 2006 Arvid Norlander
+-# All rights reserved.
+-#
+-# Redistribution and use in source and binary forms, with or without
+-# modification, are permitted provided that the following conditions are met:
+-#
+-#     * Redistributions of source code must retain the above copyright notice,
+-#     * this list of conditions and the following disclaimer.
+-#     * Redistributions in binary form must reproduce the above copyright
+-#     * notice, this list of conditions and the following disclaimer in the
+-#     * documentation and/or other materials provided with the distribution.
+-#     * Neither the name of the &lt;ORGANIZATION&gt; nor the names of its
+-#     * contributors may be used to endorse or promote products derived from
+-#     * this software without specific prior written permission.
+-#
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;
+-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-# POSSIBILITY OF SUCH DAMAGE.
+-#######
+-
+-# Set the variable in $2 to the terminal cap $1
+-# WARNING: Use this function ONLY for string caps!
+-# Parameters:
+-#   1 string capname
+-#   2 string Return variable name (Use Ind. ref.)
+-#   3 string Optional: What to use if cap not sup.
+-# Exit code:
+-#  0=OK
+-#  1=Not sup. or unknown cap
+-check_cap () {
+-	local sup_cap=0
+-	tput $1 &amp;&gt;/dev/null
+-	[ $? -ne 0 ] &amp;&amp; sup_cap=1
+-	# Eval is safe here as this should never be called with user input
+-	if [ $sup_cap -eq 0 ]; then
+-		eval &quot;$2=\&quot;\$(tput $1)\&quot;&quot;
+-	else
+-		eval &quot;$2=\&quot;\${3:-''}\&quot;&quot;
+-	fi
+-	return $sup_cap
+-}
+-
+-check_cap bold  tBOLD
+-check_cap smul  tbUNDERLINE
+-check_cap rmul  teUNDERLINE
+-check_cap blink tBLINK
+-check_cap rev   tREVERSE
+-check_cap bel   tBELL
+-check_cap sgr0  tSTD
+-
+-esc=&quot;$(echo -ne '\e')&quot;
+-tab=&quot;$(echo -ne '\t')&quot;
+-
+-
+-check_cap 'setaf 0' tcBLACK
+-check_cap 'setaf 1' tcRED
+-check_cap 'setaf 2' tcGREEN
+-check_cap 'setaf 3' tcYELLOW
+-check_cap 'setaf 4' tcBLUE
+-check_cap 'setaf 5' tcMAGENTA
+-check_cap 'setaf 6' tcCYAN
+-check_cap 'setaf 7' tcWHITE
+-
+-if [ &quot;$TERM&quot; ]; then
+-	case $TERM in
+-		'linux')
+-		tcBLACK=&quot;${tcBLACK}${tBOLD}&quot;
+-		  tcRED=&quot;${tcRED}${tBOLD}&quot;
+-		tcGREEN=&quot;${tcGREEN}${tBOLD}&quot;
+-	   tcYELLOW=&quot;${tcYELLOW}${tBOLD}&quot;
+-		 tcBLUE=&quot;${tcBLUE}${tBOLD}&quot;
+-	  tcMAGENTA=&quot;${tcMAGENTA}${tBOLD}&quot;
+-		 tcCYAN=&quot;${tcCYAN}${tBOLD}&quot;
+-		tcWHITE=&quot;${tcWHITE}${tBOLD}&quot;
+-		;;
+-	esac
+-
+-     header=&quot;${tcBLUE}&quot;
+-  subheader=&quot;${tcBLUE}${tBOLD}&quot;
+-
+-fi
+-
+-# Prints a line of 80 &quot;&#9472;&quot; if terminal has caps &quot;enacs&quot; and &quot;smacs&quot;
+-# otherwise print a line of &quot;-&quot;
+-# Example:
+-#   Output on &quot;xterm&quot; or &quot;kterm&quot; &quot;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&#9472;&quot;
+-#   Output on &quot;linux&quot; console    &quot;---------&quot;
+-#
+-#TODO: Add more terminaltypes
+-#BUG: Don't work in:
+-#BUG:   xiterm (Output a lot of small &quot;DC2&quot;)
+-#BUG:   bterm
+-print_line() {
+-	local sup_ext=0
+-	tput enacs &gt;/dev/null
+-	[ $? -eq 0 ] &amp;&amp; tput enacs
+-	tput smacs &gt;/dev/null
+-	[ $? -ne 0 ] &amp;&amp; sup_ext=1
+-	[ &quot;$TERM&quot; == 'linux' ] &amp;&amp; sup_ext=1
+-	if [ $sup_ext == 0 ]; then
+-		tput enacs
+-		tput smacs
+-		yes 'q' | head -n $(tput cols) | tr -d '\012'
+-		tput rmacs
+-	else
+-		yes '-' | head -n $(tput cols) | tr -d '\012'
+-		echo
+-	fi
+-}
+-
+-# TODO: document
+-print_negative_message() {
+-	echo &quot;${tcRED}${1}${tSTD}&quot;
+-}
+-
+-# Aborts program with message
+-# Parameters:
+-#   1 string   Message
+-#   2 string   Exit status
+-# Returns:
+-#   Does not return
+-do_abort() {
+-	print_negative_message &quot;${tcRED}Error:${tSTD} ${1}&quot;
+-	print_negative_message &quot;Aborting&quot;
+-	exit $2
+-}
+-
+-# Prints a callstack.
+-print_traceback() {
+-	print_negative_message &quot;Traceback:&quot;
+-	local i=0 j=0
+-	while [ &quot;${FUNCNAME[$i]}&quot; != &quot;main&quot; ]; do
+-		let j=i+1
+-		echo &quot;${FUNCNAME[$i]} ${BASH_SOURCE[$i]} -- ${BASH_LINENO[$i]} ${BASH_SOURCE[$j]}&quot;
+-		let i++
+-	done | column -t | sed 's/--/-- Called from line/'
+-}
+-
+-
+-# Aborts program with message about deprecated function
+-# Parameters:
+-#   1 string   Name of function
+-#   2 string   Name of file
+-# Returns:
+-#   Does not return
+-error_deprecated() {
+-	print_negative_message &quot;${tcRED}Error:${tSTD} Function $1 in $2 is is dperecated. Please make sure not to use it.&quot;
+-	print_traceback
+-	print_negative_message &quot;${tcRED}Error:${tSTD} As a end user you should never see this.&quot;
+-	do_abort &quot;Please contact the programmers about this (provide this exact error message to them).&quot; 20
+-}
+-
+-# Shows message about missing argument(s) and exits with status 1.
+-# Parameters:
+-#   1 string   Name of option missing an argument(s)
+-#   2 integer  Optional: Number of arguments Std=1
+-# Returns:
+-#   Does not return
+-missing_arg() {
+-	if [ $2 ]; then
+-		do_abort &quot;${1} requires ${2} arguments&quot; 1
+-	else
+-		do_abort &quot;${1} requires an argument&quot; 1
+-	fi
+-}
+-
+-# Shows message about invalid argument(s) and exits with status 1.
+-# Parameters:
+-#   1 string   Name of option with invalid argument(s)
+-#   2 string   Name of the invalid argument
+-#   3 integer  Optional: Number of arguments Std=1
+-# Returns:
+-#   Does not return
+-wrong_arg() {
+-	if [ $3 ]; then
+-		do_abort &quot;${2} are invalid arguments to ${1}&quot; 1
+-	else
+-		do_abort &quot;${2} is an invalid argument to ${1}&quot; 1
+-	fi
+-}
+-
+-# Check if valid argument
+-# Parameters:
+-#   1 string   The argument
+-#   2 string   Space separated list of valid argument(s).
+-# Returns:
+-#   0 if valid
+-#   1 else
+-validate_arg() {
+-	local my_arg
+-	for my_arg in $2; do
+-		[ &quot;$my_arg&quot; = &quot;$1&quot; ] &amp;&amp; return 0
+-	done
+-	return 1
+-}
+-
+-# Check if arguments are integers/floating point values.
+-# Parmeters(*):
+-#   * *        string/integer to check
+-# Returns:
+-#   0 if all arguments are integers/floating point values.
+-#   1 if one or several of the arguments are strings.
+-AreDecimalNumbers() {
+-	local argument
+-	for argument in &quot;$@&quot;; do
+-		expr &quot;$argument&quot; '+' '1' &amp;&gt;/dev/null
+-		[ $? -eq 3 ] &amp;&amp; return 1
+-	done
+-	return 0
+-}
+-
+-# Check if arguments are strings.
+-# Parmeters(*):
+-#   * *        string/integer to check
+-# Returns:
+-#   0 if all arguments are strings.
+-#   1 if one or several of the arguments are integers/floating point values.
+-AreStrings() {
+-	local argument
+-	for argument in &quot;$@&quot;; do
+-		expr &quot;$argument&quot; '+' '1' &amp;&gt;/dev/null
+-		[ $? -eq 0 ] &amp;&amp; return 1
+-	done
+-	return 0
+-}
+-
+-# Prints a error message.
+-# Parmeters:
+-#   1       integer  1 = use extra abort line.
+-#   2       string     Optional extra abort line.
+-#   2 or 3  integer  1 = use kdialog
+-#   *       string   error messages
+-print_error()	{
+-	local extraabortline=&quot;&quot;
+-	if [ &quot;$1&quot; == &quot;1&quot; ]; then
+-		extraabortline=&quot;$2&quot;
+-		shift 2
+-	else
+-		shift 1
+-	fi
+-
+-	local i usekdialog=&quot;$1&quot;
+-	shift 1
+-
+-	# Now the rest are the error messages.
+-	if [ &quot;$usekdialog&quot; == &quot;1&quot; ]; then
+-		local errorline=&quot;$1&quot;
+-		shift 1
+-		if [ $# -gt 0 ]; then
+-			for i in &quot;$@&quot;; do
+-				errorline=&quot;${errorline}\n${i}&quot;
+-			done
+-		fi
+-		[ &quot;$extraabortline&quot; ] &amp;&amp; errorline=&quot;${errorline}\n${extraabortline}&quot;
+-		kdialog --error  &quot;$errorline&quot; &amp;&gt; /dev/null
+-	else
+-		for i in &quot;$@&quot;; do
+-			echo -e &quot;${tcRED}ERROR:${tSTD} $i&quot;
+-		done
+-		[ &quot;$extraabortline&quot; ] &amp;&amp; echo -e &quot;${tcRED}${extraabortline}${tSTD}&quot;
+-	fi
+-}
+-
+
+
+Property changes on: trunk/osinfo/modules
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/modules/experimental
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[Osinfo-commit] r637 - trunk/osinfo/ebuild
+</A></li>
+	<LI>Next message: <A HREF="000027.html">[Osinfo-commit] r639 - in trunk/osinfo: conf ebuild html include	man profiles scripts xslt
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#26">[ date ]</a>
+              <a href="thread.html#26">[ thread ]</a>
+              <a href="subject.html#26">[ subject ]</a>
+              <a href="author.html#26">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

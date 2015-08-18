@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r654 - in trunk/osinfo: lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r654%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200612071231.kB7CV26u031900%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000041.html">
+   <LINK REL="Next"  HREF="000043.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r654 - in trunk/osinfo: lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r654%20-%20in%20trunk/osinfo%3A%20lib%20modules&In-Reply-To=%3C200612071231.kB7CV26u031900%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r654 - in trunk/osinfo: lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Dec  7 13:31:02 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000041.html">[Osinfo-commit] r653 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000043.html">[Osinfo-commit] r655 - trunk/osinfo/debug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-07 13:31:02 +0100 (Thu, 07 Dec 2006)
+New Revision: 654
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/wlan
+Log:
+wlan debug
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-07 12:17:17 UTC (rev 653)
++++ trunk/osinfo/lib/helper.functions	2006-12-07 12:31:02 UTC (rev 654)
+@@ -80,10 +80,15 @@
+ 		for nr in $(seq 1 1 $node_count); do
+ 			this_node=&quot;$(sed -n &quot;$nr{p;q;}&quot; &lt;&lt;&lt; &quot;${all_nodes}&quot;)&quot;
+ 
+-			# this gets the line number of the wanted node from lshw
++			# this gets the line number of the wanted node
+ 			local begin=&quot;$(awk -F: {'print $1'} &lt;&lt;&lt; ${this_node})&quot;
+-			local node_indent=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; &quot;${this_node}&quot; | \
+-					     grep -Eo '^[ ]*' | wc -m)&quot;
++			# debug: the line below should work.
++			#local node_indent=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; &quot;${this_node}&quot; | \
++			#		     grep -o '^[ ]*' | wc -m)&quot;
++			# debug: let's debug this line further
++			local node_indent_dbg=&quot;$(awk -F: {'print $2'} &lt;&lt;&lt; &quot;${this_node}&quot;)&quot;
++			local node_indent_dbg2=&quot;$(grep -o '^[ ]*' &lt;&lt;&lt; &quot;$node_indent_dbg&quot;)&quot;
++			local node_indent=&quot;$(wc -m &lt;&lt;&lt; &quot;$node_indent_dbg2&quot;)&quot;
+ 
+ 			# this loop takes care that all subnodes are included, by comparing
+ 			# the indentation level. not very elegant..
+@@ -279,7 +284,7 @@
+ # this is used to send error messages to the user
+ function error {
+ 	#infostring[${#infostring[@]}]=&quot;%error%${@}&quot;
+-	echo &quot;${tcRED}${@}${tSTD}&quot;
++	echo -e &quot;${tcRED}${@}${tSTD}&quot;
+ }
+ 
+ 
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-07 12:17:17 UTC (rev 653)
++++ trunk/osinfo/modules/wlan	2006-12-07 12:31:02 UTC (rev 654)
+@@ -18,7 +18,8 @@
+ 	cell_tmp=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
+ 	TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$iw_src&quot; &quot;$ap_src&quot; &quot;$cell_tmp&quot;)
+ 	#TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$cell_tmp&quot;)
+-	if [ ! &quot;$(isintalled iwconfig)&quot; ]; then
++	
++	if ! isinstalled iwconfig; then
+ 		info &quot;No wireless extensions found&quot;
+ 
+ 	elif [ &quot;$SYSTEM&quot; == &quot;linux&quot; ] ; then
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000041.html">[Osinfo-commit] r653 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000043.html">[Osinfo-commit] r655 - trunk/osinfo/debug
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#42">[ date ]</a>
+              <a href="thread.html#42">[ thread ]</a>
+              <a href="subject.html#42">[ subject ]</a>
+              <a href="author.html#42">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,391 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r621 - in trunk/osinfo: . ebuild lib man	modules/experimental
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-November/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r621%20-%20in%20trunk/osinfo%3A%20.%20ebuild%20lib%20man%0A%09modules/experimental&In-Reply-To=%3C200611301152.kAUBqTtg017344%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000008.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r621 - in trunk/osinfo: . ebuild lib man	modules/experimental</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r621%20-%20in%20trunk/osinfo%3A%20.%20ebuild%20lib%20man%0A%09modules/experimental&In-Reply-To=%3C200611301152.kAUBqTtg017344%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r621 - in trunk/osinfo: . ebuild lib man	modules/experimental">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Nov 30 12:52:29 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000008.html">[Osinfo-commit] r620 - trunk/osinfo/modules/experimental
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-11-30 12:52:22 +0100 (Thu, 30 Nov 2006)
+New Revision: 621
+
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/lib/version
+   trunk/osinfo/man/osinfo.1
+   trunk/osinfo/modules/experimental/samba
+Log:
+Makefile and the ebuild: it should now build on Gentoo :)
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/Makefile	2006-11-30 11:52:22 UTC (rev 621)
+@@ -30,7 +30,7 @@
+ 	@echo &quot;  clean           - remove *~&quot;
+ 	@echo &quot;  dist-all-in-one - makes a huge all in one script. (replaces source foo with foo)&quot;
+ 
+-dist: distclean
++dist: distclean man
+ 	mkdir -p dist/$(appname)/src
+ 	for dir in $(subdirs); do \
+ 		mkdir -p dist/$(appname)/src/$$dir ; \
+@@ -51,6 +51,9 @@
+ 		cat $$sources &gt;&gt; osinfo 2&gt;/dev/null ; \
+ 	done
+ 
++	# manual
++	cp man/osinfo.1 dist/osinfo
++
+ 	# finally the mainfile
+ 	# clear out sourcing external files, since it's now all-in-one
+ 	cd dist/$(appname) &amp;&amp; \
+@@ -67,11 +70,16 @@
+ # And then include the output in the paramerter of tar.
+ # Bad that it doesn't work in a variable.
+ dist-tarbz2: dist
+-	cd dist &amp;&amp; tar -jcf &quot;$$(eval $$(grep appname -A 10 -m 1 ../osinfo | pcregrep 'appname|_version') &amp;&amp; echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}-$${patch_version}).tar.bz2&quot; $(appname)
++	cd dist &amp;&amp; tar -jcf &quot;$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') &amp;&amp; echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}-$${patch_version}).tar.bz2&quot; $(appname)
+ 
+ distclean: clean
+ 	-rm -rf dist
+ 
++man: 
++	cd man
++	cat osinfo.man.txt |  txt2man -t osinfo -s 1 -r &quot;OSinfo manual&quot; &gt; osinfo.1
++	cd ..
++
+ clean:
+ 	-rm -f *~ *.tmp
+ 	-rm -f docs/*~ docs/*.tmp
+@@ -79,4 +87,6 @@
+ checkxml:
+ 	xmllint --valid osinfo.xml
+ 
++tarbz2: dist-tarbz2
++
+ .PHONY : all clean dist distclean checkxml
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-30 11:52:22 UTC (rev 621)
+@@ -50,12 +50,28 @@
+ src_install() {
+ 	
+ 	mkdir -p ${D}/usr/sbin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
+-	cp osinfo ${D}/usr/sbin
++	cp osinfo/osinfo ${D}/usr/sbin
+ 
++	doman osinfo/osinfo.1
++
+ 	#if use doc; then
+ 	#	mkdir -p ${D}/usr/share/doc/${P}
+ 	#	cp ${FILESDIR}/readme.gz ${D}/usr/share/doc/${P}/
+ 	#fi
++}
+ 
++pkg_postinst() {
++	einfo
++	einfo &quot;Osinfo is still beta; you can help be addressing bugs at&quot;
++	einfo &quot;the osinfo mailinglist: <A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
++	einfo
++	einfo &quot;Osinfo has many nice features that are not obvious at first.&quot;
++	einfo &quot;You can create an HTML document of the computers in your&quot;
++	einfo &quot;LAN, run osinfo in daemon mode on a box with Apache server.&quot;
++	einfo &quot;Send the xml sheet to the daemon with the --tcpsend option.&quot;
++	einfo
++	einfo &quot;You can freely add more modules to osinfo. Check the source&quot;
++	einfo &quot;code inside the tarball. Thank you for interest.&quot;
++	einfo 
+ }
+ 
+
+Modified: trunk/osinfo/lib/version
+===================================================================
+--- trunk/osinfo/lib/version	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/lib/version	2006-11-30 11:52:22 UTC (rev 621)
+@@ -12,8 +12,8 @@
+ appname='osinfo'
+ major_version=0
+ minor_version=2
+-micro_version=11
+-patch_version=1
++micro_version=12
++patch_version=0
+ dev_status=beta
+ release_date='2006-11-xx'
+ 
+
+Modified: trunk/osinfo/man/osinfo.1
+===================================================================
+--- trunk/osinfo/man/osinfo.1	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/man/osinfo.1	2006-11-30 11:52:22 UTC (rev 621)
+@@ -1,5 +1,5 @@
+ .&quot; Text automatically generated by txt2man-1.4.7
+-.TH osinfo 1 &quot;elokuu 12, 2006&quot; &quot;OSinfo manual&quot; &quot;&quot;
++.TH osinfo 1 &quot;marraskuu 30, 2006&quot; &quot;OSinfo manual&quot; &quot;&quot;
+ .SH NAME  
+ osinfo
+ .SH SYNOPSIS
+@@ -9,9 +9,83 @@
+ .fam T
+ .fi
+ .SH DESCRIPTION
+-description
++Arguments are names of modules \fIto\fP get info from. If arguments is &quot;all&quot;
++then list \fIinformation\fP from all modules.
++.PP
++Syntax:
++\fBosinfo\fP [Options] arguments
++\fBosinfo\fP [\\fB--usage\fP|\fB--help\fP]
++.SH OPTIONS
++.TP
++.B
++\\fB--xml\fP
++Printout in xml format \fIto\fP osinfo.xml
++.TP
++.B
++\\fB--lanforce\fP
++Makes \fIthe\fP output \fIto\fP osinfo.xml according \fIto\fP a special DTD
++.RE
++.TP
++.B
++\\fB-o\fP
++\fB--output\fP [file]     Use this file for xml output
++.RS
++.TP
++.B
++\\fB-v\fP
++\fB--verbose\fP           Show more \fIinformation\fP
++.TP
++.B
++\\fB-vv\fP
++\fB--veryverbose\fP       Show even more \fIinformation\fP
++.TP
++.B
++\\fB-V\fP
++\fB--version\fP           Shows \fIthe\fP version of \fBosinfo\fP
++.RS
++.TP
++.B
++\\fB--netcat\fP [port]
++Sends \fIthe\fP output in xml \fIto\fP \fIthe\fP tcp port via netcat
++.TP
++.B
++\\fB--no-color\fP
++Disables color output (testing)
++.TP
++.B
++\\fB--debug\fP
++For testing
++.RE
++.TP
++.B
++\\fB-D\fP
++\fB--fulldebug\fP         Print full debugging info, clutters output!
++.TP
++.B
++\\fB-P\fP
++\fB--prefix\fP [dir]      Use this dir as root
++This disables some modules
++and exits
+ .SH MODULES
+-list of modules and a description
++.SS        SYSTEM
++.SS        DISTRO
++.SS    KERNEL
++.SS        PROCESSOR
++.SS        HDD
++.SS        NETWORK
++.SS        WLAN
++.SS        APPLICATIONS
++.SS        TERMINAL
++.SS        DEVICES
++.SS        DMI
++.SS        MEMORY
++.SS        USERS
++.SS        SERVICES
++
++.SS        CDROM
++The cdrom module detects all optical (cd/dvd etc) drives in \fIthe\fP \fIsystem\fP seen by lshw. The burning / read capabilites are reported only on \fIthe\fP default verbosity level; increase verbosity \fIto\fP see all capabilities.
++.PP
++This module is not 100% proof; there are known unresolved issue when lshw cannot see a drive.
+ .SH COMPATIBILITY
+ everything is collected honoring maximum portability and minimum dependency requirements; ie. using standard *nix tools. 
+ .PP
+@@ -32,14 +106,6 @@
+ SlackWare
+ .IP \(bu 3
+ FreeBSD 6.0 has been tested as well.
+-.RE
+-.PP
+-
+-.SH OPTIONS
+-options
+-.RE
+-.PP
+-
+ .SH DEPENDENCIES
+ Some \fIinformation\fP is unavailable without special (but quite common) packages, but \fIthe\fP availability of these is tested, and no error messages are produced if these rarer tools are missing. See info below for a list of dependencies.
+ .PP
+@@ -49,51 +115,51 @@
+ .IP \(bu 3
+ awk, sed, seq, tr, bc, uniq, sort, GNU grep with support for extended regexps
+ .IP \(bu 3
+-util\-linux (fdisk, column)
++util\\fB-linux\fP (fdisk, column)
+ .IP \(bu 3
+ netcat (for sending \fIthe\fP xml output over tcp)
+ .PP
+ MODULE DEPENDENCIES:
+ .PP
+-cpu:
+-.IP \(bu 3
+-/proc/cpuinfo, x86info (optional)
+-.PP
+-users:
+-.IP \(bu 3
+-last, file:/var/log/wtmp
+-.PP
+-dmi:
+-.IP \(bu 3
+-dmidecode
+-.PP
+-memory:
+-.IP \(bu 3
+-lshw
+-.TP
+-.B
+-cdrom:
+-.IP \(bu 3
+-lshw
+-.PP
+-hdd:
+-.IP \(bu 3
+-util\-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
+-.PP
+-devices: 
+-.IP \(bu 3
+-lspci
+-.PP
+-network: 
+-.IP \(bu 3
+-net\-tools (hostname, ifconfig, route)
+-.PP
+-wlan:
+-.IP \(bu 3
+-wireless\-tools (iwconfig, iwlist)
++.nf
++.fam C
++         cpu:
++         o /proc/cpuinfo, x86info (optional)
++
++         users:
++         o last, file:/var/log/wtmp
++
++         dmi:
++         o dmidecode
++
++         memory:
++         o lshw
++
++         cdrom:   
++         o lshw
++
++         hdd:
++         o util\-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
++
++         lvm:
++         o device\-mapper lvm2 
++
++         devices: 
++         o lspci
++
++         network: 
++         o net\-tools (hostname, ifconfig, route)
++
++         wlan:
++         o wireless\-tools (iwconfig, iwlist)
++
++.fam T
++.fi
+ .SH BUGS
+ See docs/TODO in \fIthe\fP source code.
+ Hopefully most bugs are fixed in 0.3.
++.IP \(bu 3
++Module LVM contains some known bugs.
+ .SH AUTHORS
+ Written by Arvid Norlander and Mikael Lammentausta
+ .TP
+
+Modified: trunk/osinfo/modules/experimental/samba
+===================================================================
+--- trunk/osinfo/modules/experimental/samba	2006-11-30 10:40:25 UTC (rev 620)
++++ trunk/osinfo/modules/experimental/samba	2006-11-30 11:52:22 UTC (rev 621)
+@@ -7,10 +7,8 @@
+ 		smbstatus
+ 
+ 	else
+-
+ 		info &quot;smbstatus binary not found&quot;
+-		flush_values
+-
+ 	fi
+ 
++	flush_values
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000008.html">[Osinfo-commit] r620 - trunk/osinfo/modules/experimental
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#9">[ date ]</a>
+              <a href="thread.html#9">[ thread ]</a>
+              <a href="subject.html#9">[ subject ]</a>
+              <a href="author.html#9">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

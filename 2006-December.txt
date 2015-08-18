@@ -1,0 +1,5576 @@
+From lamikae at mail.berlios.de  Sun Dec  3 19:22:58 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sun, 3 Dec 2006 19:22:58 +0100
+Subject: [Osinfo-commit] r622 - in trunk/osinfo: debug include lib modules
+Message-ID: <200612031822.kB3IMwed029652@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-03 19:22:57 +0100 (Sun, 03 Dec 2006)
+New Revision: 622
+
+Added:
+   trunk/osinfo/include/overview.html
+   trunk/osinfo/include/sidebar.html
+Removed:
+   trunk/osinfo/debug/overview.html
+   trunk/osinfo/debug/sidebar.html
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/hdd
+Log:
+some fixes to HDD
+
+Deleted: trunk/osinfo/debug/overview.html
+===================================================================
+--- trunk/osinfo/debug/overview.html	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/debug/overview.html	2006-12-03 18:22:57 UTC (rev 622)
+@@ -1,208 +0,0 @@
+-<?xml version="1.0"?>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+-  <head>
+-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+-    <title>osinfo</title>
+-    <style type="text/css">
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					</style>
+-    <script type="text/javascript">
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == "none" ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//-->
+-				</script>
+-  </head>
+-  <body>
+-	
+-	<h1>client21</h1>
+-	
+-	
+-	
+-	<h2>Core system</h2><table><tbody><tr><td>Hostname</td><td>client21</td></tr></tbody></table><table><tbody><tr><td>Operating system</td><td>Gentoo Linux 2006.0</td></tr></tbody></table><table><tbody><tr><td>Operating system kernel</td><td>Linux 2.6.17-gentoo-r4y</td></tr></tbody></table><table><tbody><tr><td>System uptime</td><td>22 days</td></tr></tbody></table><table><tbody><tr><td>CPU temperature</td><td>44?C</td></tr></tbody></table><table><tbody><tr><td>M/B temperature</td><td>35?C  </td></tr></tbody></table>
+-	<h2>Distribution</h2><table><tbody><tr><td>Root dir</td><td>/</td></tr></tbody></table><table><tbody><tr><td>Distro ID</td><td>Gentoo</td></tr></tbody></table>
+-	
+-	<h2>CPU</h2><table><tbody><tr><td>Vendor</td><td>AuthenticAMD</td></tr></tbody></table><table><tbody><tr><td>Model</td><td>AMD Athlon(TM) XP 2000+</td></tr></tbody></table><table><tbody><tr><td>Frequency</td><td>1663.002 MHz</td></tr></tbody></table><table><tbody><tr><td>Architecture</td><td>i686</td></tr></tbody></table><table><tbody><tr><td>CPU temperature</td><td>44?C</td></tr></tbody></table><table><tbody><tr><td>Voltage</td><td>+1.42 V</td></tr></tbody></table><table><tbody><tr><td>Cache</td><td>256 KB</td></tr></tbody></table>
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-</body>
+-</html>
+-<?xml version="1.0"?>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+-  <head>
+-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+-    <title>osinfo</title>
+-    <style type="text/css">
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					</style>
+-    <script type="text/javascript">
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == "none" ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//-->
+-				</script>
+-  </head>
+-  <body>
+-	
+-	<h1>client26</h1>
+-	
+-	
+-	
+-	<h2>Core system</h2><table><tbody><tr><td>Hostname</td><td>client26</td></tr></tbody></table><table><tbody><tr><td>Operating system</td><td>Ubuntu Linux 6.06</td></tr></tbody></table><table><tbody><tr><td>Operating system kernel</td><td>Linux 2.6.15-26-686</td></tr></tbody></table><table><tbody><tr><td>System uptime</td><td>4:43</td></tr></tbody></table>
+-	<h2>Distribution</h2><table><tbody><tr><td>Root dir</td><td>/</td></tr></tbody></table><table><tbody><tr><td>Distro ID</td><td>Ubuntu</td></tr></tbody></table><table><tbody><tr><td>Release</td><td>6.06</td></tr></tbody></table><table><tbody><tr><td>Codename</td><td>dapper</td></tr></tbody></table><table><tbody><tr><td>Description</td><td>Ubuntu 6.06.1 LTS</td></tr></tbody></table>
+-	
+-	<h2>CPU</h2><table><tbody><tr><td>Vendor</td><td>AuthenticAMD</td></tr></tbody></table><table><tbody><tr><td>Model</td><td>AMD Athlon(TM) XP 2000+</td></tr></tbody></table><table><tbody><tr><td>Frequency</td><td>1662.750 MHz</td></tr></tbody></table><table><tbody><tr><td>Architecture</td><td>i686</td></tr></tbody></table><table><tbody><tr><td>Cache</td><td>256 KB</td></tr></tbody></table>
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-</body>
+-</html>
+-<?xml version="1.0"?>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+-  <head>
+-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+-    <title>osinfo</title>
+-    <style type="text/css">
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					</style>
+-    <script type="text/javascript">
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == "none" ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//-->
+-				</script>
+-  </head>
+-  <body>
+-	
+-	<h1>server03.openlab</h1>
+-	
+-	
+-	
+-	<h2>Core system</h2><table><tbody><tr><td>Hostname</td><td>server03.openlab</td></tr></tbody></table><table><tbody><tr><td>Operating system</td><td>Ubuntu Linux 6.06</td></tr></tbody></table><table><tbody><tr><td>Operating system kernel</td><td>Linux 2.6.15-26-386</td></tr></tbody></table><table><tbody><tr><td>System uptime</td><td>1 day</td></tr></tbody></table>
+-	<h2>Distribution</h2><table><tbody><tr><td>Root dir</td><td>/</td></tr></tbody></table><table><tbody><tr><td>Distro ID</td><td>Ubuntu</td></tr></tbody></table><table><tbody><tr><td>Release</td><td>6.06</td></tr></tbody></table><table><tbody><tr><td>Codename</td><td>dapper</td></tr></tbody></table><table><tbody><tr><td>Description</td><td>Ubuntu 6.06.1 LTS</td></tr></tbody></table>
+-	
+-	<h2>CPU</h2><table><tbody><tr><td>Vendor</td><td>AuthenticAMD</td></tr></tbody></table><table><tbody><tr><td>Model</td><td>AMD Athlon(TM) XP 2000+</td></tr></tbody></table><table><tbody><tr><td>Frequency</td><td>1261.472 MHz</td></tr></tbody></table><table><tbody><tr><td>Architecture</td><td>i686</td></tr></tbody></table><table><tbody><tr><td>Cache</td><td>256 KB</td></tr></tbody></table>
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-</body>
+-</html>
+-<?xml version="1.0"?>
+-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+-  <head>
+-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+-    <title>osinfo</title>
+-    <style type="text/css">
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					</style>
+-    <script type="text/javascript">
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == "none" ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//-->
+-				</script>
+-  </head>
+-  <body>
+-	
+-	<h1>server05</h1>
+-	
+-	
+-	
+-	<h2>Core system</h2><table><tbody><tr><td>Hostname</td><td>server05</td></tr></tbody></table><table><tbody><tr><td>Operating system</td><td>Ubuntu Linux 5.10</td></tr></tbody></table><table><tbody><tr><td>Operating system kernel</td><td>Linux 2.6.12-9-386</td></tr></tbody></table><table><tbody><tr><td>System uptime</td><td>1 day</td></tr></tbody></table><table><tbody><tr><td>CPU temperature</td><td>46?C</td></tr></tbody></table><table><tbody><tr><td>M/B temperature</td><td>32?C  </td></tr></tbody></table>
+-	<h2>Distribution</h2><table><tbody><tr><td>Root dir</td><td>/</td></tr></tbody></table><table><tbody><tr><td>Distro ID</td><td>Ubuntu</td></tr></tbody></table><table><tbody><tr><td>Release</td><td>5.10</td></tr></tbody></table><table><tbody><tr><td>Codename</td><td>breezy</td></tr></tbody></table><table><tbody><tr><td>Description</td><td>Ubuntu (The Breezy Badger Release)</td></tr></tbody></table>
+-	
+-	<h2>CPU</h2><table><tbody><tr><td>Vendor</td><td>AuthenticAMD</td></tr></tbody></table><table><tbody><tr><td>Model</td><td>AMD Athlon(TM) XP 2000+</td></tr></tbody></table><table><tbody><tr><td>Frequency</td><td>1667.253 MHz</td></tr></tbody></table><table><tbody><tr><td>Architecture</td><td>i686</td></tr></tbody></table><table><tbody><tr><td>CPU temperature</td><td>46?C</td></tr></tbody></table><table><tbody><tr><td>Voltage</td><td>+1.42 V</td></tr></tbody></table><table><tbody><tr><td>Cache</td><td>256 KB</td></tr></tbody></table>
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-</body>
+-</html>
+
+Deleted: trunk/osinfo/debug/sidebar.html
+===================================================================
+--- trunk/osinfo/debug/sidebar.html	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/debug/sidebar.html	2006-12-03 18:22:57 UTC (rev 622)
+@@ -1,95 +0,0 @@
+-<html>
+-<head>
+-</head>
+-	<body bgcolor="#FFFFFF" link="#000000" vlink="#000000" text="#000000" onResize="if (navigator.appVersion=='Netscape') history.go(0);">
+-
+-		<div style="position:absolute;top:0px;left:0px;width:100%:height:100%;">
+-		
+-			<! -- overview -->
+-			<font color="#000000" face="Times New Roman" size="+3">
+-				<p align="center">
+-					osinfo
+-				</p>
+-			</font>
+-		
+-			<hr>
+-
+-			<!-- computers -->
+-			<div style="position:relative;top:0px;left:10px;right:10px;width:100%:height:95%;">
+-
+-				<h2>desktops</h2>
+-				<table width="97%" border=1 cellpadding=4 cellspacing=5>
+-					<tr valign="top">
+-					<td bgcolor="#FFFFFF">
+-						<p align=left>
+-						<font color="#000000" face="Times New Roman" size="+1">
+-							<a href="hosts/client21.html" target="main">client21</a>
+-						</font>
+-						</p>
+-
+-						<p align=left>
+-						<font color="#000000" face="Times New Roman" size="-2">
+-								Gentoo Linux 2006.0<br>
+-								Intel(R) Pentium(R) 4 CPU 2.80GHz
+-						</font>
+-						</p>
+-					</td>
+-					</tr>
+-
+-					<tr valign="top">
+-					<td bgcolor="#FFFFFF">
+-						<font color="#000000" face="Times New Roman" size="+1">
+-							<p align=left><a href="planck.html" target="main">planck</a>
+-						</font>
+-
+-						<font color="#000000" face="Times New Roman" size="-2">
+-							<p align="left">
+-								Gentoo Linux 2006.1<br>
+-								AMD Athlon(TM) XP 2000+
+-							</p>
+-						</font>
+-					</td>
+-					</tr>
+-				</table>
+-
+-
+-				<h2>servers</h2>
+-				<table width=80 border=0 cellpadding=0 cellspacing=5>
+-				
+-					<tr valign="top">
+-					<td bgcolor="#FFFFFF">
+-					<font color="#000000" face="Times New Roman" size="-1">
+-						<p align=left><a href="server05.html" target="main">server05</a>
+-					</td>
+-					</tr>
+-
+-					<tr valign="top">
+-					<td bgcolor="#FFFFFF">
+-						<font color="#000000" face="Times New Roman" size="-1">
+-						<p align=left><a href="server03.html" target="main">server03</a>
+-					</td>
+-					</tr>
+-
+-				</table>
+-			</div>
+-
+-			<hr>
+-
+-			<!-- index link and date -->
+-			<div style="position:relative;bottom:5%;left:10px;right:10px;width:100%;height:10%;">
+-				<p align="center">
+-					<a href="overview.html" target="main">index view</a>
+-				</p>
+-
+-				<font color="#000000" face="Times New Roman" size="-2">
+-					last update<br>
+-				</font>
+-
+-				<font color="#000000" face="Times New Roman" size="-1">
+-					30/sep/2006<br>
+-				</font>
+-			</div>
+-
+-		</div>
+-	</body>
+-</html>
+
+Copied: trunk/osinfo/include/overview.html (from rev 621, trunk/osinfo/debug/overview.html)
+
+Copied: trunk/osinfo/include/sidebar.html (from rev 621, trunk/osinfo/debug/sidebar.html)
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/lib/helper.functions	2006-12-03 18:22:57 UTC (rev 622)
+@@ -274,6 +274,10 @@
+ 	}
+ fi
+ 
++function hddtemp() { 
++	hddtemp 2>"${error_log}"
++	}
++
+ # make a guess of the operating system
+ SYSTEM="$(uname -s  | tr 'A-Z' 'a-z' )"
+ 
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/modules/hdd	2006-12-03 18:22:57 UTC (rev 622)
+@@ -159,10 +159,34 @@
+ 				# HDD DEVICE NODE
+ 				add_header  "\n${drvdev}"
+ 
+-				# HDD TYPE
++				# HDD TYPE and model name
+ 				add_attribute "$hdd_type"
+ 				add_values  "$(echo $hdd_vendor $hdd_model | sed 's/^ *//')"
+ 
++				# bus configuration; verbose
++				if [ $isverbose -ge 1 ]; then
++					add_attribute 'Bus configuration'
++					# case by the last letter in $drvdev
++					case ${drvdev: -1:1} in
++						'a')
++							add_values 'primary master'
++							;;
++						'b')
++							add_values 'primary slave'
++							;;
++						'c')
++							add_values 'secondary master'
++							;;
++						'd')
++							add_values 'secondary slave'
++							;;
++						*)
++							add_values 'unknown'
++							;;
++					esac
++				fi
++
++
+ 				# HDD REPORTED CAPACITY
+ 				add_attribute 'Capacity (reported)'
+ 				add_values  "$hdd_capacity_label"
+@@ -191,12 +215,13 @@
+ 						add_values  "${tcRED}n/a${tSTD}"
+ 					fi
+ 
+-				# ACTIVITY STATE
+-				add_attribute 'State'
+-				add_values "$hdd_state"
++				# ACTIVITY STATE; verbose
++				if [ $isverbose -ge 1 ]; then
++					add_attribute 'State'
++					add_values "$hdd_state"
++				fi
+ 
+-
+-				# more verbose
++				# ATA standard; more verbose
+ 				if [ $isverbose -ge 2 ]; then
+ 					add_attribute   'ATA Standard'
+ 					add_values      "$hdd_ata_standard"
+@@ -209,8 +234,8 @@
+ 				fi
+ 
+ 
+-				# verbose
+-				if [ $isverbose -ge 1 ]; then
++				# SMART capability; more verbose
++				if [ $isverbose -ge 2 ]; then
+ 					# SMART capability
+ 					add_attribute   'S.M.A.R.T.' 
+ 					add_values      "$hdd_smart"
+@@ -251,7 +276,6 @@
+ 				add_nc_header	" Partition%col%mountpoint%col%blocks%col%free%col%filesystem\n"
+ 				add_nc_header	" ---------%col%----------%col%------%col%----%col%----------"
+ 
+-
+ 				for hdd_pt in $(seq 1 1 $partitions_on_drive); do
+ 					# print the device node
+ 					add_attribute "  ${hdd_pt_node[$hdd_pt]}"
+@@ -271,7 +295,7 @@
+ 									   ${hdd_pt_free[$hdd_pt]})"
+ 						#add_values    "${hdd_pt_free_pc[$hdd_pt]})"
+ 						else
+-							add_values ' '
++							add_values '-'
+ 						fi
+ 
+ 						# fs type
+@@ -580,11 +604,11 @@
+ 					hdd_pt_used[$ID]="n/a"
+ 				fi
+ 
+-				# set the rest to unknown values for proper columnation
+-				hdd_pt_capacity[$ID]="n/a"
+-				hdd_pt_free[$ID]="n/a"
+-				hdd_pt_used_pc[$ID]="n/a"
+-				hdd_pt_fs_size[$ID]="n/a"
++				# define the rest to empty values.
++				hdd_pt_capacity[$ID]=""
++				hdd_pt_free[$ID]=""
++				hdd_pt_used_pc[$ID]=""
++				hdd_pt_fs_size[$ID]=""
+ 
+ 			fi
+ 
+
+
+
+From lamikae at mail.berlios.de  Sun Dec  3 20:05:20 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Sun, 3 Dec 2006 20:05:20 +0100
+Subject: [Osinfo-commit] r623 - in trunk/osinfo: debug modules
+	modules/experimental
+Message-ID: <200612031905.kB3J5KFU002227@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-03 20:05:20 +0100 (Sun, 03 Dec 2006)
+New Revision: 623
+
+Added:
+   trunk/osinfo/debug/module-template
+   trunk/osinfo/modules/experimental/iptables
+Modified:
+   trunk/osinfo/modules/hdd
+Log:
+iptables module and module template
+
+Added: trunk/osinfo/debug/module-template
+===================================================================
+--- trunk/osinfo/debug/module-template	2006-12-03 18:22:57 UTC (rev 622)
++++ trunk/osinfo/debug/module-template	2006-12-03 19:05:20 UTC (rev 623)
+@@ -0,0 +1,11 @@
++Module_template() {
++	local moduleName="<insert module's name to be printed>"
++	local moduleDescription="<insert a short description of the module>"
++	module_header   "${moduleName}"
++
++	# the module
++
++	flush_values
++}
++
++	# additional module subfunctions
+
+Added: trunk/osinfo/modules/experimental/iptables
+===================================================================
+--- trunk/osinfo/modules/experimental/iptables	2006-12-03 18:22:57 UTC (rev 622)
++++ trunk/osinfo/modules/experimental/iptables	2006-12-03 19:05:20 UTC (rev 623)
+@@ -0,0 +1,10 @@
++Module_iptables() {
++	local moduleName="Iptables"
++	local moduleDescription="Linux kernel iptables rule parser"
++	module_header   "${moduleName}"
++
++	iptables -L -v -n
++
++	flush_values
++}
++
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-12-03 18:22:57 UTC (rev 622)
++++ trunk/osinfo/modules/hdd	2006-12-03 19:05:20 UTC (rev 623)
+@@ -10,8 +10,8 @@
+ # used tools:
+ # fdisk, df, udev, /proc (deprecated), smartmontools, hdparm, bc
+ Module_hdd() {
+-	local moduleName="Disk information"
+-	local moduleDescription=""
++	local moduleName="Hard drive configuration"
++	local moduleDescription="Information of the hard drives in the system"
+ 	module_header "${moduleName}"
+ 
+ 	# developement status:
+@@ -529,6 +529,10 @@
+ 		local dev_scan="${1}" part_free=0
+ 		partitions_on_drive="$(grep ^${dev_scan} ${fdisk_info} | wc -l)"
+ 		local ID=$hdd_pt_ID
++		#local swap_color="${tcYELLOW}"
++		# marking partitions in different colours would be great, but
++		# the 'column' tool does not allow that. we should rewrite the
++		# column function.
+ 
+ 		#TODO for version 0.5 or so
+ 		#hdd_fs_ID=[83] [7] [82] ... #which tells the FS type
+@@ -595,6 +599,7 @@
+ 				# it might be swap..
+ 				if [ "$(swapon -s | grep ${hdd_pt_node[$ID]})" ]; then
+ 				# mark 'swap' as mountpoint for swap partitions, if they're in use
++					#hdd_pt_mp[$ID]="${swap_color}swap${tSTD}"
+ 					hdd_pt_mp[$ID]="swap"
+ 					hdd_pt_used[$ID]="$(swapon -s | \
+ 						grep ^${hdd_pt_node[$ID]} | awk {'print $4'})"
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 11:24:36 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 11:24:36 +0100
+Subject: [Osinfo-commit] r625 - trunk/osinfo/lib
+Message-ID: <200612051024.kB5AOaBw021380@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 11:24:35 +0100 (Tue, 05 Dec 2006)
+New Revision: 625
+
+Modified:
+   trunk/osinfo/lib/check.functions
+Log:
+log file touching fix
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-05 09:56:32 UTC (rev 624)
++++ trunk/osinfo/lib/check.functions	2006-12-05 10:24:35 UTC (rev 625)
+@@ -1,13 +1,23 @@
++######
++## Check_logfile
++#
++# checks 1) if the logfile exists,
++#        2) if it is writable
++#        3) tries to touch one if applicaple
+ function Check_logfile {
+-	if [ ! -e "$error_log" ]; then
+-		touch "${error_log}" && chmod 664 "${error_log}"
+-		[[ "$?" -ne 0 ]] && \
+-			info	"Could not create log file $error_log."
++	touch "${error_log}" &>/dev/null
++
++	if [ $? -eq 0 ]; then # success
++		chmod 664 "${error_log}"
++	else # fail
++		info	"Could not touch log file $error_log."
+ 	fi
+ 
+-	if [ ! -w "$error_log" ]; then
+-		info	"Log file '$error_log' is not writable by you."
+-	fi
++	#if [ ! -w "$error_log" ]; then
++	#	info	"Log file '$error_log' is not writable by you."
++	#fi
++
++	flush_values
+ }
+ 
+ function Check_rundir {
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 10:56:32 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 10:56:32 +0100
+Subject: [Osinfo-commit] r624 - trunk/osinfo/lib
+Message-ID: <200612050956.kB59uWsn016597@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 10:56:32 +0100 (Tue, 05 Dec 2006)
+New Revision: 624
+
+Modified:
+   trunk/osinfo/lib/check.functions
+Log:
+Fixed small typo
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-03 19:05:20 UTC (rev 623)
++++ trunk/osinfo/lib/check.functions	2006-12-05 09:56:32 UTC (rev 624)
+@@ -1,7 +1,7 @@
+ function Check_logfile {
+ 	if [ ! -e "$error_log" ]; then
+ 		touch "${error_log}" && chmod 664 "${error_log}"
+-		[[ $0 -ne 0 ]] && \
++		[[ "$?" -ne 0 ]] && \
+ 			info	"Could not create log file $error_log."
+ 	fi
+ 
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 11:38:39 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 11:38:39 +0100
+Subject: [Osinfo-commit] r626 - trunk/osinfo/lib
+Message-ID: <200612051038.kB5Acdu5024682@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 11:38:38 +0100 (Tue, 05 Dec 2006)
+New Revision: 626
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+refined color functions to use case
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 10:24:35 UTC (rev 625)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 10:38:38 UTC (rev 626)
+@@ -72,20 +72,25 @@
+ check_cap 'setaf 6' tcCYAN
+ check_cap 'setaf 7' tcWHITE
+ 
+-if [ "$TERM" == "linux" ]; then
+-    tcBLACK="${tcBLACK}${tBOLD}"
+-      tcRED="${tcRED}${tBOLD}"
+-    tcGREEN="${tcGREEN}${tBOLD}"
+-   tcYELLOW="${tcYELLOW}${tBOLD}"
+-     tcBLUE="${tcBLUE}${tBOLD}"
+-  tcMAGENTA="${tcMAGENTA}${tBOLD}"
+-     tcCYAN="${tcCYAN}${tBOLD}"
+-    tcWHITE="${tcWHITE}${tBOLD}"
+-fi
++if [ "$TERM" ]; then
++	case $TERM in
++		'linux')
++		tcBLACK="${tcBLACK}${tBOLD}"
++		  tcRED="${tcRED}${tBOLD}"
++		tcGREEN="${tcGREEN}${tBOLD}"
++	   tcYELLOW="${tcYELLOW}${tBOLD}"
++		 tcBLUE="${tcBLUE}${tBOLD}"
++	  tcMAGENTA="${tcMAGENTA}${tBOLD}"
++		 tcCYAN="${tcCYAN}${tBOLD}"
++		tcWHITE="${tcWHITE}${tBOLD}"
++		;;
++	esac
+ 
+      header="${tcBLUE}"
+   subheader="${tcBLUE}${tBOLD}"
+ 
++fi
++
+ # Prints a line of 80 "?" if terminal has caps "enacs" and "smacs"
+ # otherwise print a line of "-"
+ # Example:
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:08:45 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:08:45 +0100
+Subject: [Osinfo-commit] r629 - trunk/osinfo/lib
+Message-ID: <200612051108.kB5B8jnJ030762@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:08:44 +0100 (Tue, 05 Dec 2006)
+New Revision: 629
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+Fixed bug with ''
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 11:05:30 UTC (rev 628)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 11:08:44 UTC (rev 629)
+@@ -46,7 +46,7 @@
+ 	if [ $sup_cap -eq 0 ]; then
+ 		eval "$2=\"\$(tput $1)\""
+ 	else
+-		eval "$2=\"\${3:-''}\""
++		eval "$2=\"\${3:-}\""
+ 	fi
+ 	return $sup_cap
+ }
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:12:29 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:12:29 +0100
+Subject: [Osinfo-commit] r631 - trunk/osinfo/lib
+Message-ID: <200612051112.kB5BCT66031267@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:12:29 +0100 (Tue, 05 Dec 2006)
+New Revision: 631
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+Fixed some more indention
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 11:10:56 UTC (rev 630)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 11:12:29 UTC (rev 631)
+@@ -99,8 +99,8 @@
+ 		;;
+ 	esac
+ 
+-     header="${tcBLUE}"
+-  subheader="${tcBLUE}${tBOLD}"
++	   header="${tcBLUE}"
++	subheader="${tcBLUE}${tBOLD}"
+ 
+ fi
+ 
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:10:56 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:10:56 +0100
+Subject: [Osinfo-commit] r630 - trunk/osinfo/lib
+Message-ID: <200612051110.kB5BAu4d030993@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:10:56 +0100 (Tue, 05 Dec 2006)
+New Revision: 630
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/lib/cmdline
+Log:
+Fixed bug with fancy lines with --no-color
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 11:08:44 UTC (rev 629)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 11:10:56 UTC (rev 630)
+@@ -121,8 +121,9 @@
+ 	tput smacs &>/dev/null
+ 	[ $? -ne 0 ] && sup_ext=1
+ 	[ -z "$TERM" ] && sup_ext=1
++	[ "$no_fancy" -eq 1 ] && sup_ext=1
+ 	[ "$TERM" == 'linux' ] && sup_ext=1
+-	if [ $sup_ext == 0 ]; then
++	if [ $sup_ext -eq 0 ]; then
+ 		tput enacs
+ 		tput smacs
+ 		yes 'q' | head -n "$(get_cols)" | tr -d '\012'
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2006-12-05 11:08:44 UTC (rev 629)
++++ trunk/osinfo/lib/cmdline	2006-12-05 11:10:56 UTC (rev 630)
+@@ -109,7 +109,7 @@
+ 				'--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
+ 					# clear color codes; set empty values
+ 					tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
+-					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
++					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN='' ; no_fancy=1
+ 					shift 1
+ 					;;
+ 
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:14:43 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:14:43 +0100
+Subject: [Osinfo-commit] r632 - in trunk/osinfo: lib modules
+	modules/experimental
+Message-ID: <200612051114.kB5BEhKL031480@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:14:42 +0100 (Tue, 05 Dec 2006)
+New Revision: 632
+
+Modified:
+   trunk/osinfo/lib/daemon.functions
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/lib/print.functions
+   trunk/osinfo/modules/README
+   trunk/osinfo/modules/devices
+   trunk/osinfo/modules/dmi
+   trunk/osinfo/modules/experimental/oem
+   trunk/osinfo/modules/experimental/video
+Log:
+Fixed some trailing whitespaces
+
+Modified: trunk/osinfo/lib/daemon.functions
+===================================================================
+--- trunk/osinfo/lib/daemon.functions	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/lib/daemon.functions	2006-12-05 11:14:42 UTC (rev 632)
+@@ -166,11 +166,11 @@
+ #
+ # creates (or updates by overwriting) the index.html in the runfolder.
+ # NOTE: this function should not generate any info messages to stdout!
+-# 
++#
+ update_index() {
+ 	if [ -e "${xsltdir}/index.xsl" ]; then
+ 
+-		# run a loop for all xml files in the hosts dir - 
++		# run a loop for all xml files in the hosts dir -
+ 		# do not change quotation, or else xsltproc will fail!
+ 		for clients in "${hostdir}/*.xml"; do
+ 
+@@ -213,7 +213,7 @@
+ 	# the html pages
+ 	#
+ 	#
+-	# run a loop for all xml files in the hosts dir - 
++	# run a loop for all xml files in the hosts dir -
+ 	# do not change quotation, or else xsltproc will fail!
+ 	for clients in ${hostdir}/*.xml; do
+ 
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/lib/helper.functions	2006-12-05 11:14:42 UTC (rev 632)
+@@ -201,7 +201,7 @@
+ 
+ 
+ # extracts value from <xml>value</xml>
+-# Parameters: 
++# Parameters:
+ #  1 stdin xml string (variable)
+ extr_xml_value() {
+ 	#sed 's/[^>]*>\([^<]*\)<[^.]*/\1/' <<< "${@}"
+@@ -243,7 +243,7 @@
+ 					info "$dep not found"
+ 				fi
+ 			;;
+-			
++
+ 		esac
+ 
+ 		flush_values
+@@ -274,7 +274,7 @@
+ 	}
+ fi
+ 
+-function hddtemp() { 
++function hddtemp() {
+ 	hddtemp 2>"${error_log}"
+ 	}
+ 
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/lib/print.functions	2006-12-05 11:14:42 UTC (rev 632)
+@@ -174,8 +174,8 @@
+ 	# and using colours on $value_string messes up column.
+ 
+ 	echo -e $(sed 's/%value%/\?/g ; s/%col%/\?/g' <<< ${value_string}) | \
+-	          column -t -s? 
+-	echo	
++	          column -t -s?
++	echo
+ }
+ 
+ 
+
+Modified: trunk/osinfo/modules/README
+===================================================================
+--- trunk/osinfo/modules/README	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/modules/README	2006-12-05 11:14:42 UTC (rev 632)
+@@ -10,7 +10,7 @@
+ #  1) create the module file into modules/experimental/
+ #  2) add the module name into the module index file
+ #
+-# howto stabilise a module: 
++# howto stabilise a module:
+ #  1) add the module name to the profiles/default file
+ #  2) add the module name optionally to other profiles
+ #  3) move the module from modules/experimental/ to modules/
+
+Modified: trunk/osinfo/modules/devices
+===================================================================
+--- trunk/osinfo/modules/devices	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/modules/devices	2006-12-05 11:14:42 UTC (rev 632)
+@@ -60,7 +60,7 @@
+ 
+ ############################################
+ # helper functions for to get device data
+-# 
++#
+ 	###################
+ 	## load_categories
+ 	#
+@@ -117,8 +117,8 @@
+ 		add_attribute ' Manufacturer' \
+ 					  'mother_board_manufacturer'
+ 		add_values    "$(get_mobo_manufacturer)"
+-		              # these functions are inherited from module_dmi	
+-		
++		              # these functions are inherited from module_dmi
++
+ 		add_attribute ' Model' \
+ 					  'mother_board_model'
+ 		add_values    "$(get_mobo_model)"
+@@ -160,7 +160,7 @@
+ 	#######################
+ 	## grep_lspci_array
+ 	#
+-	# extracts entries from the device array 
++	# extracts entries from the device array
+ 	grep_lspci_array() {
+ 		local device_id="$1"
+ 		local found_devices arraynr description
+
+Modified: trunk/osinfo/modules/dmi
+===================================================================
+--- trunk/osinfo/modules/dmi	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/modules/dmi	2006-12-05 11:14:42 UTC (rev 632)
+@@ -52,7 +52,7 @@
+ 		# IFS need to be changed because the values are separated by newline
+ 		local IFS_bak="$IFS" value
+ 		IFS=$','
+-		
++
+ 		# extract the handle and string the first line
+ 		# (%node% identifier that is useless here)
+ 		extr_node ${handle_desc} ${dmi_tmp_file} Handle | \
+@@ -83,8 +83,8 @@
+ 
+ 		add_attribute 'Revision'	'bios_version'
+ 		add_values    "$(get_bios_revision)"
+-	
+ 
++
+ 		add_attribute 'Date'	'bios_date'
+ 		add_values    "$(grep -i date ${osinfo_tmp} | \
+ 						 awk -F':' {'print $2'} | \
+@@ -105,7 +105,7 @@
+ 
+ 		# extract the handle to a temp file
+ 		extract_dmi ${handle_desc} > ${osinfo_tmp}
+-	
++
+ 		add_header  "System info"
+ 
+ 		add_attribute 'Manufacturer' \
+@@ -154,13 +154,13 @@
+ 		add_attribute 'Manufacturer' \
+ 					  'mother_board_manufacturer'
+ 		add_values    "$(get_mobo_manufacturer)"
+-		
+-		
++
++
+ 		add_attribute 'Model' \
+ 					  'mother_board_model'
+ 		add_values    "$(get_mobo_model)"
+-	
+-		
++
++
+ 		add_attribute 'Version' \
+ 					  'mother_board_version'
+ 		add_values    "$(grep -i version ${osinfo_tmp} | \
+@@ -174,7 +174,7 @@
+ 						 awk -F':' {'print $2'} | \
+ 						 sed 's/^\ *//')"
+ 
+-		add_footer	
++		add_footer
+ 	}
+ 
+ 
+@@ -221,7 +221,7 @@
+ 						 awk -F':' {'print $2'} | \
+ 						 sed 's/^\ *//')"
+ 
+-		add_footer	
++		add_footer
+ 	}
+ 
+ 		get_mobo_manufacturer() {
+
+Modified: trunk/osinfo/modules/experimental/oem
+===================================================================
+--- trunk/osinfo/modules/experimental/oem	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/modules/experimental/oem	2006-12-05 11:14:42 UTC (rev 632)
+@@ -1,5 +1,5 @@
+ ######################
+-# OEM INFORMATION 
++# OEM INFORMATION
+ # this module is deprecated in favor of module_dmi
+ #
+ # this module collects information from lshw, a somewhat rare package, which
+
+Modified: trunk/osinfo/modules/experimental/video
+===================================================================
+--- trunk/osinfo/modules/experimental/video	2006-12-05 11:12:29 UTC (rev 631)
++++ trunk/osinfo/modules/experimental/video	2006-12-05 11:14:42 UTC (rev 632)
+@@ -51,7 +51,7 @@
+ 	add_attribute      'Xorg log date*'
+ 	add_values         "$(ls -l ${XORG_LOG} | awk {'print $6 " " $7'})"
+ 
+-	
++
+ 	flush_values
+ }
+ 
+@@ -61,7 +61,7 @@
+ 		}
+ 
+ 	function get_dri_vendor () {
+-		awk -F\" '/Module dri/{print $2}' ${XORG_LOG} 
++		awk -F\" '/Module dri/{print $2}' ${XORG_LOG}
+ 		}
+ 
+ 	function get_opengl_renderer () {
+@@ -70,19 +70,19 @@
+ 	}
+ 
+ 	function get_drm_vendor () {
+-		awk -F\" '/Module drm/{print $2}' ${XORG_LOG} 
++		awk -F\" '/Module drm/{print $2}' ${XORG_LOG}
+ 		}
+ 
+ 	function get_glx_vendor () {
+-		awk -F\" '/Module glx/{print $2}' ${XORG_LOG} 
++		awk -F\" '/Module glx/{print $2}' ${XORG_LOG}
+ 		}
+ 
+ 	function get_aiglx () {
+-		grep ') AIGLX' ${XORG_LOG} 
++		grep ') AIGLX' ${XORG_LOG}
+ 		}
+ 
+ 	function get_glx () {
+-		grep ') GLX' ${XORG_LOG} 
++		grep ') GLX' ${XORG_LOG}
+ 		}
+ 
+ 	function get_found_chipset () {
+@@ -93,14 +93,14 @@
+ 
+ 		found_chipsets[${#found_chipsets[@]}]="$(
+ 			sed 's/Chipset\ // ; s/\ found//' <<< found_chipsets[${#found_chipsets[@]}] )"
+-			
++
+ 		echo ${found_chipsets[0]}
+ 		}
+ 
+ 	function get_agp_mode () {
+-		grep 'Using AGP [0-9]*x mode' ${XORG_LOG} 
++		grep 'Using AGP [0-9]*x mode' ${XORG_LOG}
+ 		}
+ 
+ 	function get_xorg_errors () {
+-		grep '^(EE)'  ${XORG_LOG} 
++		grep '^(EE)'  ${XORG_LOG}
+ 		}
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:01:06 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:01:06 +0100
+Subject: [Osinfo-commit] r627 - trunk/osinfo/lib
+Message-ID: <200612051101.kB5B167g029289@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:01:06 +0100 (Tue, 05 Dec 2006)
+New Revision: 627
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+First try to fix when there is no $TERM
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 10:38:38 UTC (rev 626)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 11:01:06 UTC (rev 627)
+@@ -51,6 +51,19 @@
+ 	return $sup_cap
+ }
+ 
++
++if [ "$TERM" ]; then
++	tput cols &>/dev/null
++	if [ $? -eq 0 ]; then
++		get_cols() { echo -n "$(tput cols)"; }
++	else
++		get_cols() { echo -n '80'; }
++	fi
++else
++	# Bleh, no $TERM...
++	get_cols() { echo -n '80'; }
++fi
++
+ check_cap bold  tBOLD
+ check_cap smul  tbUNDERLINE
+ check_cap rmul  teUNDERLINE
+@@ -103,18 +116,19 @@
+ #BUG:   bterm
+ print_line() {
+ 	local sup_ext=0
+-	tput enacs >/dev/null
++	tput enacs &>/dev/null
+ 	[ $? -eq 0 ] && tput enacs
+-	tput smacs >/dev/null
++	tput smacs &>/dev/null
+ 	[ $? -ne 0 ] && sup_ext=1
++	[ -z "$TERM" ] && sup_ext=1
+ 	[ "$TERM" == 'linux' ] && sup_ext=1
+ 	if [ $sup_ext == 0 ]; then
+ 		tput enacs
+ 		tput smacs
+-		yes 'q' | head -n $(tput cols) | tr -d '\012'
++		yes 'q' | head -n "$(get_cols)" | tr -d '\012'
+ 		tput rmacs
+ 	else
+-		yes '-' | head -n $(tput cols) | tr -d '\012'
++		yes '-' | head -n "$(get_cols)" | tr -d '\012'
+ 		echo
+ 	fi
+ }
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 12:05:31 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 12:05:31 +0100
+Subject: [Osinfo-commit] r628 - trunk/osinfo/lib
+Message-ID: <200612051105.kB5B5VH4030290@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 12:05:30 +0100 (Tue, 05 Dec 2006)
+New Revision: 628
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+Fixed some indention
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 11:01:06 UTC (rev 627)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 11:05:30 UTC (rev 628)
+@@ -88,14 +88,14 @@
+ if [ "$TERM" ]; then
+ 	case $TERM in
+ 		'linux')
+-		tcBLACK="${tcBLACK}${tBOLD}"
+-		  tcRED="${tcRED}${tBOLD}"
+-		tcGREEN="${tcGREEN}${tBOLD}"
+-	   tcYELLOW="${tcYELLOW}${tBOLD}"
+-		 tcBLUE="${tcBLUE}${tBOLD}"
+-	  tcMAGENTA="${tcMAGENTA}${tBOLD}"
+-		 tcCYAN="${tcCYAN}${tBOLD}"
+-		tcWHITE="${tcWHITE}${tBOLD}"
++			  tcBLACK="${tcBLACK}${tBOLD}"
++			    tcRED="${tcRED}${tBOLD}"
++			  tcGREEN="${tcGREEN}${tBOLD}"
++			 tcYELLOW="${tcYELLOW}${tBOLD}"
++			   tcBLUE="${tcBLUE}${tBOLD}"
++			tcMAGENTA="${tcMAGENTA}${tBOLD}"
++			   tcCYAN="${tcCYAN}${tBOLD}"
++			  tcWHITE="${tcWHITE}${tBOLD}"
+ 		;;
+ 	esac
+ 
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 13:23:25 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 13:23:25 +0100
+Subject: [Osinfo-commit] r635 - trunk/osinfo/lib
+Message-ID: <200612051223.kB5CNPo4017082@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 13:23:25 +0100 (Tue, 05 Dec 2006)
+New Revision: 635
+
+Modified:
+   trunk/osinfo/lib/version
+Log:
+version bump
+
+Modified: trunk/osinfo/lib/version
+===================================================================
+--- trunk/osinfo/lib/version	2006-12-05 12:22:37 UTC (rev 634)
++++ trunk/osinfo/lib/version	2006-12-05 12:23:25 UTC (rev 635)
+@@ -13,8 +13,8 @@
+ major_version=0
+ minor_version=2
+ micro_version=12
+-patch_version=0
++patch_version=1
+ dev_status=beta
+-release_date='2006-11-xx'
++release_date='2006-12-xx'
+ 
+ 
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 13:32:14 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 13:32:14 +0100
+Subject: [Osinfo-commit] r637 - trunk/osinfo/ebuild
+Message-ID: <200612051232.kB5CWE5d019133@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 13:32:14 +0100 (Tue, 05 Dec 2006)
+New Revision: 637
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+Log:
+moved osinfo installdir to /usr/bin
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-05 12:30:28 UTC (rev 636)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-05 12:32:14 UTC (rev 637)
+@@ -49,8 +49,8 @@
+ 
+ src_install() {
+ 	
+-	mkdir -p ${D}/usr/sbin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
+-	cp osinfo/osinfo ${D}/usr/sbin
++	mkdir -p ${D}/usr/bin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
++	cp osinfo/osinfo ${D}/usr/bin
+ 
+ 	doman osinfo/osinfo.1
+ 
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 13:12:35 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 13:12:35 +0100
+Subject: [Osinfo-commit] r633 - trunk/osinfo/lib
+Message-ID: <200612051212.kB5CCZbs025730@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 13:12:34 +0100 (Tue, 05 Dec 2006)
+New Revision: 633
+
+Added:
+   trunk/osinfo/lib/bash.functions~
+Modified:
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/lib/global_variables
+Log:
+some fixes
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 11:14:42 UTC (rev 632)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 12:12:34 UTC (rev 633)
+@@ -121,7 +121,7 @@
+ 	tput smacs &>/dev/null
+ 	[ $? -ne 0 ] && sup_ext=1
+ 	[ -z "$TERM" ] && sup_ext=1
+-	[ "$no_fancy" -eq 1 ] && sup_ext=1
++	[ $no_fancy -eq 1 ] && sup_ext=1
+ 	[ "$TERM" == 'linux' ] && sup_ext=1
+ 	if [ $sup_ext -eq 0 ]; then
+ 		tput enacs
+
+Copied: trunk/osinfo/lib/bash.functions~ (from rev 626, trunk/osinfo/lib/bash.functions)
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2006-12-05 11:14:42 UTC (rev 632)
++++ trunk/osinfo/lib/global_variables	2006-12-05 12:12:34 UTC (rev 633)
+@@ -11,6 +11,7 @@
+ quiet=0
+ tcpdaemon=0
+ tcpsend=0
++no_fancy=0
+ 
+ prefix="/"  # The root dir. Using a variable allows info on chrooted systems
+ PROFILES="desktop server laptop"
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 13:30:28 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 13:30:28 +0100
+Subject: [Osinfo-commit] r636 - trunk/osinfo/lib
+Message-ID: <200612051230.kB5CUStY018738@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 13:30:28 +0100 (Tue, 05 Dec 2006)
+New Revision: 636
+
+Modified:
+   trunk/osinfo/lib/check.functions
+Log:
+muted stderr of chmoding the log file
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-05 12:23:25 UTC (rev 635)
++++ trunk/osinfo/lib/check.functions	2006-12-05 12:30:28 UTC (rev 636)
+@@ -4,11 +4,12 @@
+ # checks 1) if the logfile exists,
+ #        2) if it is writable
+ #        3) tries to touch one if applicaple
++#        4) change file owner properties to a+rwx
+ function Check_logfile {
+ 	touch "${error_log}" &>/dev/null
+ 
+ 	if [ $? -eq 0 ]; then # success
+-		chmod 664 "${error_log}"
++		chmod a+rwx "${error_log}" &>/dev/null
+ 	else # fail
+ 		error "Could not touch log file $error_log."
+ 	fi
+
+
+
+From lamikae at mail.berlios.de  Tue Dec  5 13:22:37 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Tue, 5 Dec 2006 13:22:37 +0100
+Subject: [Osinfo-commit] r634 - in trunk/osinfo: . lib
+Message-ID: <200612051222.kB5CMbPf009781@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-05 13:22:37 +0100 (Tue, 05 Dec 2006)
+New Revision: 634
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/lib/cmdline
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/lib/infostring.functions
+   trunk/osinfo/sources
+Log:
+some fixes to term colour fix introduced bugs :)
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 12:22:37 UTC (rev 634)
+@@ -29,6 +29,7 @@
+ # POSSIBILITY OF SUCH DAMAGE.
+ #######
+ 
++
+ # Set the variable in $2 to the terminal cap $1
+ # WARNING: Use this function ONLY for string caps!
+ # Parameters:
+@@ -134,7 +135,7 @@
+ 	fi
+ }
+ 
+-# TODO: document
++# prints an error message in red to the console
+ print_negative_message() {
+ 	echo "${tcRED}${1}${tSTD}"
+ }
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/lib/check.functions	2006-12-05 12:22:37 UTC (rev 634)
+@@ -10,11 +10,11 @@
+ 	if [ $? -eq 0 ]; then # success
+ 		chmod 664 "${error_log}"
+ 	else # fail
+-		info	"Could not touch log file $error_log."
++		error "Could not touch log file $error_log."
+ 	fi
+ 
+ 	#if [ ! -w "$error_log" ]; then
+-	#	info	"Log file '$error_log' is not writable by you."
++	#	error "Log file '$error_log' is not writable by you."
+ 	#fi
+ 
+ 	flush_values
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/lib/cmdline	2006-12-05 12:22:37 UTC (rev 634)
+@@ -107,9 +107,10 @@
+ 					;;
+ 
+ 				'--no-color'|'--no-colour'|'--nocolor'|'--nocolour')
++					no_fancy=1
+ 					# clear color codes; set empty values
+ 					tSTD='' ; tBOLD='' ; tcBLACK='' ; tcWHITE='' ; tcRED='' ; tcGREEN=''
+-					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN='' ; no_fancy=1
++					tcYELLOW='' ; tcBLUE='' ; tcMAGENTA='' ; tcCYAN=''
+ 					shift 1
+ 					;;
+ 
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/lib/helper.functions	2006-12-05 12:22:37 UTC (rev 634)
+@@ -262,6 +262,26 @@
+ 	do_abort "${1} is not a valid module!" 1
+ }
+ 
++
++#########
++# info
++#
++# this is used for informational sentences in case of errors, warnings, notes etc.
++function info {
++	#infostring[${#infostring[@]}]="%info%${@}"
++	echo "${tcYELLOW}${@}${tSTD}"
++}
++
++#########
++# error
++#
++# this is used to send error messages to the user
++function error {
++	#infostring[${#infostring[@]}]="%error%${@}"
++	echo "${tcRED}${@}${tSTD}"
++}
++
++
+ # On *BSD, coreutils are prepended with 'g' to imply 'GNU'
+ # http://www.freebsd.org/cgi/url.cgi?ftp://ftp.freebsd.org/pub/FreeBSD/FreeBSD-current/ports/sysutils/coreutils/pkg-descr
+ if [ "$(grep bsd <<< "$SYSTEM")" ]; then
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/lib/infostring.functions	2006-12-05 12:22:37 UTC (rev 634)
+@@ -218,14 +218,6 @@
+ 	#done
+ }
+ 
+-
+-#########
+-# info
+-#
+-# this is used for informational sentences in case of errors, warnings, notes etc.
+-function info {
+-	infostring[${#infostring[@]}]="%info%${@}"
+-}
+ #################################################################
+ 
+ # HACK: As syntax highlighting seems broken in my editor,
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-05 12:12:34 UTC (rev 633)
++++ trunk/osinfo/sources	2006-12-05 12:22:37 UTC (rev 634)
+@@ -4,8 +4,8 @@
+ done
+ 
+ source lib/version                # osinfo version info
++source lib/global_variables       # as it says...
+ 
+-source lib/bash.functions         # colour & line functions
+ source lib/PRINT_Help             # print --help
+ source lib/PRINT_Usage            # usage; if no parameters are given
+ source lib/PRINT_Version          # print --version
+@@ -13,15 +13,16 @@
+ 
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+-source lib/lanforce.functions     # lanforce xml tag codes
+ 
+-source lib/global_variables       # as it says...
++source lib/bash.functions         # colour & line functions
+ source lib/infostring.functions   # infostring handler functions
+ source lib/print.functions        # format output
+ source lib/helper.functions       # helperts
+ source lib/daemon.functions       # daemon mode functions
+-source lib/update_sidebar         # 
++source lib/lanforce.functions     # lanforce xml tag codes
+ 
++source lib/update_sidebar         # html function
++
+ source profiles/default           # source all computer profiles for a coherent view of data
+ source profiles/desktop
+ source profiles/server
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:06:34 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:06:34 +0100
+Subject: [Osinfo-commit] r638 - in trunk/osinfo: lib modules
+	modules/experimental
+Message-ID: <200612051506.kB5F6Y55011673@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:06:33 +0100 (Tue, 05 Dec 2006)
+New Revision: 638
+
+Removed:
+   trunk/osinfo/lib/bash.functions~
+Modified:
+   trunk/osinfo/lib/
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/modules/
+   trunk/osinfo/modules/experimental/
+Log:
+Removed stray *~ and fixed print_line to work on terminal as well
+
+
+Property changes on: trunk/osinfo/lib
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 12:32:14 UTC (rev 637)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 15:06:33 UTC (rev 638)
+@@ -52,7 +52,7 @@
+ 	return $sup_cap
+ }
+ 
+-
++graph_got_q=0
+ if [ "$TERM" ]; then
+ 	tput cols &>/dev/null
+ 	if [ $? -eq 0 ]; then
+@@ -60,6 +60,13 @@
+ 	else
+ 		get_cols() { echo -n '80'; }
+ 	fi
++	altchars="$(tput acsc)"
++	while read -rn 2 chpair; do
++		if [ "${chpair:0:1}" == "q" ]; then
++			graph_got_q=1
++			graph_q="${chpair:1:1}"
++		fi
++	done < <(tput acsc)
+ else
+ 	# Bleh, no $TERM...
+ 	get_cols() { echo -n '80'; }
+@@ -120,14 +127,14 @@
+ 	tput enacs &>/dev/null
+ 	[ $? -eq 0 ] && tput enacs
+ 	tput smacs &>/dev/null
+-	[ $? -ne 0 ] && sup_ext=1
+-	[ -z "$TERM" ] && sup_ext=1
+-	[ $no_fancy -eq 1 ] && sup_ext=1
+-	[ "$TERM" == 'linux' ] && sup_ext=1
+-	if [ $sup_ext -eq 0 ]; then
++	[ $? -eq 0 ] && sup_ext=1
++	[ $graph_got_q -eq 1 ] && sup_ext=1
++	[ -z "$TERM" ] && sup_ext=0
++	[ $no_fancy -eq 1 ] && sup_ext=0
++	if [ $sup_ext -eq 1 ]; then
+ 		tput enacs
+ 		tput smacs
+-		yes 'q' | head -n "$(get_cols)" | tr -d '\012'
++		yes "$graph_q" | head -n "$(get_cols)" | tr -d '\012'
+ 		tput rmacs
+ 	else
+ 		yes '-' | head -n "$(get_cols)" | tr -d '\012'
+
+Deleted: trunk/osinfo/lib/bash.functions~
+===================================================================
+--- trunk/osinfo/lib/bash.functions~	2006-12-05 12:32:14 UTC (rev 637)
++++ trunk/osinfo/lib/bash.functions~	2006-12-05 15:06:33 UTC (rev 638)
+@@ -1,274 +0,0 @@
+-#!/bin/bash
+-#######
+-# bash.functions - shared functions used by some apps.
+-# Copyright (C) 2006 Arvid Norlander
+-# All rights reserved.
+-#
+-# Redistribution and use in source and binary forms, with or without
+-# modification, are permitted provided that the following conditions are met:
+-#
+-#     * Redistributions of source code must retain the above copyright notice,
+-#     * this list of conditions and the following disclaimer.
+-#     * Redistributions in binary form must reproduce the above copyright
+-#     * notice, this list of conditions and the following disclaimer in the
+-#     * documentation and/or other materials provided with the distribution.
+-#     * Neither the name of the <ORGANIZATION> nor the names of its
+-#     * contributors may be used to endorse or promote products derived from
+-#     * this software without specific prior written permission.
+-#
+-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+-# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+-# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+-# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+-# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+-# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+-# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+-# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+-# POSSIBILITY OF SUCH DAMAGE.
+-#######
+-
+-# Set the variable in $2 to the terminal cap $1
+-# WARNING: Use this function ONLY for string caps!
+-# Parameters:
+-#   1 string capname
+-#   2 string Return variable name (Use Ind. ref.)
+-#   3 string Optional: What to use if cap not sup.
+-# Exit code:
+-#  0=OK
+-#  1=Not sup. or unknown cap
+-check_cap () {
+-	local sup_cap=0
+-	tput $1 &>/dev/null
+-	[ $? -ne 0 ] && sup_cap=1
+-	# Eval is safe here as this should never be called with user input
+-	if [ $sup_cap -eq 0 ]; then
+-		eval "$2=\"\$(tput $1)\""
+-	else
+-		eval "$2=\"\${3:-''}\""
+-	fi
+-	return $sup_cap
+-}
+-
+-check_cap bold  tBOLD
+-check_cap smul  tbUNDERLINE
+-check_cap rmul  teUNDERLINE
+-check_cap blink tBLINK
+-check_cap rev   tREVERSE
+-check_cap bel   tBELL
+-check_cap sgr0  tSTD
+-
+-esc="$(echo -ne '\e')"
+-tab="$(echo -ne '\t')"
+-
+-
+-check_cap 'setaf 0' tcBLACK
+-check_cap 'setaf 1' tcRED
+-check_cap 'setaf 2' tcGREEN
+-check_cap 'setaf 3' tcYELLOW
+-check_cap 'setaf 4' tcBLUE
+-check_cap 'setaf 5' tcMAGENTA
+-check_cap 'setaf 6' tcCYAN
+-check_cap 'setaf 7' tcWHITE
+-
+-if [ "$TERM" ]; then
+-	case $TERM in
+-		'linux')
+-		tcBLACK="${tcBLACK}${tBOLD}"
+-		  tcRED="${tcRED}${tBOLD}"
+-		tcGREEN="${tcGREEN}${tBOLD}"
+-	   tcYELLOW="${tcYELLOW}${tBOLD}"
+-		 tcBLUE="${tcBLUE}${tBOLD}"
+-	  tcMAGENTA="${tcMAGENTA}${tBOLD}"
+-		 tcCYAN="${tcCYAN}${tBOLD}"
+-		tcWHITE="${tcWHITE}${tBOLD}"
+-		;;
+-	esac
+-
+-     header="${tcBLUE}"
+-  subheader="${tcBLUE}${tBOLD}"
+-
+-fi
+-
+-# Prints a line of 80 "?" if terminal has caps "enacs" and "smacs"
+-# otherwise print a line of "-"
+-# Example:
+-#   Output on "xterm" or "kterm" "?????????"
+-#   Output on "linux" console    "---------"
+-#
+-#TODO: Add more terminaltypes
+-#BUG: Don't work in:
+-#BUG:   xiterm (Output a lot of small "DC2")
+-#BUG:   bterm
+-print_line() {
+-	local sup_ext=0
+-	tput enacs >/dev/null
+-	[ $? -eq 0 ] && tput enacs
+-	tput smacs >/dev/null
+-	[ $? -ne 0 ] && sup_ext=1
+-	[ "$TERM" == 'linux' ] && sup_ext=1
+-	if [ $sup_ext == 0 ]; then
+-		tput enacs
+-		tput smacs
+-		yes 'q' | head -n $(tput cols) | tr -d '\012'
+-		tput rmacs
+-	else
+-		yes '-' | head -n $(tput cols) | tr -d '\012'
+-		echo
+-	fi
+-}
+-
+-# TODO: document
+-print_negative_message() {
+-	echo "${tcRED}${1}${tSTD}"
+-}
+-
+-# Aborts program with message
+-# Parameters:
+-#   1 string   Message
+-#   2 string   Exit status
+-# Returns:
+-#   Does not return
+-do_abort() {
+-	print_negative_message "${tcRED}Error:${tSTD} ${1}"
+-	print_negative_message "Aborting"
+-	exit $2
+-}
+-
+-# Prints a callstack.
+-print_traceback() {
+-	print_negative_message "Traceback:"
+-	local i=0 j=0
+-	while [ "${FUNCNAME[$i]}" != "main" ]; do
+-		let j=i+1
+-		echo "${FUNCNAME[$i]} ${BASH_SOURCE[$i]} -- ${BASH_LINENO[$i]} ${BASH_SOURCE[$j]}"
+-		let i++
+-	done | column -t | sed 's/--/-- Called from line/'
+-}
+-
+-
+-# Aborts program with message about deprecated function
+-# Parameters:
+-#   1 string   Name of function
+-#   2 string   Name of file
+-# Returns:
+-#   Does not return
+-error_deprecated() {
+-	print_negative_message "${tcRED}Error:${tSTD} Function $1 in $2 is is dperecated. Please make sure not to use it."
+-	print_traceback
+-	print_negative_message "${tcRED}Error:${tSTD} As a end user you should never see this."
+-	do_abort "Please contact the programmers about this (provide this exact error message to them)." 20
+-}
+-
+-# Shows message about missing argument(s) and exits with status 1.
+-# Parameters:
+-#   1 string   Name of option missing an argument(s)
+-#   2 integer  Optional: Number of arguments Std=1
+-# Returns:
+-#   Does not return
+-missing_arg() {
+-	if [ $2 ]; then
+-		do_abort "${1} requires ${2} arguments" 1
+-	else
+-		do_abort "${1} requires an argument" 1
+-	fi
+-}
+-
+-# Shows message about invalid argument(s) and exits with status 1.
+-# Parameters:
+-#   1 string   Name of option with invalid argument(s)
+-#   2 string   Name of the invalid argument
+-#   3 integer  Optional: Number of arguments Std=1
+-# Returns:
+-#   Does not return
+-wrong_arg() {
+-	if [ $3 ]; then
+-		do_abort "${2} are invalid arguments to ${1}" 1
+-	else
+-		do_abort "${2} is an invalid argument to ${1}" 1
+-	fi
+-}
+-
+-# Check if valid argument
+-# Parameters:
+-#   1 string   The argument
+-#   2 string   Space separated list of valid argument(s).
+-# Returns:
+-#   0 if valid
+-#   1 else
+-validate_arg() {
+-	local my_arg
+-	for my_arg in $2; do
+-		[ "$my_arg" = "$1" ] && return 0
+-	done
+-	return 1
+-}
+-
+-# Check if arguments are integers/floating point values.
+-# Parmeters(*):
+-#   * *        string/integer to check
+-# Returns:
+-#   0 if all arguments are integers/floating point values.
+-#   1 if one or several of the arguments are strings.
+-AreDecimalNumbers() {
+-	local argument
+-	for argument in "$@"; do
+-		expr "$argument" '+' '1' &>/dev/null
+-		[ $? -eq 3 ] && return 1
+-	done
+-	return 0
+-}
+-
+-# Check if arguments are strings.
+-# Parmeters(*):
+-#   * *        string/integer to check
+-# Returns:
+-#   0 if all arguments are strings.
+-#   1 if one or several of the arguments are integers/floating point values.
+-AreStrings() {
+-	local argument
+-	for argument in "$@"; do
+-		expr "$argument" '+' '1' &>/dev/null
+-		[ $? -eq 0 ] && return 1
+-	done
+-	return 0
+-}
+-
+-# Prints a error message.
+-# Parmeters:
+-#   1       integer  1 = use extra abort line.
+-#   2       string     Optional extra abort line.
+-#   2 or 3  integer  1 = use kdialog
+-#   *       string   error messages
+-print_error()	{
+-	local extraabortline=""
+-	if [ "$1" == "1" ]; then
+-		extraabortline="$2"
+-		shift 2
+-	else
+-		shift 1
+-	fi
+-
+-	local i usekdialog="$1"
+-	shift 1
+-
+-	# Now the rest are the error messages.
+-	if [ "$usekdialog" == "1" ]; then
+-		local errorline="$1"
+-		shift 1
+-		if [ $# -gt 0 ]; then
+-			for i in "$@"; do
+-				errorline="${errorline}\n${i}"
+-			done
+-		fi
+-		[ "$extraabortline" ] && errorline="${errorline}\n${extraabortline}"
+-		kdialog --error  "$errorline" &> /dev/null
+-	else
+-		for i in "$@"; do
+-			echo -e "${tcRED}ERROR:${tSTD} $i"
+-		done
+-		[ "$extraabortline" ] && echo -e "${tcRED}${extraabortline}${tSTD}"
+-	fi
+-}
+-
+
+
+Property changes on: trunk/osinfo/modules
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/modules/experimental
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:09:44 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:09:44 +0100
+Subject: [Osinfo-commit] r639 - in trunk/osinfo: conf ebuild html include
+	man profiles scripts xslt
+Message-ID: <200612051509.kB5F9i8M011890@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:09:44 +0100 (Tue, 05 Dec 2006)
+New Revision: 639
+
+Modified:
+   trunk/osinfo/conf/
+   trunk/osinfo/ebuild/
+   trunk/osinfo/html/
+   trunk/osinfo/include/
+   trunk/osinfo/man/
+   trunk/osinfo/profiles/
+   trunk/osinfo/scripts/
+   trunk/osinfo/xslt/
+Log:
+Fixed svn:ignore
+
+
+Property changes on: trunk/osinfo/conf
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/ebuild
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/html
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/include
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/man
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/profiles
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/scripts
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/xslt
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:14:24 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:14:24 +0100
+Subject: [Osinfo-commit] r640 - in trunk/osinfo: debug/phpsysinfo
+	ebuild/files html/hosts
+Message-ID: <200612051514.kB5FEOlh012766@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:14:23 +0100 (Tue, 05 Dec 2006)
+New Revision: 640
+
+Modified:
+   trunk/osinfo/debug/phpsysinfo/
+   trunk/osinfo/ebuild/files/
+   trunk/osinfo/html/hosts/
+Log:
+Fixed some svn:ignore
+
+
+Property changes on: trunk/osinfo/debug/phpsysinfo
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/ebuild/files
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+Property changes on: trunk/osinfo/html/hosts
+___________________________________________________________________
+Name: svn:ignore
+   + *~
+
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:17:25 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:17:25 +0100
+Subject: [Osinfo-commit] r641 - trunk/osinfo/modules
+Message-ID: <200612051517.kB5FHPBb013044@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:17:25 +0100 (Tue, 05 Dec 2006)
+New Revision: 641
+
+Modified:
+   trunk/osinfo/modules/hdd
+   trunk/osinfo/modules/memory
+   trunk/osinfo/modules/network
+   trunk/osinfo/modules/ram
+   trunk/osinfo/modules/system
+   trunk/osinfo/modules/wlan
+Log:
+Cleaned up trailing whitespaces
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/hdd	2006-12-05 15:17:25 UTC (rev 641)
+@@ -227,9 +227,9 @@
+ 					add_values      "$hdd_ata_standard"
+ 
+ 					add_attribute 'Driver'
+-					add_values    "$hdd_driver" 
++					add_values    "$hdd_driver"
+ 
+-					add_attribute 'Geometry' 
++					add_attribute 'Geometry'
+ 					add_values    "$hdd_geometry"
+ 				fi
+ 
+@@ -237,7 +237,7 @@
+ 				# SMART capability; more verbose
+ 				if [ $isverbose -ge 2 ]; then
+ 					# SMART capability
+-					add_attribute   'S.M.A.R.T.' 
++					add_attribute   'S.M.A.R.T.'
+ 					add_values      "$hdd_smart"
+ 				fi
+ 
+@@ -248,7 +248,7 @@
+ 					# TEMPERATURE
+ 					add_attribute   'Temperature'
+ 					add_values  "$hdd_tempC"
+-						[ "$hdd_tempC" ] 
++						[ "$hdd_tempC" ]
+ 
+ 					# verbose
+ 					if [ $isverbose -ge 1 ]; then
+@@ -595,7 +595,7 @@
+ 					"${hdd_pt_free[$ID]}/${hdd_pt_capacity[$ID]}*100)%"
+ 
+ 			else # unmounted
+-				
++
+ 				# it might be swap..
+ 				if [ "$(swapon -s | grep ${hdd_pt_node[$ID]})" ]; then
+ 				# mark 'swap' as mountpoint for swap partitions, if they're in use
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/memory	2006-12-05 15:17:25 UTC (rev 641)
+@@ -7,7 +7,7 @@
+ #
+ # lshw is used for RAM size evaluation. the size is reported by BIOS
+ # and is the most accurate way to detect the physical system memory.
+-# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly
+ # incorrectly, since they only detect total ram after kernel allocation.
+ #
+ # TODO: add support for memory type/speed detection thru lshw
+@@ -47,7 +47,7 @@
+ 			add_values        "$(get_physical_ram_size ${ramnode})"
+ 			add_value_footer  "MB"
+ 
+-			[ $usexml -ne 1 ] && flush_values 
++			[ $usexml -ne 1 ] && flush_values
+ 			# xml cannot flush here, as add_footer is defined below
+ 
+ 			# get specific membank info
+@@ -95,13 +95,13 @@
+ 
+ 					add_footer        "Bank"
+ 
+-					[ $usexml -ne 1 ] && flush_values 
++					[ $usexml -ne 1 ] && flush_values
+ 					# xml cannot flush here, as add_footer is defined below
+ 
+ 				done
+ 
+ 			fi
+-			
++
+ 			[ $usexml -eq 1 ] && add_footer # RAM
+ 			flush_values
+ 		fi
+@@ -113,7 +113,7 @@
+ 
+ 	function get_physical_ram_size() {
+ 	# Parameters:
+-	#  1  lshw xml memory node file 
++	#  1  lshw xml memory node file
+ 	#     (output from `extr_lshw_node memory`)
+ 
+ 		ramnode="${1}"
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/network	2006-12-05 15:17:25 UTC (rev 641)
+@@ -127,35 +127,35 @@
+ 		}
+ 
+ 	function get_nis_domain() {
+-		hostname -y 2> /dev/null	
++		hostname -y 2> /dev/null
+ 		}
+ 
+ 	function get_dns_domain() {
+-		hostname -d 2> /dev/null	
++		hostname -d 2> /dev/null
+ 		}
+ 
+ 	function get_fqdn() {
+-		hostname -f 2> /dev/null	
++		hostname -f 2> /dev/null
+ 		}
+ 
+ 	function get_ipv4() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+ 		grep -Eio 'inet[A-Za-z: ]*([0-9]{1,3}\.){3}[0-9]{1,3}' ${1} | \
+-	        grep -Eo '[0-9\.]+' 
++	        grep -Eo '[0-9\.]+'
+ 		}
+ 
+ 	function get_ipv6() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+ 		sed "s/  /\n/g" ${1} | grep -i inet6 | \
+-	        grep -Eio '([0-9a-f]{3,4}(\:){1,2}){4,8}([0-9a-f]{3,4})' 
++	        grep -Eio '([0-9a-f]{3,4}(\:){1,2}){4,8}([0-9a-f]{3,4})'
+ 		}
+ 
+ 	function get_enckey() {
+ 		# parameters:
+ 		#  1  output of iwconfig (file)
+-		grep -Eoi 'encryption key:[0-9A-Z\-]*' ${1} | awk -F\: {'print $2'}		
++		grep -Eoi 'encryption key:[0-9A-Z\-]*' ${1} | awk -F\: {'print $2'}
+ 	}
+ 
+ 	function get_mac_address() {
+
+Modified: trunk/osinfo/modules/ram
+===================================================================
+--- trunk/osinfo/modules/ram	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/ram	2006-12-05 15:17:25 UTC (rev 641)
+@@ -5,7 +5,7 @@
+ #
+ # lshw is used for RAM size evaluation. the size is reported by BIOS
+ # and is the most accurate way to detect the physical system memory.
+-# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly
+ # incorrectly, since they only detect total ram after kernel allocation.
+ #
+ Module_ram() {
+@@ -33,7 +33,7 @@
+ 			add_value_footer  "MB"
+ 
+ 			# xml cannot flush here, as add_footer is defined below
+-			[ $usexml -ne 1 ] && flush_values 
++			[ $usexml -ne 1 ] && flush_values
+ 
+ 			# get specific membank info
+ 			#if CheckReq_root more specific RAM information; then
+@@ -90,13 +90,13 @@
+ 
+ 					add_footer        "Bank"
+ 
+-					[ $usexml -ne 1 ] && flush_values 
++					[ $usexml -ne 1 ] && flush_values
+ 					# xml cannot flush here, as add_footer is defined below
+ 
+ 				done
+ 
+ 			fi
+-			
++
+ 			[ $usexml -eq 1 ] && add_footer # RAM
+ 			flush_values
+ 		fi
+@@ -104,7 +104,7 @@
+ 
+ 	function get_physical_ram_size() {
+ 	# Parameters:
+-	#  1  lshw xml memory node file 
++	#  1  lshw xml memory node file
+ 	#     (output from `extr_lshw_node memory`)
+ 
+ 		ramnode="${1}"
+
+Modified: trunk/osinfo/modules/system
+===================================================================
+--- trunk/osinfo/modules/system	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/system	2006-12-05 15:17:25 UTC (rev 641)
+@@ -62,7 +62,7 @@
+ 		add_attribute   "Fan"
+ 		local cpu_fan="$(sensors | grep -i 'cpu fan' | \
+ 		                 grep -Eo '[0-9]+ RPM')"
+-		add_values       "$(awk  {'print $1'} <<< $cpu_fan )" 
++		add_values       "$(awk  {'print $1'} <<< $cpu_fan )"
+ 		[ "$cpu_fan" ] && add_value_footer "RPM"
+ 	}
+ 
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-05 15:14:23 UTC (rev 640)
++++ trunk/osinfo/modules/wlan	2006-12-05 15:17:25 UTC (rev 641)
+@@ -60,7 +60,7 @@
+ 			               sed 's/\"//g')"
+ 
+ 			add_header   "$essid"
+-			
++
+ 			# if the interface is associated to this ESSID
+ 			if [ $accociated ]; then
+ 				#access_points[${access_points[@]}]="$(grep -A 1 -i ${access_point}" \
+@@ -82,7 +82,7 @@
+ 			add_attribute   'link quality'
+ 			add_values      "$(grep -Eo 'Quality[\=:][a-zA-Z0-9\/]+' $cell_tmp | \
+ 			                   awk -F"=|:" '{print $2}')"
+-							   
++
+ 			add_attribute   'address'
+ 			add_values      "$(awk -F"Address:" '{print $2}' $cell_tmp )"
+ 
+@@ -94,7 +94,7 @@
+ 			add_values      "$(grep -i $essid -A 2 $iw_src | \
+ 			                   grep -Eo 'Frequency[:0-9\.\ MGTP]*Hz' | \
+ 							   awk -F':' {'print $2'})"
+-							   
++
+ 			add_attribute   'bit rate'
+ 			add_values      "$(grep -i $essid -A 2 $iw_src | \
+ 			                   grep -iEo 'bit rate[:0-9\.\ MGTP]*b\/s' | \
+@@ -119,7 +119,7 @@
+ 				add_attribute   'group cipher'
+ 				add_values      "$(grep -i 'group cipher' $cell_tmp | \
+ 					               awk -F"=|:" '{print $2}')"
+-			
++
+ 				add_attribute   'pairwise cipher'
+ 				add_values      "$(grep -i 'pairwise cipher' $cell_tmp | \
+ 				                   awk -F"=|:" '{print $2}')"
+@@ -131,8 +131,8 @@
+ 
+ 
+ 			#add_attribute   'security mode'
+-			
+ 
++
+ 			add_attribute   'signal level'
+ 			add_values      "$(grep  'Signal level[\=:][-a-zA-Z0-9\/ ]+' $cell_tmp | \
+ 			                   awk -F"=|:" '{print $2}')"
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:25:01 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:25:01 +0100
+Subject: [Osinfo-commit] r642 - trunk/osinfo/lib
+Message-ID: <200612051525.kB5FP18d013700@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:25:01 +0100 (Tue, 05 Dec 2006)
+New Revision: 642
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/lib/helper.functions
+Log:
+Small change to fix module users output
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 15:17:25 UTC (rev 641)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 15:25:01 UTC (rev 642)
+@@ -83,7 +83,6 @@
+ esc="$(echo -ne '\e')"
+ tab="$(echo -ne '\t')"
+ 
+-
+ check_cap 'setaf 0' tcBLACK
+ check_cap 'setaf 1' tcRED
+ check_cap 'setaf 2' tcGREEN
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-05 15:17:25 UTC (rev 641)
++++ trunk/osinfo/lib/helper.functions	2006-12-05 15:25:01 UTC (rev 642)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ################################################################################
+ ################################################################################
+ ## General helper functions                                                   ##
+@@ -269,7 +270,7 @@
+ # this is used for informational sentences in case of errors, warnings, notes etc.
+ function info {
+ 	#infostring[${#infostring[@]}]="%info%${@}"
+-	echo "${tcYELLOW}${@}${tSTD}"
++	echo -e "${tcYELLOW}${@}${tSTD}"
+ }
+ 
+ #########
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:33:52 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:33:52 +0100
+Subject: [Osinfo-commit] r643 - in trunk/osinfo: lib modules
+Message-ID: <200612051533.kB5FXq2A014650@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:33:52 +0100 (Tue, 05 Dec 2006)
+New Revision: 643
+
+Modified:
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/modules/network
+Log:
+Fixed modules/network when ifconfig isn't excutable to normal users
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-05 15:25:01 UTC (rev 642)
++++ trunk/osinfo/lib/check.functions	2006-12-05 15:33:52 UTC (rev 643)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ######
+ ## Check_logfile
+ #
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:25:01 UTC (rev 642)
++++ trunk/osinfo/modules/network	2006-12-05 15:33:52 UTC (rev 643)
+@@ -30,14 +30,20 @@
+ 	# more of less similarity, but the one on FreeBSD 6.0 is different.
+ 	if [ "$(type -p ifconfig)" ]; then
+ 		nw_src="ifconfig"
++		
++		# Can we run ifconfig?
++		if [ -x "$(type -p ifconfig)" ]; then
++		
++			if [ "$SYSTEM" == "linux" ] ; then
++				ETH_DEVICES="$(ifconfig -a | grep BROADCAST -B 3 | \
++				grep -Ev '(^ )|(^--)|LOOPBACK' | awk  {'print $1'})"
+ 
+-		if [ "$SYSTEM" == "linux" ] ; then
+-			ETH_DEVICES="$(ifconfig -a | grep BROADCAST -B 3 | \
+-			grep -Ev '(^ )|(^--)|LOOPBACK' | awk  {'print $1'})"
+-
+-		else # *BSD ifconfig
+-			ETH_DEVICES="$(ifconfig -a | grep BROADCAST | grep -v LOOPBACK | \
+-			awk -F': ' {'print $1'})"
++			else # *BSD ifconfig
++				ETH_DEVICES="$(ifconfig -a | grep BROADCAST | grep -v LOOPBACK | \
++				awk -F': ' {'print $1'})"
++			fi
++		else
++			CheckReq_root
+ 		fi
+ 	fi
+ 
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:35:02 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:35:02 +0100
+Subject: [Osinfo-commit] r644 - trunk/osinfo/modules
+Message-ID: <200612051535.kB5FZ2Jx014775@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:35:01 +0100 (Tue, 05 Dec 2006)
+New Revision: 644
+
+Modified:
+   trunk/osinfo/modules/network
+Log:
+Cleaned up some indention
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:33:52 UTC (rev 643)
++++ trunk/osinfo/modules/network	2006-12-05 15:35:01 UTC (rev 644)
+@@ -91,17 +91,17 @@
+ 
+ 				add_attribute 'Gateway'	"default_gateway"
+ 				add_values    "$(route -n | grep $interface_name | \
+-							  awk '/^0.0.0.0/{print $2}')"
++				                 awk '/^0.0.0.0/{print $2}')"
+ 
+ 				add_attribute 'Broadcast'
+ 				add_values    "$(sed "s/  /\n/g" ${nw_info} | \
+-								 grep -Eio 'cast[A-Za-z: ]*([0-9]{1,3}\.){3}[0-9]{1,3}' | \
+-								 grep -Eo '[0-9\.]+' )"
++				                 grep -Eio 'cast[A-Za-z: ]*([0-9]{1,3}\.){3}[0-9]{1,3}' | \
++				                 grep -Eo '[0-9\.]+' )"
+ 
+ 				add_attribute 'Netmask'	"subnet_mask"
+ 				add_values    "$(sed "s/  /\n/g" ${nw_info} | \
+-								 grep -Eio 'mask[A-Za-z: ]*((([0-9]{1,3}\.){3}[0-9]{1,3})|(0x[0-f]{8}))' | \
+-								 grep -Eo '[0-9\.fx]+' )"
++				                 grep -Eio 'mask[A-Za-z: ]*((([0-9]{1,3}\.){3}[0-9]{1,3})|(0x[0-f]{8}))' | \
++				                 grep -Eo '[0-9\.fx]+' )"
+ 
+ 				# wireless extensions
+ 				if [ -s ${iw_info} ] ; then
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 16:42:51 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 16:42:51 +0100
+Subject: [Osinfo-commit] r645 - in trunk/osinfo: . lib modules
+Message-ID: <200612051542.kB5FgpmA015699@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 16:42:51 +0100 (Tue, 05 Dec 2006)
+New Revision: 645
+
+Modified:
+   trunk/osinfo/
+   trunk/osinfo/lib/bash.functions
+   trunk/osinfo/modules/applications
+   trunk/osinfo/modules/network
+Log:
+Fixed some minor formating issues, added a few comments and some svn:ignore tweaks
+
+
+Property changes on: trunk/osinfo
+___________________________________________________________________
+Name: svn:ignore
+   - *~
+osinfo.xml
+dist
+
+   + *~
+dist
+*.xml
+*.xsl
+
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-05 15:35:01 UTC (rev 644)
++++ trunk/osinfo/lib/bash.functions	2006-12-05 15:42:51 UTC (rev 645)
+@@ -263,7 +263,7 @@
+ #   2       string     Optional extra abort line.
+ #   2 or 3  integer  1 = use kdialog
+ #   *       string   error messages
+-print_error()	{
++print_error() {
+ 	local extraabortline=""
+ 	if [ "$1" == "1" ]; then
+ 		extraabortline="$2"
+
+Modified: trunk/osinfo/modules/applications
+===================================================================
+--- trunk/osinfo/modules/applications	2006-12-05 15:35:01 UTC (rev 644)
++++ trunk/osinfo/modules/applications	2006-12-05 15:42:51 UTC (rev 645)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ #######################
+ # APPLICATIONS
+ #
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 15:35:01 UTC (rev 644)
++++ trunk/osinfo/modules/network	2006-12-05 15:42:51 UTC (rev 645)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ##########
+ # NETWORK
+ #
+@@ -47,6 +48,7 @@
+ 		fi
+ 	fi
+ 
++	# We can still print DNS domain and such though even if we coudln't run ifconfig.
+ 	print_network_information
+ 
+ 	flush_values
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 17:39:39 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 17:39:39 +0100
+Subject: [Osinfo-commit] r646 - in trunk/osinfo: . lib
+Message-ID: <200612051639.kB5Gddmu023486@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 17:39:39 +0100 (Tue, 05 Dec 2006)
+New Revision: 646
+
+Modified:
+   trunk/osinfo/lib/print.functions
+   trunk/osinfo/osinfo.dtd
+Log:
+Changed xml format, more sane now, updated DTD
+
+Modified: trunk/osinfo/lib/print.functions
+===================================================================
+--- trunk/osinfo/lib/print.functions	2006-12-05 15:42:51 UTC (rev 645)
++++ trunk/osinfo/lib/print.functions	2006-12-05 16:39:39 UTC (rev 646)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ############################################
+ # XML HEADER & FOOTER FUNCTIONS
+ # -----------------------------
+@@ -52,30 +53,30 @@
+ 	xml_param_tag_closed "script version" \
+ 	"${major_version}.${minor_version}.${micro_version}-${patch_version} ${dev_status}"
+ 
+-	# profile
+ 	add_indentation
+-	xml_param_tag_closed "computer profile" "${profile}"
++	xml_opentag_start "computer"
+ 
++	# profile
++	xml_opentag_param "profile" "${profile}"
++
+ 	# hostname
+-	add_indentation
+-	xml_param_tag_closed "computer hostname" "$(get_hostname)"
++	xml_opentag_param "hostname" "$(get_hostname)"
+ 
+ 	# IP address
+ 	#add_indentation
+ 	#xml_param_tag_closed "computer ipv4" "${ip}"
+ 
+ 	# DNS Domain
+-	add_indentation
+-	xml_param_tag_closed "computer domain" "${get_dns_domain}"
++	xml_opentag_param "domain" "${get_dns_domain}"
+ 
+ 	# operating system
+-	add_indentation
+-	xml_param_tag_closed "computer OS" "$(get_operating_system)"
++	xml_opentag_param "os" "$(get_operating_system)"
+ 
+ 	# processor
+-	add_indentation
+-	xml_param_tag_closed "computer CPU" "$(get_cpu_model)"
++	xml_opentag_param "cpu" "$(get_cpu_model)"
+ 
++	xml_opentag_stop 0
++
+ 	# scanning date
+ 	add_indentation
+ 	xml_param_tag_closed "scanning date" "${timestamp}"
+
+Modified: trunk/osinfo/osinfo.dtd
+===================================================================
+--- trunk/osinfo/osinfo.dtd	2006-12-05 15:42:51 UTC (rev 645)
++++ trunk/osinfo/osinfo.dtd	2006-12-05 16:39:39 UTC (rev 646)
+@@ -1,72 +1,112 @@
+-<!ELEMENT osinfo (distribution|
++<!ELEMENT osinfo (script|
++                  computer|
++                  scanning|
+                   system|
++                  distribution|
+                   kernel|
+                   processor|
++                  system_ram_memory|
++                  system_memory|
++                  hard_drive_configuration|
++                  network_information|
++                  wlan_information|
++                  dmi_information|
+                   applications|
+                   terminal_info|
+-                  dmi_information|
+-                  system_memory|
+                   devices|
++                  enhancements|
++                  cd_dvd_drives|
+                   users|
+-                  cd_dvd_drives|
+-                  network_information|
+-                  wlan_information|
+-                  disk_information|
+-                  services)*>
++                  services|
++                  battery|
++                  oem_information)*>
+ 
+ 
++<!ELEMENT script EMPTY>
++<!ATTLIST script version CDATA #REQUIRED>
+ 
+-<!ELEMENT cd_dvd_drives (cd_drive)*>
+-<!ELEMENT cd_drive (attribute+)>
+-<!ATTLIST cd_drive name CDATA #REQUIRED>
++<!ELEMENT computer EMPTY>
++<!ATTLIST computer profile  CDATA #REQUIRED
++                   hostname CDATA #REQUIRED
++                   domain   CDATA #REQUIRED
++                   os       CDATA #REQUIRED
++                   cpu      CDATA #REQUIRED>
+ 
+-<!ELEMENT devices (attribute+)>
++<!ELEMENT scanning EMPTY>
++<!ATTLIST scanning date CDATA #REQUIRED>
+ 
+-<!ELEMENT system_memory (attribute+)>
+ 
+-<!ELEMENT users (current_user|
+-                 last_logged_in_user|
+-                 all_users)*>
+-<!ELEMENT current_user (attribute+)>
+-<!ELEMENT last_logged_in_user (attribute+)>
+-<!ELEMENT all_users (value+)>
+ 
+-<!ELEMENT applications (attribute+)>
+ 
+-<!ELEMENT terminal_info (attribute+)>
++<!ELEMENT attribute (description|value)*>
++<!ATTLIST attribute name CDATA #REQUIRED
++                    code CDATA #IMPLIED>
++<!ELEMENT description (#PCDATA)>
++<!ELEMENT value (#PCDATA)>
+ 
+-<!ELEMENT processor (attribute+)>
+ 
++<!ELEMENT system (attribute+)>
++<!ELEMENT distribution (attribute+)>
+ <!ELEMENT kernel (attribute+)>
++<!ELEMENT processor (attribute+)>
++<!ELEMENT system_ram_memory (ram+)>
++<!ELEMENT system_memory (ram+)>
++<!ELEMENT hard_drive_configuration (drive+)>
++<!ELEMENT network_information (computer*)>
++<!ELEMENT wlan_information (attribute*)> <!-- UNKNOWN -->
++<!ELEMENT dmi_information (bios|
++                           system_info|
++                           motherboard|
++                           chassis)*>
++<!ELEMENT applications (attribute+)>
++<!ELEMENT terminal_info (attribute+)>
++<!ELEMENT devices (motherboard,controllers)>
++<!ELEMENT enhancements (attribute+)>
++<!ELEMENT cd_dvd_drives (cd_drive)*>
++<!ELEMENT users (active_user,wtmp_statistics)>
++<!ELEMENT services (value+)>
++<!ELEMENT battery (attribute*)> <!-- UNKNOWN -->
++<!ELEMENT oem_information (attribute+)>
+ 
+-<!ELEMENT system (attribute+)>
+ 
+-<!ELEMENT distribution (attribute+)>
+ 
+-<!ELEMENT wlan_information (attribute*)>
++<!-- system_ram_memory, system_memory -->
++<!ELEMENT ram (attribute+)>
+ 
+-<!ELEMENT network_information (computer*)>
+-<!ELEMENT computer (attribute|iface)*>
+-<!ATTLIST computer name CDATA #REQUIRED>
++
++<!-- hard_drive_configuration -->
++<!ELEMENT drive (attribute|partitions)*>
++<!ELEMENT partitions (value+)>
++
++
++<!-- network_information -->
++<!-- <!ELEMENT computer (attribute|iface)*>
++<!ATTLIST computer name CDATA #REQUIRED> -->
+ <!ELEMENT iface (attribute+)>
+ <!ATTLIST iface name CDATA #REQUIRED>
+ 
+-<!ELEMENT dmi_information (bios|
+-                           system_info|
+-                           motherboard|
+-                           chassis)*>
++
++<!-- dmi_information, devices -->
++<!ELEMENT motherboard (attribute+)>
++
++
++<!-- dmi_information -->
+ <!ELEMENT bios (attribute+)>
+ <!ELEMENT system_info (attribute+)>
+-<!ELEMENT motherboard (attribute+)>
+-<!ELEMENT chassis (attribute+)>
++<!ELEMENT chassis (attribute*)>
+ 
+-<!ELEMENT services (value+)>
+ 
+-<!ELEMENT disk_information (attribute+)>
++<!-- devices -->
++<!ELEMENT controllers (attribute+)>
+ 
+ 
++<!-- cd_dvd_drives -->
++<!ELEMENT cd_drive (attribute+)>
++<!ATTLIST cd_drive name CDATA #REQUIRED>
+ 
+-<!ELEMENT attribute (value*)>
+-<!ATTLIST attribute name CDATA #REQUIRED
+-                    code CDATA #IMPLIED>
+-<!ELEMENT value (#PCDATA)>
++
++<!-- users -->
++<!ELEMENT active_user (value+)>
++<!ATTLIST active_user unixname CDATA #REQUIRED>
++<!ELEMENT wtmp_statistics (value+)>
++
+
+
+
+From anmaster at mail.berlios.de  Tue Dec  5 17:49:11 2006
+From: anmaster at mail.berlios.de (anmaster at BerliOS)
+Date: Tue, 5 Dec 2006 17:49:11 +0100
+Subject: [Osinfo-commit] r647 - in trunk/osinfo: lib modules
+Message-ID: <200612051649.kB5GnBCh024750@sheep.berlios.de>
+
+Author: anmaster
+Date: 2006-12-05 17:49:10 +0100 (Tue, 05 Dec 2006)
+New Revision: 647
+
+Modified:
+   trunk/osinfo/lib/infostring.functions
+   trunk/osinfo/modules/network
+Log:
+Fixed some trailing whitespaces + added hack for broken syntax highlighting in kate
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2006-12-05 16:39:39 UTC (rev 646)
++++ trunk/osinfo/lib/infostring.functions	2006-12-05 16:49:10 UTC (rev 647)
+@@ -1,3 +1,4 @@
++#!/bin/bash
+ ###########################################################################
+ ### infostring handler functions
+ ##
+@@ -52,6 +53,7 @@
+ 			info "Improper output mode; THIS IS A BUG"
+ 			flush_values
+ 			exit 1
++			;;
+ 	esac
+ }
+ 
+@@ -94,6 +96,7 @@
+ function add_footer() {
+ 	if [ "$1" ]; then
+ 		infostring[${#infostring[@]}]="%footer%${@}"
++		# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ 	else
+ 		close_last_header
+ 	fi
+@@ -114,6 +117,7 @@
+ #  2 code tag for xml  (eg. os)                 (optional)
+ function add_attribute() {
+ 	infostring[${#infostring[@]}]="%attribute%${1};${2}"
++	# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ }
+ 
+ 
+@@ -130,13 +134,15 @@
+ #	   [ $isverbose -lt 2 ]; then
+ 		# if the last non-empty item (second to last)
+ 		# is an attribute or a header, unset it
+-		if [ "$(grep 'attribute\|header' <<< ${infostring[$((${#infostring[@]}-1))]} )" ]; then
++#		if [ "$(grep 'attribute\|header' <<< ${infostring[$((${#infostring[@]}-1))]} )" ]; then
+ 			unset infostring[$((${#infostring[@]}-1))]
++			# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ 		fi
+ 	else # there is an input value
+ 		# clear leading whitespaces
+ 		local value="$(sed 's/^\ *//' <<< ${@})"
+ 		infostring[${#infostring[@]}]="%value%${value}"
++		# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ 	fi
+ }
+ 
+@@ -147,6 +153,7 @@
+ # This function inserts a value_footer, which indicates a dimension, eg. <footer>kB/s</footer>.
+ function add_value_footer {
+ 	infostring[${#infostring[@]}]="%value_footer%${@}"
++	# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
+ }
+ 
+ 
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-05 16:39:39 UTC (rev 646)
++++ trunk/osinfo/modules/network	2006-12-05 16:49:10 UTC (rev 647)
+@@ -31,10 +31,10 @@
+ 	# more of less similarity, but the one on FreeBSD 6.0 is different.
+ 	if [ "$(type -p ifconfig)" ]; then
+ 		nw_src="ifconfig"
+-		
++
+ 		# Can we run ifconfig?
+ 		if [ -x "$(type -p ifconfig)" ]; then
+-		
++
+ 			if [ "$SYSTEM" == "linux" ] ; then
+ 				ETH_DEVICES="$(ifconfig -a | grep BROADCAST -B 3 | \
+ 				grep -Ev '(^ )|(^--)|LOOPBACK' | awk  {'print $1'})"
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 08:44:06 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 08:44:06 +0100
+Subject: [Osinfo-commit] r648 - in trunk/osinfo: . debug debug/bugs lib
+Message-ID: <200612070744.kB77i6GK020613@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 08:44:06 +0100 (Thu, 07 Dec 2006)
+New Revision: 648
+
+Added:
+   trunk/osinfo/debug/bugs/
+   trunk/osinfo/debug/bugs/9626.wlan
+Modified:
+   trunk/osinfo/lib/infostring.functions
+   trunk/osinfo/sources
+Log:
+fixed a small bug (probably a typo) that broke everything :)
+
+Added: trunk/osinfo/debug/bugs/9626.wlan
+===================================================================
+--- trunk/osinfo/debug/bugs/9626.wlan	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/debug/bugs/9626.wlan	2006-12-07 07:44:06 UTC (rev 648)
+@@ -0,0 +1,147 @@
++++ shift 1
++++ '[' 1 -gt 0 ']'
++++ case "$1" in
++++ module_cmds=' wlan'
++++ shift 1
++++ '[' 0 -gt 0 ']'
++++ Check_logfile
++++ touch /var/log/osinfo.log
++++ '[' 0 -eq 0 ']'
++++ chmod a+rwx /var/log/osinfo.log
++++ flush_values
++++ local hdr
+++++ seq 0 -1 1
++++ '[' 0 -eq 0 ']'
++++ print_stdout
++++ local 'header_color='
++++ local 'info_color='
++++ local item itemnr value_string=
+++++ seq 1 1 0
+++++ sed 's/%value%/\?/g ; s/%col%/\?/g'
++++ column -t '-s?'
++++ echo -e
++++ echo
++
++++ unset infostring
++++ '[' 0 -eq 0 ']'
++++ select_profile
++++ case $profile in
++++ default_profile
++++ for module in '$module_cmds'
++++ local GOOD_MODULES
++++ '[' linux == linux ']'
++++ GOOD_MODULES='system distro kernel processor ram memory hdd network wlan dmi applications terminal devices cdrom users services battery oem'
++++ break
++++ '[' / '!=' / ']'
++++ '[' 0 -eq 1 ']'
++++ for module in '$module_cmds'
++++ case $module in
+++++ grep -o wlan
++++ Module_wlan
++++ local 'moduleName=Wlan information'
++++ local 'moduleDescription=detects wireless network access points'
++++ Modules=("${Modules[@]}" "$moduleName;$moduleDescription")
++++ module_header 'Wlan information'
++++ case "$output_mode" in
++++ print_line
++++ local sup_ext=0
++++ tput enacs
++++ '[' 0 -eq 0 ']'
++++ tput enacs
++++ tput smacs
++++ '[' 0 -eq 0 ']'
++++ sup_ext=1
++++ '[' 1 -eq 1 ']'
++++ sup_ext=1
++++ '[' -z rxvt-unicode ']'
++++ '[' 0 -eq 1 ']'
++++ '[' 1 -eq 1 ']'
++++ tput enacs
++++ tput smacs
++++ ??? ?
++++ ?? -? '\012'
+++++ ??? ????
++++++ ???? ????
+++++ ???? -? 80
++++ ???? -? 80
++????????????????????????????????????????????????????????????????????????????????++ ???? ?????
++++ echo 'Wlan information:'
++Wlan information:
++++ print_line
++++ local sup_ext=0
++++ tput enacs
++++ '[' 0 -eq 0 ']'
++++ tput enacs
++++ tput smacs
++++ '[' 0 -eq 0 ']'
++++ sup_ext=1
++++ '[' 1 -eq 1 ']'
++++ sup_ext=1
++++ '[' -z rxvt-unicode ']'
++++ '[' 0 -eq 1 ']'
++++ '[' 1 -eq 1 ']'
++++ tput enacs
++++ tput smacs
++++ ??? ?
+++++ ??? ????
++++++ ???? ????
++++ ?? -? '\012'
+++++ ???? -? 80
++++ ???? -? 80
++????????????????????????????????????????????????????????????????????????????????++ ???? ?????
+++++ mktemp /tmp/osinfo.XXXXXX
++++ iw_src=/tmp/osinfo.VDEPRJ
+++++ mktemp /tmp/osinfo.XXXXXX
++++ ap_src=/tmp/osinfo.A0ZtZJ
+++++ mktemp /tmp/osinfo.XXXXXX
++++ cell_tmp=/tmp/osinfo.pWcU9J
++++ TempFiles=("${TempFiles[@]}" "$iw_src" "$ap_src" "$cell_tmp")
+++++ type -p iwconfig
++++ '[' '!' /sbin/iwconfig ']'
++++ '[' linux == linux ']'
++++ iwconfig
+++++ grep 'IEEE 802' /tmp/osinfo.VDEPRJ
+++++ awk '{print $1}'
++++ local wlan_devices=
++++ iwlist scan
++++ '[' 0 == 1 ']'
+++++ grep -i cell /tmp/osinfo.A0ZtZJ
+++++ wc -l
++++ local ap_count=12
++++ '[' 12 -ge 1 ']'
++++ info '12 access points found by device '
++++ echo -e '12 access points found by device '
++12 access points found by device 
++++ IFS_bak=' hift
++'
++++ IFS='
++'
+++++ grep -i cell /tmp/osinfo.A0ZtZJ
++++ for access_point in '$(grep -i cell ${ap_src})'
++++ extr_node '          Cell 01 - Address: 00:09:5B:6C:DF:BC' /tmp/osinfo.A0ZtZJ Cell
++++ local 'node_id=          Cell 01 - Address: 00:09:5B:6C:DF:BC'
++++ local input_file=/tmp/osinfo.A0ZtZJ
++++ local node_closer=Cell
++++ local nr node
++++ local all_nodes=
++++ local node_count=0
+++++ mktemp /tmp/osinfo.XXXXXX
++++ input_tmp=/tmp/osinfo.UHufMH
++++ TempFiles=("${TempFiles[@]}" "$input_tmp")
++++ grep -n . /tmp/osinfo.A0ZtZJ
++++ '[' '!' Cell ']'
+++++ grep -i '          Cell 01 - Address: 00:09:5B:6C:DF:BC' /tmp/osinfo.UHufMH
++++ all_nodes='2:          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ grep -i '          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ wc -l
++++ node_count=1
++++ '[' 1 -ge 1 ']'
+++++ seq 1 1 1
++++ for nr in '$(seq 1 1 $node_count)'
+++++ sed -n '1{p;q;}'
++++ this_node='2:          Cell 01 - Address: 00:09:5B:6C:DF:BC'
+++++ awk -F: '{print $1}'
++++ local begin=2
+++++ awk -F: '{print $2}'
+++++ grep -Eo '^[ ]*'
+++++ wc -m
+
+Modified: trunk/osinfo/lib/infostring.functions
+===================================================================
+--- trunk/osinfo/lib/infostring.functions	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/lib/infostring.functions	2006-12-07 07:44:06 UTC (rev 648)
+@@ -126,17 +126,20 @@
+ #
+ # This function inserts the input strings into the $infostring[] array.
+ #
+-# if the value is empty, or just whitespaces, remove the preceding attribute,
+-# if verbosity does not require extreme explicity (-vv)
+ function add_values {
++	# if the value is empty, or just whitespaces, remove the preceding attribute
+ 	if [ ! "$@" ] || \
+ 	   [ ! "$(grep '[^\ *]' <<< "${@}")" ]; then
+-#	   [ $isverbose -lt 2 ]; then
+-		# if the last non-empty item (second to last)
+-		# is an attribute or a header, unset it
+-#		if [ "$(grep 'attribute\|header' <<< ${infostring[$((${#infostring[@]}-1))]} )" ]; then
+-			unset infostring[$((${#infostring[@]}-1))]
+-			# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
++
++		# but only if verbosity does not require extreme explicity (-vv)
++		if [ $isverbose -ge 2 ]; then
++
++			# if the last non-empty item (second to last)
++			# is an attribute or a header, unset it
++			if [ "$(grep 'attribute\|header' <<< ${infostring[$((${#infostring[@]}-1))]} )" ]; then
++				unset infostring[$((${#infostring[@]}-1))]
++				# HACK: As syntax highlighting seems broken in my editor I add this comment hack as a workaround: "
++			fi
+ 		fi
+ 	else # there is an input value
+ 		# clear leading whitespaces
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-05 16:49:10 UTC (rev 647)
++++ trunk/osinfo/sources	2006-12-07 07:44:06 UTC (rev 648)
+@@ -14,12 +14,12 @@
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+ 
+-source lib/bash.functions         # colour & line functions
+ source lib/infostring.functions   # infostring handler functions
+ source lib/print.functions        # format output
+ source lib/helper.functions       # helperts
+ source lib/daemon.functions       # daemon mode functions
+ source lib/lanforce.functions     # lanforce xml tag codes
++source lib/bash.functions         # colour & line functions
+ 
+ source lib/update_sidebar         # html function
+ 
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 08:46:32 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 08:46:32 +0100
+Subject: [Osinfo-commit] r649 - in trunk/osinfo: . modules
+Message-ID: <200612070746.kB77kWWP020871@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 08:46:32 +0100 (Thu, 07 Dec 2006)
+New Revision: 649
+
+Modified:
+   trunk/osinfo/modules/memory
+   trunk/osinfo/sources
+Log:
+removed RAM output from memory
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-12-07 07:44:06 UTC (rev 648)
++++ trunk/osinfo/modules/memory	2006-12-07 07:46:32 UTC (rev 649)
+@@ -2,32 +2,21 @@
+ # MEMORY
+ #
+ # this module tells complete information of the memory
+-# installed and used on the system.
++# used on the system.
+ # THE MODULE IS STILL VERY INCOMPLETE!
+ #
+-# lshw is used for RAM size evaluation. the size is reported by BIOS
+-# and is the most accurate way to detect the physical system memory.
+-# 'free' and '/proc/meminfo' would also report free RAM, but slightly
+-# incorrectly, since they only detect total ram after kernel allocation.
+-#
+-# TODO: add support for memory type/speed detection thru lshw
+-# TODO: memory usage
+ Module_memory() {
+ 	local moduleName="System memory"
+ 	module_header "${moduleName}"
+ 
+-	print_physical_ram_info
+ 
+-	if [ $isdebug -ge 1 ]; then
+-		# meminfo="/proc/meminfo"
++	# meminfo="/proc/meminfo"
+ 
+-		add_attribute     'Available RAM'
+-		add_values        "$(get_available_ram)"
++	add_attribute     'Available RAM'
++	add_values        "$(get_available_ram)"
+ 
+-		print_total_usage
+-	fi
++	#print_total_usage
+ 
+-
+ 	flush_values
+ }
+ 
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-07 07:44:06 UTC (rev 648)
++++ trunk/osinfo/sources	2006-12-07 07:46:32 UTC (rev 649)
+@@ -14,12 +14,12 @@
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+ 
++source lib/bash.functions         # colour & line functions
+ source lib/infostring.functions   # infostring handler functions
+ source lib/print.functions        # format output
+ source lib/helper.functions       # helperts
+ source lib/daemon.functions       # daemon mode functions
+ source lib/lanforce.functions     # lanforce xml tag codes
+-source lib/bash.functions         # colour & line functions
+ 
+ source lib/update_sidebar         # html function
+ 
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 08:47:18 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 08:47:18 +0100
+Subject: [Osinfo-commit] r650 - in trunk/osinfo/modules: . experimental
+Message-ID: <200612070747.kB77lIBK021028@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 08:47:18 +0100 (Thu, 07 Dec 2006)
+New Revision: 650
+
+Added:
+   trunk/osinfo/modules/experimental/services
+Removed:
+   trunk/osinfo/modules/services
+Log:
+classified the service module as experimental
+
+Copied: trunk/osinfo/modules/experimental/services (from rev 647, trunk/osinfo/modules/services)
+
+Deleted: trunk/osinfo/modules/services
+===================================================================
+--- trunk/osinfo/modules/services	2006-12-07 07:46:32 UTC (rev 649)
++++ trunk/osinfo/modules/services	2006-12-07 07:47:18 UTC (rev 650)
+@@ -1,107 +0,0 @@
+-###########################
+-# SYSTEM SERVICES (daemons)
+-
+-# http://linuxhelp.blogspot.com/2006/04/enabling-and-disabling-services-during_01.html
+-
+-# Gentoo based:
+-#  rc-status
+-
+-# Fedora, RedHat, Suse:
+-#  /sbin/service --status-all
+-#  chkconfig --list
+-
+-# Ubuntu, Debian based:
+-#  sysv-init
+-#  'runlevel' gives to values: "previous current", grep on the current
+-
+-# Slackware:
+-#	There is no sane way to get "running services" from Slackware
+-#	(at least last time I used Slackware: 9.0 I think).
+-#	to change what services are started you edit the bootscripts (written in bash).
+-#	(there are 7 or 8 IIRC, one for each runlevel, 1 for kernel modules to load,
+-#	1 for local and 1 for system startup)
+-Module_services() {
+-	local moduleName="Services"
+-	module_header "${moduleName}"
+-
+-	local method
+-
+-		# these functions handle scanning, they'll echo output
+-		if [ "$(type -p rc-status)" ]; then
+-			# Gentoo
+-			method='rc-status'
+-			local services="$(scan_services_rcstatus)"
+-
+-		elif [ "$(type -p sysv-rc-conf)" ]; then
+-			# Debian and Ubuntu, if they've got the package
+-			method='sysv-rc-conf'
+-			local services="$(scan_services_sysv)"
+-
+-		elif [ "$(type -p chkconfig)" ]; then
+-			# Red Hat, Fedora Core, SuSE
+-			method='chkconfig'
+-			local services="$(scan_services_chkconfig)"
+-		fi
+-
+-
+-		# attribute only for lanfroce xml, nothing for std xml
+-		if [ $lanforce = 1 ]; then
+-			add_attribute 'Services'	'service'
+-		elif [ $usexml = 0 ]; then
+-			add_header  "$method"
+-		fi
+-
+-
+-		# then report what scan found
+-		local count=0 columns=5
+-		for srv in $services; do
+-			if [ $count -eq $columns ]; then
+-				add_values    "$srv\n "
+-				count=0
+-			else
+-				add_values    "$srv"
+-			fi
+-
+-			((count++))
+-		done
+-
+-		#value_footer
+-
+-
+-	#module_footer
+-	flush_values
+-}
+-
+-	#################################
+-	### SERVICE MODULE SUBFUNCTIONS
+-	##
+-	# this script is used on gentoo
+-	scan_services_rcstatus() {
+-
+-		echo $(rc-status | awk '/started/{print $1}' | sort)
+-
+-	}
+-
+-	# this works on debian-based systems
+-	scan_services_sysv() {
+-
+-		local runlevel=$(runlevel | awk {'print $2'})
+-
+-		echo $(sysv-rc-conf --list 2> /dev/null | \
+-		       awk '/'$runlevel'\:on/{print $1}' | sort)
+-
+-	}
+-
+-	scan_services_chkconfig() {
+-
+-		# similar to sysv-rc-conf
+-		# works on rpm-based systems
+-
+-		local runlevel=$(runlevel | awk {'print $2'})
+-
+-		echo $(chkconfig --list 2> /dev/null | \
+-		       awk '/'$runlevel'\:on/{print $1}' | sort)
+-
+-	}
+-	#################################
+-
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 11:39:08 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 11:39:08 +0100
+Subject: [Osinfo-commit] r651 - in trunk/osinfo: . lib
+Message-ID: <200612071039.kB7Ad89f009638@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 11:39:07 +0100 (Thu, 07 Dec 2006)
+New Revision: 651
+
+Modified:
+   trunk/osinfo/lib/check.functions
+   trunk/osinfo/osinfo
+Log:
+cleared the first empty line of stdout
+
+Modified: trunk/osinfo/lib/check.functions
+===================================================================
+--- trunk/osinfo/lib/check.functions	2006-12-07 07:47:18 UTC (rev 650)
++++ trunk/osinfo/lib/check.functions	2006-12-07 10:39:07 UTC (rev 651)
+@@ -13,13 +13,13 @@
+ 		chmod a+rwx "${error_log}" &>/dev/null
+ 	else # fail
+ 		error "Could not touch log file $error_log."
++		flush_values
+ 	fi
+ 
+ 	#if [ ! -w "$error_log" ]; then
+ 	#	error "Log file '$error_log' is not writable by you."
+ 	#fi
+ 
+-	flush_values
+ }
+ 
+ function Check_rundir {
+
+Modified: trunk/osinfo/osinfo
+===================================================================
+--- trunk/osinfo/osinfo	2006-12-07 07:47:18 UTC (rev 650)
++++ trunk/osinfo/osinfo	2006-12-07 10:39:07 UTC (rev 651)
+@@ -10,7 +10,6 @@
+ [ -e "/etc/osinfo.conf" ] && \
+ . /etc/osinfo.conf                # the configuration file
+ 
+-
+ main() {
+ 	# parse the command line arguments
+ 	parse_arguments "${@}"
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 11:49:06 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 11:49:06 +0100
+Subject: [Osinfo-commit] r652 - in trunk/osinfo: . lib modules
+Message-ID: <200612071049.kB7An6lA010972@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 11:49:05 +0100 (Thu, 07 Dec 2006)
+New Revision: 652
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/hdd
+   trunk/osinfo/modules/network
+   trunk/osinfo/modules/wlan
+   trunk/osinfo/sources
+Log:
+less data sent to stderr, instead use the log file
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-07 10:39:07 UTC (rev 651)
++++ trunk/osinfo/lib/helper.functions	2006-12-07 10:49:05 UTC (rev 652)
+@@ -295,10 +295,40 @@
+ 	}
+ fi
+ 
+-function hddtemp() {
+-	hddtemp 2>"${error_log}"
+-	}
++####
++## redefine external programs so they won't produce stderr messages
++if [ $isdebug -lt 1 ]; then
++	function hddtemp() {
++		hddtemp 2>"${error_log}"
++		}
+ 
++	function smartctl() {
++		smartctl 2>"${error_log}"
++		}
++
++	function hostname() {
++		hostname 2>"${error_log}"
++		}
++
++	function fdisk() {
++		fdisk 2>"${error_log}"
++		}
++
++	function iwconfig() {
++		iwconfig 2>"${error_log}"
++		}
++
++	function ifconfig() {
++		ifconfig 2>"${error_log}"
++		}
++	
++	function iwlist() {
++		iwlist 2>"${error_log}"
++		}
++
++fi
++
++
+ # make a guess of the operating system
+ SYSTEM="$(uname -s  | tr 'A-Z' 'a-z' )"
+ 
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-12-07 10:39:07 UTC (rev 651)
++++ trunk/osinfo/modules/hdd	2006-12-07 10:49:05 UTC (rev 652)
+@@ -35,7 +35,7 @@
+ 		# allocate a temp file
+ 		fdisk_info="$(mktemp /tmp/osinfo.XXXXXX)"
+ 		TempFiles=("${TempFiles[@]}" "$fdisk_info")
+-		fdisk -l > $fdisk_info 2>/dev/null
++		fdisk -l > $fdisk_info
+ 
+ 		# detect all drives in the system
+ 		local drives="$(grep -Eo '\/(dev)\/[a-z]+' ${fdisk_info} | uniq )"
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-12-07 10:39:07 UTC (rev 651)
++++ trunk/osinfo/modules/network	2006-12-07 10:49:05 UTC (rev 652)
+@@ -71,9 +71,12 @@
+ 
+ 			# collect the information from detected network devices
+ 			for interface_name in $ETH_DEVICES; do
+-				ifconfig $interface_name > ${nw_info} 2>/dev/null
+-				iwconfig $interface_name > ${iw_info} 2>/dev/null
+ 
++				# wired 
++				ifconfig $interface_name > ${nw_info}
++				# wireless
++				iwconfig $interface_name > ${iw_info}
++
+ 				add_header    $interface_name   'iface name'
+ 
+ 				add_attribute 'Device'
+@@ -130,20 +133,19 @@
+ 
+ 
+ 	function get_hostname() {
+-		# hostname produces stderr if no network is available
+-		hostname 2> /dev/null
++		hostname # this might be redundant...
+ 		}
+ 
+ 	function get_nis_domain() {
+-		hostname -y 2> /dev/null
++		hostname -y 
+ 		}
+ 
+ 	function get_dns_domain() {
+-		hostname -d 2> /dev/null
++		hostname -d
+ 		}
+ 
+ 	function get_fqdn() {
+-		hostname -f 2> /dev/null
++		hostname -f
+ 		}
+ 
+ 	function get_ipv4() {
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-07 10:39:07 UTC (rev 651)
++++ trunk/osinfo/modules/wlan	2006-12-07 10:49:05 UTC (rev 652)
+@@ -26,9 +26,9 @@
+ 	elif [ "$SYSTEM" == "linux" ] ; then
+ 
+ 		# get the basic info
+-		iwconfig 2>/dev/null > $iw_src
++		iwconfig > $iw_src
+ 		local wlan_devices="$(grep 'IEEE 802' ${iw_src} | awk  {'print $1'})"
+-		iwlist $wlan_devices scan 2> /dev/null > $ap_src
++		iwlist $wlan_devices scan > $ap_src
+ 
+ 
+ 		# for debugging purposes
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-07 10:39:07 UTC (rev 651)
++++ trunk/osinfo/sources	2006-12-07 10:49:05 UTC (rev 652)
+@@ -17,7 +17,6 @@
+ source lib/bash.functions         # colour & line functions
+ source lib/infostring.functions   # infostring handler functions
+ source lib/print.functions        # format output
+-source lib/helper.functions       # helperts
+ source lib/daemon.functions       # daemon mode functions
+ source lib/lanforce.functions     # lanforce xml tag codes
+ 
+@@ -30,4 +29,5 @@
+ 
+ source lib/check.functions        # check various functionalities
+ source lib/cmdline                # command line options, leave as last!
++source lib/helper.functions       # helpers
+ 
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 13:17:18 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 13:17:18 +0100
+Subject: [Osinfo-commit] r653 - in trunk/osinfo: lib modules
+Message-ID: <200612071217.kB7CHI9X029703@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 13:17:17 +0100 (Thu, 07 Dec 2006)
+New Revision: 653
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/wlan
+Log:
+reverted some things introduced in the last commit
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-07 10:49:05 UTC (rev 652)
++++ trunk/osinfo/lib/helper.functions	2006-12-07 12:17:17 UTC (rev 653)
+@@ -252,7 +252,7 @@
+ }
+ 
+ function isinstalled() {
+-	if [ "$(type -p ${1})" ]; then
++	if [ "$(type -p "${1}")" ]; then
+ 		return 0
+ 	else
+ 		return 1
+@@ -297,36 +297,38 @@
+ 
+ ####
+ ## redefine external programs so they won't produce stderr messages
+-if [ $isdebug -lt 1 ]; then
+-	function hddtemp() {
+-		hddtemp 2>"${error_log}"
+-		}
++## generally these may give errors. and if used with "isinstalled" function
++## osinfo will hang.
++#if [ $isdebug -lt 1 ]; then
++	#function hddtemp() {
++	#	hddtemp 2>"${error_log}"
++	#	}
+ 
+-	function smartctl() {
+-		smartctl 2>"${error_log}"
+-		}
++	#function smartctl() {
++	#	smartctl 2>"${error_log}"
++	#	}
+ 
+-	function hostname() {
+-		hostname 2>"${error_log}"
+-		}
++	#function hostname() # will cause hangs. do not define.
+ 
+-	function fdisk() {
+-		fdisk 2>"${error_log}"
+-		}
++	#function fdisk() {
++	#	fdisk 2>"${error_log}"
++	#	}
+ 
+-	function iwconfig() {
+-		iwconfig 2>"${error_log}"
+-		}
++	#function iwconfig() {
++	#	iwconfig 2>"${error_log}"
++	#	}
+ 
+-	function ifconfig() {
+-		ifconfig 2>"${error_log}"
+-		}
++	#function ifconfig() {
++	#set -x
++		#ifconfig 2>"${error_log}"
++	#set +x
++	#	}
+ 	
+-	function iwlist() {
+-		iwlist 2>"${error_log}"
+-		}
++	#function iwlist() {
++	#	iwlist 2>"${error_log}"
++	#	}
+ 
+-fi
++#fi
+ 
+ 
+ # make a guess of the operating system
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-07 10:49:05 UTC (rev 652)
++++ trunk/osinfo/modules/wlan	2006-12-07 12:17:17 UTC (rev 653)
+@@ -18,9 +18,7 @@
+ 	cell_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+ 	TempFiles=("${TempFiles[@]}" "$iw_src" "$ap_src" "$cell_tmp")
+ 	#TempFiles=("${TempFiles[@]}" "$cell_tmp")
+-
+-	if [ ! "$(type -p iwconfig)" ]; then
+-
++	if [ ! "$(isintalled iwconfig)" ]; then
+ 		info "No wireless extensions found"
+ 
+ 	elif [ "$SYSTEM" == "linux" ] ; then
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 13:31:02 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 13:31:02 +0100
+Subject: [Osinfo-commit] r654 - in trunk/osinfo: lib modules
+Message-ID: <200612071231.kB7CV26u031900@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 13:31:02 +0100 (Thu, 07 Dec 2006)
+New Revision: 654
+
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/wlan
+Log:
+wlan debug
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-12-07 12:17:17 UTC (rev 653)
++++ trunk/osinfo/lib/helper.functions	2006-12-07 12:31:02 UTC (rev 654)
+@@ -80,10 +80,15 @@
+ 		for nr in $(seq 1 1 $node_count); do
+ 			this_node="$(sed -n "$nr{p;q;}" <<< "${all_nodes}")"
+ 
+-			# this gets the line number of the wanted node from lshw
++			# this gets the line number of the wanted node
+ 			local begin="$(awk -F: {'print $1'} <<< ${this_node})"
+-			local node_indent="$(awk -F: {'print $2'} <<< "${this_node}" | \
+-					     grep -Eo '^[ ]*' | wc -m)"
++			# debug: the line below should work.
++			#local node_indent="$(awk -F: {'print $2'} <<< "${this_node}" | \
++			#		     grep -o '^[ ]*' | wc -m)"
++			# debug: let's debug this line further
++			local node_indent_dbg="$(awk -F: {'print $2'} <<< "${this_node}")"
++			local node_indent_dbg2="$(grep -o '^[ ]*' <<< "$node_indent_dbg")"
++			local node_indent="$(wc -m <<< "$node_indent_dbg2")"
+ 
+ 			# this loop takes care that all subnodes are included, by comparing
+ 			# the indentation level. not very elegant..
+@@ -279,7 +284,7 @@
+ # this is used to send error messages to the user
+ function error {
+ 	#infostring[${#infostring[@]}]="%error%${@}"
+-	echo "${tcRED}${@}${tSTD}"
++	echo -e "${tcRED}${@}${tSTD}"
+ }
+ 
+ 
+
+Modified: trunk/osinfo/modules/wlan
+===================================================================
+--- trunk/osinfo/modules/wlan	2006-12-07 12:17:17 UTC (rev 653)
++++ trunk/osinfo/modules/wlan	2006-12-07 12:31:02 UTC (rev 654)
+@@ -18,7 +18,8 @@
+ 	cell_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+ 	TempFiles=("${TempFiles[@]}" "$iw_src" "$ap_src" "$cell_tmp")
+ 	#TempFiles=("${TempFiles[@]}" "$cell_tmp")
+-	if [ ! "$(isintalled iwconfig)" ]; then
++	
++	if ! isinstalled iwconfig; then
+ 		info "No wireless extensions found"
+ 
+ 	elif [ "$SYSTEM" == "linux" ] ; then
+
+
+
+From lamikae at mail.berlios.de  Thu Dec  7 21:30:43 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 7 Dec 2006 21:30:43 +0100
+Subject: [Osinfo-commit] r655 - trunk/osinfo/debug
+Message-ID: <200612072030.kB7KUhAc030268@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-07 21:30:43 +0100 (Thu, 07 Dec 2006)
+New Revision: 655
+
+Added:
+   trunk/osinfo/debug/bash.functions
+Log:
+bash.functions backup
+
+Copied: trunk/osinfo/debug/bash.functions (from rev 621, trunk/osinfo/lib/bash.functions)
+
+
+
+From lamikae at mail.berlios.de  Fri Dec  8 19:20:45 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 8 Dec 2006 19:20:45 +0100
+Subject: [Osinfo-commit] r656 - trunk/osinfo/ebuild
+Message-ID: <200612081820.kB8IKjwq025577@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-08 19:20:44 +0100 (Fri, 08 Dec 2006)
+New Revision: 656
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+Log:
+bump grep version requirement
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-07 20:30:43 UTC (rev 655)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-08 18:20:44 UTC (rev 656)
+@@ -26,7 +26,7 @@
+               media-video/dvbsnoop)
+ 		app-shells/bash
+ 		sys-apps/coreutils
+-		sys-apps/grep
++		>=sys-apps/grep-2.5.1
+ 		sys-apps/sed
+ 		sys-devel/bc
+ 		|| (sys-apps/gawk sys-apps/mawk)"
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 11:00:54 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 11:00:54 +0100
+Subject: [Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib
+Message-ID: <200612181000.kBIA0sJp005663@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 11:00:53 +0100 (Mon, 18 Dec 2006)
+New Revision: 657
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/lib/PRINT_Help
+   trunk/osinfo/lib/PRINT_Usage
+   trunk/osinfo/lib/cmdline
+   trunk/osinfo/lib/global_variables
+   trunk/osinfo/sources
+Log:
+cleaned up the variables file - added default TERM=xterm - updated ebuild
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-18 10:00:53 UTC (rev 657)
+@@ -11,9 +11,10 @@
+ LICENSE="BSD"
+ SLOT="0"
+ KEYWORDS="~x86 ~amd64 ~x86-fbsd"
+-IUSE="xsl devices hdd ddc dvb"
++IUSE="xsl devices hdd tcp" #add later: dvb ddc
+ 
+-DEPEND="xsl? (dev-libs/libxslt)
++DEPEND=""
++RDEPEND="xsl? (dev-libs/libxslt)
+ 		devices? (sys-apps/lshw
+ 		          sys-apps/pciutils
+ 		          sys-apps/usbutils)
+@@ -29,49 +30,31 @@
+ 		>=sys-apps/grep-2.5.1
+ 		sys-apps/sed
+ 		sys-devel/bc
++		tcp? || (net-analyzer/netcat net-analyzer/netcat6
++		net-analyzer/gnu-netcat)
+ 		|| (sys-apps/gawk sys-apps/mawk)"
+ 
+-RDEPEND="${DEPEND}"
+ 
+-src_unpack() {
+-	mkdir -p ${S} # S is our source dir, where we copy our source files to
+-
+-	# does not work yet..
+-	tar xjf ${DISTDIR}/${A} -C ${S}
+-
+-#	cp ${FILESDIR}/osinfo.gz ${S}
+-#	gzip -d ${S}/osinfo.gz
+-
+-}
+-
+-
+-# src_compile() {}
+-
+ src_install() {
+-	
+-	mkdir -p ${D}/usr/bin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
+-	cp osinfo/osinfo ${D}/usr/bin
+ 
+-	doman osinfo/osinfo.1
++	S="${WORKDIR}/${PN}"
++	dobin ${S}/osinfo
++	doman ${S}/osinfo.1
+ 
+-	#if use doc; then
+-	#	mkdir -p ${D}/usr/share/doc/${P}
+-	#	cp ${FILESDIR}/readme.gz ${D}/usr/share/doc/${P}/
+-	#fi
+ }
+ 
+ pkg_postinst() {
+-	einfo
+-	einfo "Osinfo is still beta; you can help be addressing bugs at"
+-	einfo "the osinfo mailinglist: osinfo at lists.berlios.de"
+-	einfo
+-	einfo "Osinfo has many nice features that are not obvious at first."
+-	einfo "You can create an HTML document of the computers in your"
+-	einfo "LAN, run osinfo in daemon mode on a box with Apache server."
+-	einfo "Send the xml sheet to the daemon with the --tcpsend option."
+-	einfo
+-	einfo "You can freely add more modules to osinfo. Check the source"
+-	einfo "code inside the tarball. Thank you for interest."
+-	einfo 
++	elog
++	elog "Osinfo is still beta; you can help be addressing bugs at"
++	elog "the osinfo mailinglist: osinfo at lists.berlios.de"
++	elog
++	elog "Osinfo has many nice features that are not obvious at first."
++	elog "You can create an HTML document of the computers in your"
++	elog "LAN, and run osinfo in daemon mode on a box with Apache server."
++	elog "Send the xml sheet to the daemon with the --tcpsend option."
++	elog
++	elog "You can freely add more modules to osinfo. Check the source"
++	elog "code inside the tarball. Thank you for interest."
++	elog 
+ }
+ 
+
+Modified: trunk/osinfo/lib/PRINT_Help
+===================================================================
+--- trunk/osinfo/lib/PRINT_Help	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/PRINT_Help	2006-12-18 10:00:53 UTC (rev 657)
+@@ -27,7 +27,5 @@
+ 
+ 	if [ "$1" ]; then
+ 		exit $1
+-	else
+-		exit 0
+ 	fi
+ }
+
+Modified: trunk/osinfo/lib/PRINT_Usage
+===================================================================
+--- trunk/osinfo/lib/PRINT_Usage	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/PRINT_Usage	2006-12-18 10:00:53 UTC (rev 657)
+@@ -17,11 +17,10 @@
+ 	fi
+ 	echo -e "        all     - list information from all modules"
+ 	echo
+-#	echo 'If arguments is "all" then list information from all modules'
+-	echo "    ${tcGREEN}PROFILES${tSTD}:"
+-	echo -e "        desktop - limit output to standard desktop essentials"
+-	echo -e "        server  - server essentials"
+-	echo -e "        laptop  - laptop essentials"
++#	echo "    ${tcGREEN}PROFILES${tSTD}:"
++#	echo -e "        desktop - limit output to standard desktop essentials"
++#	echo -e "        server  - server essentials"
++#	echo -e "        laptop  - laptop essentials"
+ 	echo
+ #	echo "See --help for the full list of options."
+ }
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/cmdline	2006-12-18 10:00:53 UTC (rev 657)
+@@ -5,6 +5,8 @@
+ 			case "$1" in
+ 				'--help'|'-help'|'--usage'|'-usage'|'-h'|'')
+ 					PRINT_Help
++					PRINT_Debug
++					exit 0
+ 					;;
+ 
+ 				'--profile')
+@@ -192,6 +194,7 @@
+ 					cat index.xml
+ 					exit 0
+ 					;;
++
+ 				*)
+ 					module_cmds="$module_cmds $1"
+ 					shift 1;
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/global_variables	2006-12-18 10:00:53 UTC (rev 657)
+@@ -1,37 +1,45 @@
+-#############################################################
++### VARIABLES ###############################################
++## send bugs and feedback here:
++bugreport_email="osinfo at lists.berlios.de"
++
++## output defaults
++PROFILES="desktop server laptop"
++#profile="desktop"    # default profile is desktop
++profile="undefined"
++#OUTPUT_MODES="stdout xml kdialog"  # this list is not used (yet)
++output_mode="stdout" # default output mode is stdout
++makehtml=0 # by default, do not make html
++usexml=0 # by default, no not make xml 
++tcpsend=0 # by default, no not send via tcp
++
+ ## GLOBAL USERSPACE VARIABLES
+ isverbose=0
+ isdebug=0
+ usekdialog=0
+ lanforce=0
+-usexml=0
+-makehtml=0
+ fake=0
+ dev_code=0
+ quiet=0
+ tcpdaemon=0
+-tcpsend=0
+ no_fancy=0
+ 
++## chroot / virtual stuff
+ prefix="/"  # The root dir. Using a variable allows info on chrooted systems
+-PROFILES="desktop server laptop"
+-#profile="desktop"    # default profile is desktop
+-profile="undefined"
+-#OUTPUT_MODES="stdout xml kdialog"  # this list is not used (yet)
+-output_mode="stdout" # default output mode is stdout
+ 
++## Xorg log file ##
++## this is used by the experimental "video" module
++[ ! "$XORG_LOG" ] && [ -e "/var/log/Xorg.0.log" ] && XORG_LOG="/var/log/Xorg.0.log"
+ 
++### temp file handling ###
++# allocate a universal temp file
++osinfo_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
++TempFiles=("${TempFiles[@]}" "$osinfo_tmp")
++
+ # Keeps track of open headers, and closes them in the correct order upon flush_values.
+ OpenHeaders=()
+ TempFiles=()
+ Modules=()
+ 
+-
+-### XORG LOG FILE ###
+-
+-[ ! "$XORG_LOG" ] && [ -e "/var/log/Xorg.0.log" ] && XORG_LOG="/var/log/Xorg.0.log"
+-
+-
+ ### DAEMON MODE VARIABLES ###
+ 
+ # if the conf file is not available..
+@@ -50,22 +58,13 @@
+ xsltdir="${rundir}/xslt"
+ 
+ 
++### MISCELLANEOUS VARIABLES ###
+ 
+ # Before we break path hash some binaries so the script can find them (if they exist).
+ #hash kdialog &>/dev/null
+ 
+ # PATH here allows normal users to run ifconfig and lsmod
+-export PATH=$PATH:/bin/:/sbin/:/usr/bin/:/usr/sbin/
++PATH=$PATH:/bin/:/sbin/:/usr/bin/:/usr/sbin/
++TERM=xterm
+ 
+-# LC_ALL makes is possible to print to stdout, due to support for '' :)
+-#[[ ! "$LC_ALL" ]] && export LC_ALL="en_GB"
+-
+-
+-bugreport_email="osinfo at lists.berlios.de"
+-
+-# allocate a universal temp file
+-osinfo_tmp="$(mktemp /tmp/osinfo.XXXXXX)"
+-TempFiles=("${TempFiles[@]}" "$osinfo_tmp")
+-
+-
+ #############################################################
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/sources	2006-12-18 10:00:53 UTC (rev 657)
+@@ -10,6 +10,7 @@
+ source lib/PRINT_Usage            # usage; if no parameters are given
+ source lib/PRINT_Version          # print --version
+ source lib/PRINT_UnknownOS
++source lib/PRINT_*
+ 
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 11:04:12 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 11:04:12 +0100
+Subject: [Osinfo-commit] r658 - trunk/osinfo/lib
+Message-ID: <200612181004.kBIA4Cui006032@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 11:04:12 +0100 (Mon, 18 Dec 2006)
+New Revision: 658
+
+Modified:
+   trunk/osinfo/lib/global_variables
+Log:
+prevented the ugly xsl file to be written
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2006-12-18 10:00:53 UTC (rev 657)
++++ trunk/osinfo/lib/global_variables	2006-12-18 10:04:12 UTC (rev 658)
+@@ -50,7 +50,8 @@
+ INDEXXMLFILE="${rundir}/index.xml"
+ XMLFILE="$(get_hostname).xml"
+ XSLDEBUGFILE="osinfo.xsl"
+-XSLFILE="$(get_hostname).xsl" ; rm "$XSLFILE" -f
++#XSLFILE="$(get_hostname).xsl" ; rm "$XSLFILE" -f
++XSLFILE="/dev/null"
+ HTMLFILE="$(get_hostname).html"
+ 
+ rel_hostdir='./hosts'
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 11:18:10 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 11:18:10 +0100
+Subject: [Osinfo-commit] r659 - trunk/osinfo/lib
+Message-ID: <200612181018.kBIAIAQd009033@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 11:18:10 +0100 (Mon, 18 Dec 2006)
+New Revision: 659
+
+Added:
+   trunk/osinfo/lib/PRINT_Debug
+Log:
+a debug message
+
+Added: trunk/osinfo/lib/PRINT_Debug
+===================================================================
+--- trunk/osinfo/lib/PRINT_Debug	2006-12-18 10:04:12 UTC (rev 658)
++++ trunk/osinfo/lib/PRINT_Debug	2006-12-18 10:18:10 UTC (rev 659)
+@@ -0,0 +1,11 @@
++function PRINT_Debug {
++	echo " * Please note that $appname is still experimental!"
++	echo " * If you find bugs, please send the full backtrace (by using"
++	echo " * the -D switch) to the mailinglist: $bugreport_email."
++	echo
++	echo " * You can extend the existing modules and easily create new"
++	echo " * ones - have a look at the source code. The developers are"
++	echo " * happy to get help from other users. :) You can contact us"
++	echo " * through the email address given above. We would like to hear"
++	echo " * your feedback on $appname!"
++}
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 13:39:06 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 13:39:06 +0100
+Subject: [Osinfo-commit] r660 - trunk/osinfo-website/res/images
+Message-ID: <200612181239.kBICd6UM002039@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 13:39:05 +0100 (Mon, 18 Dec 2006)
+New Revision: 660
+
+Added:
+   trunk/osinfo-website/res/images/cli.png
+Log:
+screenshot
+
+Added: trunk/osinfo-website/res/images/cli.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/osinfo-website/res/images/cli.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 20:18:55 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 20:18:55 +0100
+Subject: [Osinfo-commit] r661 - trunk/osinfo/lib
+Message-ID: <200612181918.kBIJIt8D029450@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 20:18:55 +0100 (Mon, 18 Dec 2006)
+New Revision: 661
+
+Modified:
+   trunk/osinfo/lib/PRINT_Debug
+   trunk/osinfo/lib/bash.functions
+Log:
+changed the appearance of debug info
+
+Modified: trunk/osinfo/lib/PRINT_Debug
+===================================================================
+--- trunk/osinfo/lib/PRINT_Debug	2006-12-18 12:39:05 UTC (rev 660)
++++ trunk/osinfo/lib/PRINT_Debug	2006-12-18 19:18:55 UTC (rev 661)
+@@ -1,11 +1,11 @@
+ function PRINT_Debug {
+-	echo " * Please note that $appname is still experimental!"
+-	echo " * If you find bugs, please send the full backtrace (by using"
+-	echo " * the -D switch) to the mailinglist: $bugreport_email."
+-	echo
+-	echo " * You can extend the existing modules and easily create new"
+-	echo " * ones - have a look at the source code. The developers are"
+-	echo " * happy to get help from other users. :) You can contact us"
+-	echo " * through the email address given above. We would like to hear"
+-	echo " * your feedback on $appname!"
++	print_info "Please note that $appname is still experimental!"
++	print_info "If you find bugs, please send the full backtrace (by using"
++	print_info "the -D switch) to the mailinglist: $bugreport_email."
++	print_info
++	print_info "You can extend the existing modules and easily create new"
++	print_info "ones - have a look at the source code. The developers are"
++	print_info "happy to get help from other users. :) You can contact us"
++	print_info "through the email address given above. We would like to hear"
++	print_info "your feedback on $appname!"
+ }
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-18 12:39:05 UTC (rev 660)
++++ trunk/osinfo/lib/bash.functions	2006-12-18 19:18:55 UTC (rev 661)
+@@ -294,3 +294,7 @@
+ 	fi
+ }
+ 
++# prints a message with a green star in the beginning of each line 
++print_info() {
++	echo -e " ${tcGREEN}*${tSTD} ${@}"
++}
+
+
+
+From lamikae at mail.berlios.de  Mon Dec 18 20:20:42 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Mon, 18 Dec 2006 20:20:42 +0100
+Subject: [Osinfo-commit] r662 - trunk/osinfo/modules
+Message-ID: <200612181920.kBIJKg7H029811@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-18 20:20:42 +0100 (Mon, 18 Dec 2006)
+New Revision: 662
+
+Modified:
+   trunk/osinfo/modules/distro
+Log:
+added Rubix to distros
+
+Modified: trunk/osinfo/modules/distro
+===================================================================
+--- trunk/osinfo/modules/distro	2006-12-18 19:18:55 UTC (rev 661)
++++ trunk/osinfo/modules/distro	2006-12-18 19:20:42 UTC (rev 662)
+@@ -87,7 +87,7 @@
+ 
+ 			# Begin searching for distro identifying files
+ 			local found_files="" myfile
+-			for myfile in ${root_dir}etc/{SuSE-release,fedora-release,redhat-release,slackware-version,Topologilinux-version,gentoo-release,issue}; do
++			for myfile in ${root_dir}etc/{SuSE-release,fedora-release,redhat-release,slackware-version,Topologilinux-version,gentoo-release,issue,rubix-release}; do
+ 				[ -e $myfile ] && found_files="$found_files $myfile"
+ 			done
+ 
+@@ -119,6 +119,10 @@
+ 						found_distros="$found_distros Gentoo"
+ 						break
+ 						;;
++					"${root_dir}etc/rubix-release")
++						found_distros="$found_distros Rubix"
++						break
++						;;
+ 					# if nothing previous matches, then use /etc/issue
+ 					# AnMaster: Inform user that this might be very wrong...
+ 					"${root_dir}etc/issue")
+@@ -136,7 +140,7 @@
+ 			# has not been thoroughly tested. the commented code
+ 			# may be removed after verifying the new code works.
+ 			case "$(echo ${found_distros} | tr 'A-Z' 'a-z')" in
+-				'suse'|'fedora core'|'fedora'|'red hat'|'slackware'|'slackware topologilinux'|'gentoo'|'ubuntu')
++				'suse'|'fedora core'|'fedora'|'red hat'|'slackware'|'slackware topologilinux'|'gentoo'|'ubuntu'|'rubix')
+ 				#'SuSE'|'Fedora Core'|'Fedora'|'Red Hat'|'Slackware'|'Slackware Topologilinux'|'Gentoo'|'Ubuntu')
+ 
+ 					distro_id="${found_distros}"
+
+
+
+From lamikae at mail.berlios.de  Thu Dec 21 14:47:08 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Thu, 21 Dec 2006 14:47:08 +0100
+Subject: [Osinfo-commit] r663 - trunk/osinfo/lib
+Message-ID: <200612211347.kBLDl8f1024925@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-21 14:47:08 +0100 (Thu, 21 Dec 2006)
+New Revision: 663
+
+Modified:
+   trunk/osinfo/lib/bash.functions
+Log:
+commented the bit which prevented sudo to work
+
+Modified: trunk/osinfo/lib/bash.functions
+===================================================================
+--- trunk/osinfo/lib/bash.functions	2006-12-18 19:20:42 UTC (rev 662)
++++ trunk/osinfo/lib/bash.functions	2006-12-21 13:47:08 UTC (rev 663)
+@@ -60,13 +60,15 @@
+ 	else
+ 		get_cols() { echo -n '80'; }
+ 	fi
+-	altchars="$(tput acsc)"
+-	while read -rn 2 chpair; do
+-		if [ "${chpair:0:1}" == "q" ]; then
+-			graph_got_q=1
+-			graph_q="${chpair:1:1}"
+-		fi
+-	done < <(tput acsc)
++	# BUG: masking this out for the 0.3_rc1 release
++	# since this prevents sudo to work. -Mikael
++	#altchars="$(tput acsc)"
++	#while read -rn 2 chpair; do
++	#	if [ "${chpair:0:1}" == "q" ]; then
++	#		graph_got_q=1
++	#		graph_q="${chpair:1:1}"
++	#	fi
++	#done < <(tput acsc)
+ else
+ 	# Bleh, no $TERM...
+ 	get_cols() { echo -n '80'; }
+
+
+
+From lamikae at mail.berlios.de  Fri Dec 22 07:25:45 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 22 Dec 2006 07:25:45 +0100
+Subject: [Osinfo-commit] r664 - in trunk/osinfo: . ebuild man
+Message-ID: <200612220625.kBM6Pjpi015978@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-22 07:25:45 +0100 (Fri, 22 Dec 2006)
+New Revision: 664
+
+Removed:
+   trunk/osinfo/include/
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/man/osinfo.1
+Log:
+modified Makefile:dist a bit
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-12-21 13:47:08 UTC (rev 663)
++++ trunk/osinfo/Makefile	2006-12-22 06:25:45 UTC (rev 664)
+@@ -1,17 +1,9 @@
+-#helpers+=bash.functions
+-#helpers+=lib/xml.functions
+-#helpers+=lib/lanforce.functions
+-#helpers+=lib/print_help
+-#helpers+=lib/cmdline
+-#helpers+=lib/xslt.functions
+-#helpers+=lib/check.functions
+-#helpers+=modules/osinfo.modules
++# osinfo Makefile
++#
+ mainapp=osinfo
+-subdirs=docs conf man init.d lib modules modules/experimental xslt profiles include
++subdirs=docs html html/xslt html/hosts
++src_subdir=conf man init.d lib modules modules/experimental xslt profiles ebuild ebuild/files
+ 
+-#helpers=lib/*
+-#helpers+=modules/*
+-#helpers+=profiles/*
+ # helpers go only to the src/ directory
+ helpers=sources
+ 
+@@ -24,45 +16,51 @@
+ 
+ help:
+ 	@echo "Targets:"
++	@echo "  install         - install the application"
+ 	@echo "  dist            - makes a dist dir, ready for $(appname) tarball"
+ 	@echo "  dist-tarbz2     - tar and bzip2 the dist"
+ 	@echo "  distclean       - remove the dist dir and *~"
+ 	@echo "  clean           - remove *~"
+-	@echo "  dist-all-in-one - makes a huge all in one script. (replaces source foo with foo)"
+ 
+ dist: distclean man
+-	mkdir -p dist/$(appname)/src
++	mkdir -p dist/$(appname)
++
++	######################
++	# copy subdirectories
++	######################
+ 	for dir in $(subdirs); do \
+-		mkdir -p dist/$(appname)/src/$$dir ; \
+-		cp $$dir/* dist/$(appname)/src/$$dir ; \
++		cp -r $$dir dist/$(appname)/ ; \
+ 	done
++
++	######################
++	# copy sources
++	######################
++	mkdir -p dist/$(appname)/src
++	for dir in $(src_subdir); do \
++		cp -r $$dir dist/$(appname)/src/ ; \
++	done
+ 	cp $(helpers) dist/$(appname)/src
+ 	cp $(mainapp) dist/$(appname)/src
+ 	cp $(our_dtd) dist/$(appname)/src
+ 
++	######################
+ 	# make all-in-one package
+-	#@echo "THIS MAY BE BROKEN! Some things have changed...."
+-
+-	#@echo "WARNING: this is quite untested"
+-	#@echo "         therefore the output is saved in \"osinfo-all-in-one\" not \"osinfo\""
+-
++	######################
+ 	cd dist/$(appname) && \
+ 	for sources in "src/lib/version" "src/profiles/*" "src/modules/*" "src/modules/experimental/*" "src/lib/*[^version]*" ; do \
+ 		cat $$sources >> osinfo 2>/dev/null ; \
+ 	done
+-
+-	# manual
+-	cp man/osinfo.1 dist/osinfo
+-
+-	# finally the mainfile
+-	# clear out sourcing external files, since it's now all-in-one
+ 	cd dist/$(appname) && \
+ 		sed 's/^source[a-zA-Z. _\/]*//' src/$(mainapp) >> osinfo
++		# clear out sourcing external files, since it's now all-in-one
++	chmod +x dist/$(appname)/osinfo
+ 
+-	#for sources in "osinfo $$(awk /^source/{'print $$2'} osinfo)"; do cat "$$sources" >> osinfo-all-in-one ; done
+-	#cd dist/$(appname) && perl -npe 's/^source (.*)/`cat $1`/e' <$(mainapp) > osinfo-all-in-one
++	######################
++	# copy manual
++	######################
++	cp man/osinfo.1 dist/osinfo
+ 
+-	chmod +x dist/$(appname)/osinfo
++	# done!
+ 
+ # Not very elegant
+ # It greps the definitons out of osinfo and then evals it.
+@@ -75,6 +73,8 @@
+ distclean: clean
+ 	-rm -rf dist
+ 
++install: dist
++
+ man: 
+ 	cd man
+ 	cat osinfo.man.txt |  txt2man -t osinfo -s 1 -r "OSinfo manual" > osinfo.1
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-21 13:47:08 UTC (rev 663)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-22 06:25:45 UTC (rev 664)
+@@ -1,16 +1,16 @@
+-# Copyright 2006 Mikael Lammentausta
++# Copyright 1999-2006 Gentoo Foundation
+ # Distributed under the terms of the GNU General Public License v2
+ # $Header: $
+ 
+ inherit eutils
+ 
+-DESCRIPTION="osinfo lists system information available to the OS"
++DESCRIPTION="OSinfo lists system information available to the OS"
+ HOMEPAGE="http://osinfo.berlios.de"
+ SRC_URI="ftp://ftp.berlios.de/pub/osinfo/osinfo.tar.bz2"
+ 
+ LICENSE="BSD"
+ SLOT="0"
+-KEYWORDS="~x86 ~amd64 ~x86-fbsd"
++KEYWORDS="~x86 ~amd64"
+ IUSE="xsl devices hdd tcp" #add later: dvb ddc
+ 
+ DEPEND=""
+@@ -36,11 +36,9 @@
+ 
+ 
+ src_install() {
+-
+ 	S="${WORKDIR}/${PN}"
+ 	dobin ${S}/osinfo
+ 	doman ${S}/osinfo.1
+-
+ }
+ 
+ pkg_postinst() {
+@@ -52,9 +50,9 @@
+ 	elog "You can create an HTML document of the computers in your"
+ 	elog "LAN, and run osinfo in daemon mode on a box with Apache server."
+ 	elog "Send the xml sheet to the daemon with the --tcpsend option."
++	elog "These features are still incomplete, but you can help to improve them!"
+ 	elog
+ 	elog "You can freely add more modules to osinfo. Check the source"
+ 	elog "code inside the tarball. Thank you for interest."
+ 	elog 
+ }
+-
+
+Modified: trunk/osinfo/man/osinfo.1
+===================================================================
+--- trunk/osinfo/man/osinfo.1	2006-12-21 13:47:08 UTC (rev 663)
++++ trunk/osinfo/man/osinfo.1	2006-12-22 06:25:45 UTC (rev 664)
+@@ -1,5 +1,5 @@
+-." Text automatically generated by txt2man-1.4.7
+-.TH osinfo 1 "marraskuu 30, 2006" "OSinfo manual" ""
++." Text automatically generated by txt2man
++.TH osinfo 1 "joulukuu 22, 2006" "OSinfo manual" ""
+ .SH NAME  
+ osinfo
+ .SH SYNOPSIS
+@@ -14,55 +14,55 @@
+ .PP
+ Syntax:
+ \fBosinfo\fP [Options] arguments
+-\fBosinfo\fP [\\fB--usage\fP|\fB--help\fP]
++\fBosinfo\fP [\fB--usage\fP|\fB--help\fP]
+ .SH OPTIONS
+ .TP
+ .B
+-\\fB--xml\fP
++\fB--xml\fP
+ Printout in xml format \fIto\fP osinfo.xml
+ .TP
+ .B
+-\\fB--lanforce\fP
++\fB--lanforce\fP
+ Makes \fIthe\fP output \fIto\fP osinfo.xml according \fIto\fP a special DTD
+ .RE
+ .TP
+ .B
+-\\fB-o\fP
++\fB-o\fP
+ \fB--output\fP [file]     Use this file for xml output
+ .RS
+ .TP
+ .B
+-\\fB-v\fP
++\fB-v\fP
+ \fB--verbose\fP           Show more \fIinformation\fP
+ .TP
+ .B
+-\\fB-vv\fP
++\fB-vv\fP
+ \fB--veryverbose\fP       Show even more \fIinformation\fP
+ .TP
+ .B
+-\\fB-V\fP
++\fB-V\fP
+ \fB--version\fP           Shows \fIthe\fP version of \fBosinfo\fP
+ .RS
+ .TP
+ .B
+-\\fB--netcat\fP [port]
++\fB--netcat\fP [port]
+ Sends \fIthe\fP output in xml \fIto\fP \fIthe\fP tcp port via netcat
+ .TP
+ .B
+-\\fB--no-color\fP
++\fB--no-color\fP
+ Disables color output (testing)
+ .TP
+ .B
+-\\fB--debug\fP
++\fB--debug\fP
+ For testing
+ .RE
+ .TP
+ .B
+-\\fB-D\fP
++\fB-D\fP
+ \fB--fulldebug\fP         Print full debugging info, clutters output!
+ .TP
+ .B
+-\\fB-P\fP
++\fB-P\fP
+ \fB--prefix\fP [dir]      Use this dir as root
+ This disables some modules
+ and exits
+@@ -115,7 +115,7 @@
+ .IP \(bu 3
+ awk, sed, seq, tr, bc, uniq, sort, GNU grep with support for extended regexps
+ .IP \(bu 3
+-util\\fB-linux\fP (fdisk, column)
++util-linux (fdisk, column)
+ .IP \(bu 3
+ netcat (for sending \fIthe\fP xml output over tcp)
+ .PP
+@@ -139,19 +139,19 @@
+          o lshw
+ 
+          hdd:
+-         o util\-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
++         o util-linux (fdisk), df, udev, smartmontools (optional), hdparm (optional)
+ 
+          lvm:
+-         o device\-mapper lvm2 
++         o device-mapper lvm2 
+ 
+          devices: 
+          o lspci
+ 
+          network: 
+-         o net\-tools (hostname, ifconfig, route)
++         o net-tools (hostname, ifconfig, route)
+ 
+          wlan:
+-         o wireless\-tools (iwconfig, iwlist)
++         o wireless-tools (iwconfig, iwlist)
+ 
+ .fam T
+ .fi
+
+
+
+From lamikae at mail.berlios.de  Fri Dec 22 07:39:47 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 22 Dec 2006 07:39:47 +0100
+Subject: [Osinfo-commit] r665 - in trunk/osinfo: . ebuild html lib scripts
+Message-ID: <200612220639.kBM6dlSI016925@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-22 07:39:47 +0100 (Fri, 22 Dec 2006)
+New Revision: 665
+
+Added:
+   trunk/osinfo/html/dtd/
+   trunk/osinfo/scripts/upload_tarbz2.sh
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/lib/PRINT_Version
+   trunk/osinfo/lib/version
+Log:
+moving dtds to html/
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-12-22 06:25:45 UTC (rev 664)
++++ trunk/osinfo/Makefile	2006-12-22 06:39:47 UTC (rev 665)
+@@ -63,12 +63,12 @@
+ 	# done!
+ 
+ # Not very elegant
+-# It greps the definitons out of osinfo and then evals it.
++# It greps the definitions out of osinfo and then evals it.
+ # After that it echos the thing.
+ # And then include the output in the paramerter of tar.
+ # Bad that it doesn't work in a variable.
+ dist-tarbz2: dist
+-	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}-$${patch_version}).tar.bz2" $(appname)
++	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}_$${patch_version}).tar.bz2" $(appname)
+ 
+ distclean: clean
+ 	-rm -rf dist
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-22 06:25:45 UTC (rev 664)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-22 06:39:47 UTC (rev 665)
+@@ -2,7 +2,7 @@
+ # Distributed under the terms of the GNU General Public License v2
+ # $Header: $
+ 
+-inherit eutils
++inherit eutils webapp
+ 
+ DESCRIPTION="OSinfo lists system information available to the OS"
+ HOMEPAGE="http://osinfo.berlios.de"
+
+Modified: trunk/osinfo/lib/PRINT_Version
+===================================================================
+--- trunk/osinfo/lib/PRINT_Version	2006-12-22 06:25:45 UTC (rev 664)
++++ trunk/osinfo/lib/PRINT_Version	2006-12-22 06:39:47 UTC (rev 665)
+@@ -1,6 +1,6 @@
+ function PRINT_Version {
+ 	echo "${tBOLD}${appname}${tSTD}-${major_version}.${minor_version}.${micro_version}-${patch_version} ${dev_status}"
+-	[ "$dev_status" == "stable" ] && \
++	#[ "$dev_status" == "stable" ] && \
+ 	echo "Release date: "$(date -d $release_date +%A\ %e\ %B\ %Y)
+ 	echo 'Copyright (C) 2005-2006 Arvid Norlander'
+ 	echo 'Copyright (C) 2006 Mikael Lammentausta'
+
+Modified: trunk/osinfo/lib/version
+===================================================================
+--- trunk/osinfo/lib/version	2006-12-22 06:25:45 UTC (rev 664)
++++ trunk/osinfo/lib/version	2006-12-22 06:39:47 UTC (rev 665)
+@@ -11,10 +11,10 @@
+ ################################################################################
+ appname='osinfo'
+ major_version=0
+-minor_version=2
+-micro_version=12
+-patch_version=1
++minor_version=3
++micro_version=0
++patch_version=rc1
+ dev_status=beta
+-release_date='2006-12-xx'
++release_date='2006-12-22'
+ 
+ 
+
+Added: trunk/osinfo/scripts/upload_tarbz2.sh
+===================================================================
+--- trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 06:25:45 UTC (rev 664)
++++ trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 06:39:47 UTC (rev 665)
+@@ -0,0 +1,5 @@
++#!/bin/bash
++# 1 : Username
++user="$1"
++[ ! "$user" ] && echo "Please give username" && exit 1
++/usr/bin/rsync --progress -t -e "ssh -p 22" ../dist/osinfo*tar.bz2 "$user"@shell.berlios.de:/home/groups/ftp/pub/osinfo/
+
+
+Property changes on: trunk/osinfo/scripts/upload_tarbz2.sh
+___________________________________________________________________
+Name: svn:executable
+   + *
+
+
+
+From lamikae at mail.berlios.de  Fri Dec 22 08:01:47 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 22 Dec 2006 08:01:47 +0100
+Subject: [Osinfo-commit] r666 - in trunk/osinfo: . debug docs ebuild html
+	html/dtd scripts
+Message-ID: <200612220701.kBM71log019175@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-22 08:01:46 +0100 (Fri, 22 Dec 2006)
+New Revision: 666
+
+Added:
+   trunk/osinfo/debug/LF_inventory.pdf
+   trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+   trunk/osinfo/html/dtd/lanforce.dtd
+   trunk/osinfo/html/dtd/osinfo.dtd
+Removed:
+   trunk/osinfo/docs/LF_inventory.pdf
+   trunk/osinfo/ebuild/files/
+   trunk/osinfo/html/xslt
+   trunk/osinfo/lanforce.dtd
+   trunk/osinfo/osinfo.dtd
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/debug/planck.xml
+   trunk/osinfo/scripts/upload_tarbz2.sh
+Log:
+removed symlink, updated ebuild
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/Makefile	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,8 +1,8 @@
+ # osinfo Makefile
+ #
+ mainapp=osinfo
+-subdirs=docs html html/xslt html/hosts
+-src_subdir=conf man init.d lib modules modules/experimental xslt profiles ebuild ebuild/files
++subdirs=docs html 
++src_subdir=conf man init.d lib modules xslt profiles ebuild 
+ 
+ # helpers go only to the src/ directory
+ helpers=sources
+@@ -41,7 +41,6 @@
+ 	done
+ 	cp $(helpers) dist/$(appname)/src
+ 	cp $(mainapp) dist/$(appname)/src
+-	cp $(our_dtd) dist/$(appname)/src
+ 
+ 	######################
+ 	# make all-in-one package
+@@ -58,7 +57,7 @@
+ 	######################
+ 	# copy manual
+ 	######################
+-	cp man/osinfo.1 dist/osinfo
++	cp -r man dist/$(appname)
+ 
+ 	# done!
+ 
+
+Copied: trunk/osinfo/debug/LF_inventory.pdf (from rev 663, trunk/osinfo/docs/LF_inventory.pdf)
+
+Modified: trunk/osinfo/debug/planck.xml
+===================================================================
+--- trunk/osinfo/debug/planck.xml	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/debug/planck.xml	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,11 +1,13 @@
+ <?xml version="1.0" ?>
+ <!DOCTYPE osinfo SYSTEM "osinfo.dtd">
+ <osinfo>
+-	<osinfo version="0.2.9-8 alpha" />
+-	<client hostname="planck" />
+-	<ip v4="192.168.0.100" />
+-	<computer profile="desktop" />
+-	<scanning date="2006-09-28 12:20:40" />
++	<script version="0.2.11-1 beta" />
++	<computer profile="undefined" />
++	<computer hostname="planck" />
++	<computer domain="" />
++	<computer OS="Gentoo Linux 2006.1" />
++	<computer CPU="Intel(R) Pentium(R) 4 CPU 2.80GHz" />
++	<scanning date="2006-11-20 20:55:47" />
+ 	<system>
+ 		<attribute name="hostname" code="hostname">
+ 			<description>Hostname</description>
+@@ -17,26 +19,11 @@
+ 			<value>Gentoo Linux 2006.1</value>
+ 		</attribute>
+ 
+-		<attribute name="operating_system_kernel" code="os_build">
+-			<description>Operating system kernel</description>
+-			<value>Linux 2.6.17-gentoo-r8</value>
+-		</attribute>
+-
+ 		<attribute name="system_uptime" code="uptime">
+ 			<description>System uptime</description>
+-			<value>9 min</value>
++			<value>12 min</value>
+ 		</attribute>
+ 
+-		<attribute name="cpu_temperature" code="">
+-			<description>CPU temperature</description>
+-			<value>26.0</value>
+-		</attribute>
+-
+-		<attribute name="m_b_temperature" code="">
+-			<description>M/B temperature</description>
+-			<value>26 C  </value>
+-		</attribute>
+-
+ 	</system>
+ 	<distribution>
+ 		<attribute name="root_dir" code="">
+@@ -49,6 +36,11 @@
+ 			<value>Gentoo</value>
+ 		</attribute>
+ 
++		<attribute name="release" code="">
++			<description>Release</description>
++			<value>2006.1</value>
++		</attribute>
++
+ 	</distribution>
+ 	<kernel>
+ 		<attribute name="kernel_name" code="">
+@@ -63,7 +55,7 @@
+ 
+ 		<attribute name="kernel_version" code="">
+ 			<description>Kernel version</description>
+-			<value>#1 PREEMPT Tue Sep 26 18:24:31 EEST 2006</value>
++			<value>#2 PREEMPT Sun Oct 22 20:34:48 EEST 2006</value>
+ 		</attribute>
+ 
+ 		<attribute name="kernel_name" code="">
+@@ -73,68 +65,56 @@
+ 
+ 	</kernel>
+ 	<processor>
+-		<attribute name="vendor" code="processor_vendor">
+-			<description>Vendor</description>
++		<attribute name="cpu_vendor" code="processor_vendor">
++			<description>CPU Vendor</description>
+ 			<value>GenuineIntel</value>
+ 		</attribute>
+ 
+-		<attribute name="model" code="processor_model">
+-			<description>Model</description>
++		<attribute name="cpu_model" code="processor_model">
++			<description>CPU Model</description>
+ 			<value>Intel(R) Pentium(R) 4 CPU 2.80GHz</value>
+ 		</attribute>
+ 
+-		<attribute name="frequency" code="processor_speed">
+-			<description>Frequency</description>
++		<attribute name="cpu_frequency" code="processor_speed">
++			<description>CPU Frequency</description>
+ 			<value>2800.000 MHz</value>
+ 		</attribute>
+ 
+-		<attribute name="architecture" code="system_type">
+-			<description>Architecture</description>
+-			<value>i686</value>
++		<attribute name="virtualization" code="vmx">
++			<description>Virtualization</description>
++			<value>no</value>
+ 		</attribute>
+ 
+-		<attribute name="cpu_temperature" code="">
+-			<description>CPU temperature</description>
+-			<value>26.0</value>
+-		</attribute>
+-
+-		<attribute name="fan" code="">
+-			<description>Fan</description>
+-			<value>964 RPM</value>
+-		</attribute>
+-
+-		<attribute name="voltage" code="">
+-			<description>Voltage</description>
+-			<value>+1.46 V</value>
+-		</attribute>
+-
+-		<attribute name="cache" code="">
+-			<description>Cache</description>
+-			<value>512 KB</value>
+-		</attribute>
+-
+-		<attribute name="stepping" code="">
+-			<description>Stepping</description>
+-			<value>9</value>
+-		</attribute>
+-
+ 	</processor>
+ 	<disk_information>
+-		<attribute name="ide_drive" code="hard_disk">
+-			<description>IDE drive</description>
+-			<value>IDE drive Hitachi Deskstar 7K250 series HDS722512VLAT20 (VN341EC4G2U1RK) 123.5 GB</value>
+-		</attribute>
++		<drive>
++			<attribute name="ide_drive" code="hard_disk">
++				<description>IDE drive</description>
++				<value>IDE drive Hitachi Deskstar 7K250 series HDS722512VLAT20 (VN341EC4G2U1RK) 123.5 GB</value>
++			</attribute>
+ 
+-		<attribute name="partitions" code="drive">
+-			<description>partitions</description>
+-			<value>/dev/hda1 swap /746991 Linux swap / Solaris </value>
+-			<value>/dev/hda2 - /1 W95 Ext'd (LBA) </value>
+-			<value>/dev/hda3 /usr/portage 254620/498015 Linux </value>
+-			<value>/dev/hda4 / 92680/13888192 Linux </value>
+-			<value>/dev/hda5 /mnt/hda5 15982812/18643401 Linux </value>
+-			<value>/dev/hda6 - /64324228 HPFS/NTFS </value>
+-		</attribute>
++			<partitions>
++				<value>/dev/hda1 swap n/a/746991 Linux swap / Solaris</value>
++				<value>/dev/hda2 - n/a/1 W95 Ext'd (LBA)</value>
++				<value>/dev/hda3 /usr/portage 219868/498015 Linux</value>
++				<value>/dev/hda4 / 4337256/13888192 Linux</value>
++				<value>/dev/hda5 /home 2044328/18643401 Linux</value>
++				<value>/dev/hda6 /mnt/kirjasto 17902552/22523098 Linux</value>
++				<value>/dev/hda7 - n/a/64324228 HPFS/NTFS</value>
++			</partitions>
++		</drive>
++		<drive>
++			<attribute name="ide_drive" code="hard_disk">
++				<description>IDE drive</description>
++				<value>IDE drive Maxtor DiamondMax 10 family Maxtor_6L300R0 (L62F481G) 300.0 GB</value>
++			</attribute>
+ 
++			<partitions>
++				<value>/dev/hdb1 /mnt/arkisto 29460348/43945776 Linux</value>
++				<value>/dev/hdb2 /mnt/musiikki 62683792/89843512 Linux</value>
++				<value>/dev/hdb3 /mnt/valokuva-arkisto 104253940/159260377 Linux</value>
++			</partitions>
++		</drive>
+ 	</disk_information>
+ 	<applications>
+ 		<attribute name="applications" code="software">
+@@ -152,26 +132,16 @@
+ 			<iface name="dummy0" >
+ 				<attribute name="mac" code="mac_address">
+ 					<description>MAC</description>
+-					<value>F6:DB:38:04:C6:91</value>
++					<value>E2:BF:BE:F1:E4:66</value>
+ 				</attribute>
+ 
+-				<attribute name="ip_type" code="ip_type">
+-					<description>IP type</description>
+-					<value>undetermined</value>
++			</iface>
++			<iface name="eth0" >
++				<attribute name="device" code="">
++					<description>Device</description>
++					<value>8139 (rev 10)</value>
+ 				</attribute>
+ 
+-				<attribute name="rx_bytes" code="">
+-					<description>RX bytes</description>
+-					<value>0 (0.0 b)</value>
+-				</attribute>
+-
+-				<attribute name="tx_bytes" code="">
+-					<description>TX bytes</description>
+-					<value>0 (0.0 b)</value>
+-				</attribute>
+-
+-			</iface>
+-			<iface name="eth0" >
+ 				<attribute name="mac" code="mac_address">
+ 					<description>MAC</description>
+ 					<value>00:48:54:82:BE:30</value>
+@@ -202,16 +172,6 @@
+ 					<value>255.255.255.0</value>
+ 				</attribute>
+ 
+-				<attribute name="rx_bytes" code="">
+-					<description>RX bytes</description>
+-					<value>3286918 (3.1 Mb)</value>
+-				</attribute>
+-
+-				<attribute name="tx_bytes" code="">
+-					<description>TX bytes</description>
+-					<value>508558 (496.6 Kb)</value>
+-				</attribute>
+-
+ 			</iface>
+ 		</computer>
+ 	</network_information>
+@@ -220,7 +180,7 @@
+ 	<terminal_info>
+ 		<attribute name="terminal_type" code="">
+ 			<description>Terminal type</description>
+-			<value>xterm</value>
++			<value>linux</value>
+ 		</attribute>
+ 
+ 		<attribute name="terminal_speed" code="">
+@@ -230,70 +190,87 @@
+ 
+ 		<attribute name="rows" code="">
+ 			<description>Rows</description>
+-			<value>58</value>
++			<value>51</value>
+ 		</attribute>
+ 
+ 		<attribute name="columns" code="">
+ 			<description>Columns</description>
+-			<value>178</value>
++			<value>138</value>
+ 		</attribute>
+ 
+ 	</terminal_info>
+ 	<devices>
++		<motherboard>
++			<attribute name="_manufacturer" code="mother_board_manufacturer">
++				<description>Manufacturer</description>
++				<value>ASUSTeK Computer Inc.</value>
++			</attribute>
++
++			<attribute name="_model" code="mother_board_model">
++				<description>Model</description>
++				<value>P4C800</value>
++			</attribute>
++
++			<attribute name="_bios_revision" code="bios_version">
++				<description>BIOS revision</description>
++				<value>1017.004</value>
++			</attribute>
++
++		</motherboard>
+ 		<controllers>
+ 			<attribute name="_host_bridge" code="">
+ 				<description>Host bridge</description>
+-				<value>Intel Corporation 82875P/E7210 Memory Controller Hub (rev 02) </value>
++				<value>Intel Corporation 82875P/E7210 Memory Controller Hub (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_pci_bridge" code="">
+ 				<description>PCI bridge</description>
+-				<value>Intel Corporation 82875P Processor to AGP Controller (rev 02) </value>
++				<value>Intel Corporation 82875P Processor to AGP Controller (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_usb_controller" code="">
+ 				<description>USB Controller</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #1 (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #1 (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_usb_controller" code="">
+ 				<description>USB Controller</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #2 (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #2 (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_usb_controller" code="">
+ 				<description>USB Controller</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #3 (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #3 (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_usb_controller" code="">
+ 				<description>USB Controller</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #4 (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB UHCI Controller #4 (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_usb_controller" code="">
+ 				<description>USB Controller</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB2 EHCI Controller (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) USB2 EHCI Controller (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_pci_bridge" code="">
+ 				<description>PCI bridge</description>
+-				<value>Intel Corporation 82801 PCI Bridge (rev c2) </value>
++				<value>Intel Corporation 82801 PCI Bridge (rev c2)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_isa_bridge" code="">
+ 				<description>ISA bridge</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) LPC Interface Bridge (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) LPC Interface Bridge (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_ide_interface" code="">
+ 				<description>IDE interface</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) IDE Controller (rev 02)</value>
+ 			</attribute>
+ 
+ 			<attribute name="_smbus" code="">
+ 				<description>SMBus</description>
+-				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) SMBus Controller (rev 02) </value>
++				<value>Intel Corporation 82801EB/ER (ICH5/ICH5R) SMBus Controller (rev 02)</value>
+ 			</attribute>
+ 
+ 		</controllers>
+@@ -301,35 +278,43 @@
+ 	<enhancements>
+ 		<attribute name="_display_adapter(s)" code="display_adapter">
+ 			<description>Display adapter(s)</description>
+-			<value>ATI Technologies Inc RV280 [Radeon 9200 PRO] (rev 01) </value>
++			<value>ATI Technologies Inc RV280 [Radeon 9200 PRO] (rev 01)</value>
+ 		</attribute>
+ 
+ 		<attribute name="_display_adapter(s)" code="display_adapter">
+ 			<description>Display adapter(s)</description>
+-			<value>ATI Technologies Inc RV280 [Radeon 9200 PRO] (Secondary) (rev 01) </value>
++			<value>ATI Technologies Inc RV280 [Radeon 9200 PRO] (Secondary) (rev 01)</value>
+ 		</attribute>
+ 
+ 		<attribute name="_multimedia_audio_controller" code="">
+ 			<description>Multimedia audio controller</description>
+-			<value>Creative Labs SB Audigy (rev 04) </value>
++			<value>Creative Labs SB Audigy (rev 04)</value>
+ 		</attribute>
+ 
+ 		<attribute name="_input_device_controller" code="">
+ 			<description>Input device controller</description>
+-			<value>Creative Labs SB Audigy MIDI/Game port (rev 04) </value>
++			<value>Creative Labs SB Audigy MIDI/Game port (rev 04)</value>
+ 		</attribute>
+ 
+ 		<attribute name="_firewire_(ieee_1394)" code="">
+ 			<description>FireWire (IEEE 1394)</description>
+-			<value>Creative Labs SB Audigy FireWire Port (rev 04) </value>
++			<value>Creative Labs SB Audigy FireWire Port (rev 04)</value>
+ 		</attribute>
+ 
+ 		<attribute name="_ethernet_controller(s)" code="network_adapter">
+ 			<description>Ethernet controller(s)</description>
+-			<value>Realtek Semiconductor Co., Ltd. RTL-8139/8139C/8139C+ (rev 10) </value>
++			<value>Unknown device 0001:8139 (rev 10)</value>
+ 		</attribute>
+ 
+ 	</enhancements>
++	<usb>
++		<value>Bus 005 Device 001: ID 0000:0000  </value>
++		<value>Bus 004 Device 001: ID 0000:0000  </value>
++		<value>Bus 003 Device 001: ID 0000:0000  </value>
++		<value>Bus 002 Device 002: ID 046d:c50b Logitech, Inc. Cordless Desktop Optical</value>
++		<value>Bus 002 Device 001: ID 0000:0000  </value>
++		<value>Bus 001 Device 001: ID 0000:0000  </value>
++	</usb>
+ 	<dmi_information>
+ 		<bios>
+ 			<attribute name="vendor" code="">
+@@ -430,25 +415,62 @@
+ 
+ 		</chassis>
+ 	</dmi_information>
++	<cd_dvd_drives>
++		<cd_drive name="cd_dvd_drive_1" >
++			<attribute name="model" code="cdrom">
++				<description>Model</description>
++				<value>BENQ DVD DD DW1640</value>
++			</attribute>
++
++			<attribute name="drive_type" code="">
++				<description>Drive type</description>
++				<value>DVD writer</value>
++			</attribute>
++
++			<attribute name="serial_number" code="">
++				<description>Serial number</description>
++				<value>9JB5U150F351907510PP</value>
++			</attribute>
++
++			<attribute name="physical_bus" code="">
++				<description>Physical bus</description>
++				<value>ide at 1.1</value>
++			</attribute>
++
++			<attribute name="device_node" code="">
++				<description>Device node</description>
++				<value>/dev/hdd</value>
++			</attribute>
++
++			<attribute name="capabilities" code="">
++				<description>Capabilities</description>
++				<value>DVD-R burning </value>
++				<value>DVD playback </value>
++				<value>CD-RW burning </value>
++				<value>CD-R burning </value>
++				<value>Audio CD playback </value>
++				<value>can read CD-ROMs </value>
++			</attribute>
++
++		</cd_drive>
++	</cd_dvd_drives>
+ 	<system_memory>
+-		<attribute name="total_size" code="ram">
+-			<description>Total size</description>
+-			<value>256.0 MB</value>
++		<attribute name="total_ram" code="ram">
++			<description>Total RAM</description>
++			<value>1024.0 MB</value>
+ 		</attribute>
+ 
+ 	</system_memory>
+ 	<users>
+ 		<active_user unixname="" >
+ 			<value>real name: root</value>
+-			<value>login date: </value>
++			<value>login date:</value>
+ 			<value>uid: 0</value>
+ 			<value>gid: 0</value>
+-			<value>groups: root bin daemon sys adm disk wheel floppy dialout tape video </value>
+-			<value>shell: /bin/bash
+-/bin/bash</value>
+-			<value>home: /root
+-/root</value>
+-			<value>locales: </value>
++			<value>groups: root bin daemon sys adm disk wheel floppy dialout tape video</value>
++			<value>shell: /bin/bash /bin/bash</value>
++			<value>home: /root /root</value>
++			<value>locales:</value>
+ 		</active_user>
+ 		<wtmp_statistics>
+ 			<value>wtmp begins Sat Jan 14 21:50:12 2006</value>
+@@ -459,22 +481,29 @@
+ 			<value>shell: /bin/bash</value>
+ 			<value>home: /home/mikael</value>
+ 			<value>first login date: 2006-01-19</value>
+-			<value>last login date: 2006-09-28</value>
++			<value>last login date: 2006-11-20</value>
+ 			<value>latest entry: :0</value>
+-			<value>login count: 429</value>
++			<value>login count: 700</value>
+ 		</last_login>
+ 		<all_users>
+ 			<user unixname="mikael" >
+ 				<value>uid: 1000</value>
+ 				<value>gid: 100</value>
+ 				<value>first login date: 2006-01-19</value>
+-				<value>last login date: 2006-09-28</value>
+-				<value>login count: 429</value>
++				<value>last login date: 2006-11-20</value>
++				<value>login count: 700</value>
+ 			</user>
++			<user unixname="pekka" >
++				<value>uid: 1002</value>
++				<value>gid: 1002</value>
++				<value>first login date: 2006-11-08</value>
++				<value>last login date: 2006-11-08</value>
++				<value>login count: 1</value>
++			</user>
+ 			<user unixname="" >
+-				<value>first login date: </value>
+-				<value>last login date: </value>
+-				<value>login count: </value>
++				<value>first login date:</value>
++				<value>last login date:</value>
++				<value>login count:</value>
+ 			</user>
+ 			<user unixname="vaula" >
+ 				<value>uid: 1001</value>
+@@ -487,15 +516,13 @@
+ 	</users>
+ 	<services>
+ 		<value>apache2</value>
++		<value>cupsd</value>
+ 		<value>hald</value>
+ 		<value>local</value>
+ 		<value>net.eth0</value>
+ 		<value>netmount</value>
+-		<value>nfs </value>
+ 		<value>ntp-client</value>
+-		<value>portmap</value>
+-		<value>splash</value>
+-		<value>sshd</value>
+-		<value>xdm </value>
++		<value>xdm</value>
++		<value>xinerama</value>
+ 	</services>
+ </osinfo>
+
+Deleted: trunk/osinfo/docs/LF_inventory.pdf
+===================================================================
+(Binary files differ)
+
+Added: trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 07:01:46 UTC (rev 666)
+@@ -0,0 +1,58 @@
++# Copyright 1999-2006 Gentoo Foundation
++# Distributed under the terms of the GNU General Public License v2
++# $Header: $
++
++inherit eutils
++
++DESCRIPTION="OSinfo lists system information available to the OS"
++HOMEPAGE="http://osinfo.berlios.de"
++SRC_URI="ftp://ftp.berlios.de/pub/${PN}/${P}.tar.bz2"
++
++S="${WORKDIR}/${PN}"
++
++LICENSE="BSD"
++SLOT="0"
++KEYWORDS="~x86 ~amd64"
++IUSE="html devices hdd tcp" #add later: dvb ddc
++
++DEPEND=""
++RDEPEND="html? (dev-libs/libxslt)
++		devices? (sys-apps/lshw
++		          sys-apps/pciutils
++		          sys-apps/usbutils)
++		hdd? (sys-apps/hdparm
++		      app-admin/hddtemp
++		      >=sys-apps/smartmontools-5.36)
++		ddc? (sys-apps/ddcxinfo-knoppix)
++		dvb? (media-tv/dvbtune
++              media-tv/linuxtv-dvb-apps
++              media-video/dvbsnoop)
++		app-shells/bash
++		>=sys-apps/grep-2.5.1
++		sys-devel/bc
++		tcp? ( || (net-analyzer/netcat net-analyzer/netcat6	net-analyzer/gnu-netcat))
++		|| (sys-apps/gawk sys-apps/mawk)"
++
++
++src_install() {
++	dobin osinfo
++	doman man/osinfo.1
++	dodoc docs/*
++}
++
++pkg_postinst() {
++	elog
++	elog "Osinfo is still beta; you can help be addressing bugs at"
++	elog "the osinfo mailinglist: osinfo at lists.berlios.de"
++	elog
++	elog "Osinfo has many nice features that are not obvious at first."
++	elog "You can create an HTML document of the computers in your"
++	elog "LAN, and run osinfo in daemon mode on a box with Apache server."
++	elog "Send the xml sheet to the daemon with the --tcpsend option."
++	elog "These features are still incomplete, not installed by the ebuild,"
++	elog "but you can help to improve them!"
++	elog
++	elog "You can freely add more modules to osinfo. Check the source"
++	elog "code inside the tarball. Thank you for interest."
++	elog 
++}
+
+Copied: trunk/osinfo/html/dtd/lanforce.dtd (from rev 663, trunk/osinfo/lanforce.dtd)
+
+Copied: trunk/osinfo/html/dtd/osinfo.dtd (from rev 663, trunk/osinfo/osinfo.dtd)
+
+Deleted: trunk/osinfo/html/xslt
+===================================================================
+--- trunk/osinfo/html/xslt	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/html/xslt	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1 +0,0 @@
+-link ../xslt/
+\ No newline at end of file
+
+Deleted: trunk/osinfo/lanforce.dtd
+===================================================================
+--- trunk/osinfo/lanforce.dtd	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/lanforce.dtd	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,31 +0,0 @@
+-<!ELEMENT entityset (entity+)>
+-<!ELEMENT entity (template, attribute*, note*)>
+-<!ATTLIST entity id         CDATA #IMPLIED
+-                 name       CDATA #REQUIRED
+-                 ip         CDATA #IMPLIED>
+-<!ELEMENT template EMPTY>
+-<!ATTLIST template id       CDATA #IMPLIED
+-                    name    CDATA #IMPLIED
+-                    code    CDATA #REQUIRED>
+-<!ELEMENT attribute (header?,(value|reference|embeddedreference|externalreference)*,footer?)>
+-<!ATTLIST attribute id      CDATA #IMPLIED
+-                     name   CDATA #IMPLIED
+-                     code   CDATA #REQUIRED>
+-<!ELEMENT header (#PCDATA)>
+-<!ELEMENT value (#PCDATA)>
+-<!ELEMENT reference EMPTY>
+-<!ATTLIST reference id      CDATA #IMPLIED
+-                     type   CDATA #IMPLIED>
+-<!ELEMENT embeddedreference EMPTY>
+-<!ATTLIST embeddedreference id         CDATA #IMPLIED
+-                            type       CDATA #IMPLIED>
+-<!ELEMENT externalreference EMPTY>
+-<!ATTLIST externalreference name       CDATA #IMPLIED
+-                            location   CDATA #IMPLIED>
+-<!ELEMENT footer (#PCDATA)>
+-<!ELEMENT note (name,text)>
+-<!ATTLIST note   creator               CDATA #REQUIRED
+-                 timestamp             CDATA #IMPLIED
+-                 follow-references     CDATA #REQUIRED>
+-<!ELEMENT name (#PCDATA)>
+-<!ELEMENT text (#PCDATA)>
+
+Deleted: trunk/osinfo/osinfo.dtd
+===================================================================
+--- trunk/osinfo/osinfo.dtd	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/osinfo.dtd	2006-12-22 07:01:46 UTC (rev 666)
+@@ -1,112 +0,0 @@
+-<!ELEMENT osinfo (script|
+-                  computer|
+-                  scanning|
+-                  system|
+-                  distribution|
+-                  kernel|
+-                  processor|
+-                  system_ram_memory|
+-                  system_memory|
+-                  hard_drive_configuration|
+-                  network_information|
+-                  wlan_information|
+-                  dmi_information|
+-                  applications|
+-                  terminal_info|
+-                  devices|
+-                  enhancements|
+-                  cd_dvd_drives|
+-                  users|
+-                  services|
+-                  battery|
+-                  oem_information)*>
+-
+-
+-<!ELEMENT script EMPTY>
+-<!ATTLIST script version CDATA #REQUIRED>
+-
+-<!ELEMENT computer EMPTY>
+-<!ATTLIST computer profile  CDATA #REQUIRED
+-                   hostname CDATA #REQUIRED
+-                   domain   CDATA #REQUIRED
+-                   os       CDATA #REQUIRED
+-                   cpu      CDATA #REQUIRED>
+-
+-<!ELEMENT scanning EMPTY>
+-<!ATTLIST scanning date CDATA #REQUIRED>
+-
+-
+-
+-
+-<!ELEMENT attribute (description|value)*>
+-<!ATTLIST attribute name CDATA #REQUIRED
+-                    code CDATA #IMPLIED>
+-<!ELEMENT description (#PCDATA)>
+-<!ELEMENT value (#PCDATA)>
+-
+-
+-<!ELEMENT system (attribute+)>
+-<!ELEMENT distribution (attribute+)>
+-<!ELEMENT kernel (attribute+)>
+-<!ELEMENT processor (attribute+)>
+-<!ELEMENT system_ram_memory (ram+)>
+-<!ELEMENT system_memory (ram+)>
+-<!ELEMENT hard_drive_configuration (drive+)>
+-<!ELEMENT network_information (computer*)>
+-<!ELEMENT wlan_information (attribute*)> <!-- UNKNOWN -->
+-<!ELEMENT dmi_information (bios|
+-                           system_info|
+-                           motherboard|
+-                           chassis)*>
+-<!ELEMENT applications (attribute+)>
+-<!ELEMENT terminal_info (attribute+)>
+-<!ELEMENT devices (motherboard,controllers)>
+-<!ELEMENT enhancements (attribute+)>
+-<!ELEMENT cd_dvd_drives (cd_drive)*>
+-<!ELEMENT users (active_user,wtmp_statistics)>
+-<!ELEMENT services (value+)>
+-<!ELEMENT battery (attribute*)> <!-- UNKNOWN -->
+-<!ELEMENT oem_information (attribute+)>
+-
+-
+-
+-<!-- system_ram_memory, system_memory -->
+-<!ELEMENT ram (attribute+)>
+-
+-
+-<!-- hard_drive_configuration -->
+-<!ELEMENT drive (attribute|partitions)*>
+-<!ELEMENT partitions (value+)>
+-
+-
+-<!-- network_information -->
+-<!-- <!ELEMENT computer (attribute|iface)*>
+-<!ATTLIST computer name CDATA #REQUIRED> -->
+-<!ELEMENT iface (attribute+)>
+-<!ATTLIST iface name CDATA #REQUIRED>
+-
+-
+-<!-- dmi_information, devices -->
+-<!ELEMENT motherboard (attribute+)>
+-
+-
+-<!-- dmi_information -->
+-<!ELEMENT bios (attribute+)>
+-<!ELEMENT system_info (attribute+)>
+-<!ELEMENT chassis (attribute*)>
+-
+-
+-<!-- devices -->
+-<!ELEMENT controllers (attribute+)>
+-
+-
+-<!-- cd_dvd_drives -->
+-<!ELEMENT cd_drive (attribute+)>
+-<!ATTLIST cd_drive name CDATA #REQUIRED>
+-
+-
+-<!-- users -->
+-<!ELEMENT active_user (value+)>
+-<!ATTLIST active_user unixname CDATA #REQUIRED>
+-<!ELEMENT wtmp_statistics (value+)>
+-
+
+Modified: trunk/osinfo/scripts/upload_tarbz2.sh
+===================================================================
+--- trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 06:39:47 UTC (rev 665)
++++ trunk/osinfo/scripts/upload_tarbz2.sh	2006-12-22 07:01:46 UTC (rev 666)
+@@ -2,4 +2,5 @@
+ # 1 : Username
+ user="$1"
+ [ ! "$user" ] && echo "Please give username" && exit 1
+-/usr/bin/rsync --progress -t -e "ssh -p 22" ../dist/osinfo*tar.bz2 "$user"@shell.berlios.de:/home/groups/ftp/pub/osinfo/
++/usr/bin/rsync --progress -t -e "ssh -p 22" dist/osinfo*tar.bz2 "$user"@shell.berlios.de:/home/groups/ftp/pub/osinfo/
++[ $? -eq 1 ] && echo "Run this script from osinfo root" && exit 1
+
+
+
+From lamikae at mail.berlios.de  Fri Dec 22 08:02:11 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 22 Dec 2006 08:02:11 +0100
+Subject: [Osinfo-commit] r667 - in trunk/osinfo: . html
+Message-ID: <200612220702.kBM72BH6019227@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-22 08:02:11 +0100 (Fri, 22 Dec 2006)
+New Revision: 667
+
+Added:
+   trunk/osinfo/html/xslt/
+Removed:
+   trunk/osinfo/xslt/
+Log:
+moved xslt to html/
+
+Copied: trunk/osinfo/html/xslt (from rev 663, trunk/osinfo/xslt)
+
+
+
+From lamikae at mail.berlios.de  Fri Dec 22 14:36:51 2006
+From: lamikae at mail.berlios.de (lamikae at BerliOS)
+Date: Fri, 22 Dec 2006 14:36:51 +0100
+Subject: [Osinfo-commit] r668 - in trunk/osinfo: . ebuild
+Message-ID: <200612221336.kBMDaprW006806@sheep.berlios.de>
+
+Author: lamikae
+Date: 2006-12-22 14:36:51 +0100 (Fri, 22 Dec 2006)
+New Revision: 668
+
+Modified:
+   trunk/osinfo/Makefile
+   trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+Log:
+ebuild, comments
+
+Modified: trunk/osinfo/Makefile
+===================================================================
+--- trunk/osinfo/Makefile	2006-12-22 07:02:11 UTC (rev 667)
++++ trunk/osinfo/Makefile	2006-12-22 13:36:51 UTC (rev 668)
+@@ -67,7 +67,11 @@
+ # And then include the output in the paramerter of tar.
+ # Bad that it doesn't work in a variable.
+ dist-tarbz2: dist
++	######################
++	# make the tarball
++	######################
+ 	cd dist && tar -jcf "$$(eval $$(grep appname -A 10 -m 1 ../lib/version | pcregrep 'appname|_version') && echo $${appname}-$${major_version}.$${minor_version}.$${micro_version}_$${patch_version}).tar.bz2" $(appname)
++	# done!
+ 
+ distclean: clean
+ 	-rm -rf dist
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 07:02:11 UTC (rev 667)
++++ trunk/osinfo/ebuild/osinfo-0.3.0_rc1.ebuild	2006-12-22 13:36:51 UTC (rev 668)
+@@ -13,27 +13,22 @@
+ LICENSE="BSD"
+ SLOT="0"
+ KEYWORDS="~x86 ~amd64"
+-IUSE="html devices hdd tcp" #add later: dvb ddc
++IUSE="html devices hdd tcp"
+ 
+ DEPEND=""
+-RDEPEND="html? (dev-libs/libxslt)
+-		devices? (sys-apps/lshw
++	# grep 2.5.0 will bug with osinfo
++	#>=sys-apps/grep-2.5.1
++RDEPEND="sys-devel/bc
++		|| ( sys-apps/gawk sys-apps/mawk )
++		html? ( dev-libs/libxslt )
++		devices? ( sys-apps/lshw
+ 		          sys-apps/pciutils
+-		          sys-apps/usbutils)
+-		hdd? (sys-apps/hdparm
++		          sys-apps/usbutils )
++		hdd? ( sys-apps/hdparm
+ 		      app-admin/hddtemp
+-		      >=sys-apps/smartmontools-5.36)
+-		ddc? (sys-apps/ddcxinfo-knoppix)
+-		dvb? (media-tv/dvbtune
+-              media-tv/linuxtv-dvb-apps
+-              media-video/dvbsnoop)
+-		app-shells/bash
+-		>=sys-apps/grep-2.5.1
+-		sys-devel/bc
+-		tcp? ( || (net-analyzer/netcat net-analyzer/netcat6	net-analyzer/gnu-netcat))
+-		|| (sys-apps/gawk sys-apps/mawk)"
++		      >=sys-apps/smartmontools-5.36 )
++		tcp? ( || ( net-analyzer/netcat net-analyzer/netcat6 net-analyzer/gnu-netcat ))"
+ 
+-
+ src_install() {
+ 	dobin osinfo
+ 	doman man/osinfo.1
+
+
+

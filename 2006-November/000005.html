@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r617 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-November/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r617%20-%20trunk/osinfo/modules&In-Reply-To=%3C200611282158.kASLwMNB006582%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000004.html">
+   <LINK REL="Next"  HREF="000006.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r617 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r617%20-%20trunk/osinfo/modules&In-Reply-To=%3C200611282158.kASLwMNB006582%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r617 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Tue Nov 28 22:58:22 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000004.html">[Osinfo-commit] r616 - in trunk/osinfo: docs lib modules
+</A></li>
+        <LI>Next message: <A HREF="000006.html">[Osinfo-commit] r618 - in trunk/osinfo: modules profiles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-11-28 22:58:21 +0100 (Tue, 28 Nov 2006)
+New Revision: 617
+
+Added:
+   trunk/osinfo/modules/ram
+Log:
+separeted memory to ram; some additional features
+
+Copied: trunk/osinfo/modules/ram (from rev 616, trunk/osinfo/modules/memory)
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-28 16:27:59 UTC (rev 616)
++++ trunk/osinfo/modules/ram	2006-11-28 21:58:21 UTC (rev 617)
+@@ -0,0 +1,116 @@
++#######################
++# MEMORY
++#
++# This module tells complete information of the RAM memory installed on the system.
++#
++# lshw is used for RAM size evaluation. the size is reported by BIOS
++# and is the most accurate way to detect the physical system memory.
++# 'free' and '/proc/meminfo' would also report free RAM, but slightly 
++# incorrectly, since they only detect total ram after kernel allocation.
++#
++Module_memory() {
++	local moduleName=&quot;System memory&quot;
++	module_header &quot;${moduleName}&quot;
++
++	print_physical_ram_info
++
++	flush_values
++}
++
++	function print_physical_ram_info() {
++		if CheckReq lshw; then
++
++			# reserve temp file
++			ramnode=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
++			TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$ramnode&quot; &quot;$banknode&quot; )
++
++			extr_lshw_node memory &gt; $ramnode
++
++			# print
++			add_header        'RAM'
++			add_attribute     'Physical RAM'	'ram'
++			add_values        &quot;$(get_physical_ram_size ${ramnode})&quot;
++			add_value_footer  &quot;MB&quot;
++
++			# xml cannot flush here, as add_footer is defined below
++			[ $usexml -ne 1 ] &amp;&amp; flush_values 
++
++			# get specific membank info
++			#if CheckReq_root more specific RAM information; then
++			if CheckReq_root silent; then
++
++				# reserve another temp file
++				banknode=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
++				TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$banknode&quot; )
++
++				# get the number of memory banks installed
++				local membank_nr=&quot;$(grep bank ${ramnode} | wc -l)&quot;
++
++				# correct the offset
++				((membank_nr--))
++
++				# extract information of each bank
++				for bank in $(seq 0 1 $membank_nr); do
++
++					# extract the corresponding bank node
++					extr_lshw_node &quot;bank:$bank&quot;	&gt; ${banknode}
++
++					# debug
++					[ $isdebug -ge 1 ] &amp;&amp; cat $banknode
++
++					add_header        &quot;Bank $bank&quot;
++
++					add_attribute     &quot;RAM bank$bank description&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep description $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank size&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep size $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank vendor&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep vendor $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank serial&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep serial $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank slot&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep slot $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank width&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep width $banknode))&quot;
++
++					add_attribute     &quot;RAM bank$bank speed&quot;
++					add_values        &quot;$(extr_xml_value \
++					                  $(grep speed $banknode))&quot;
++
++					add_footer        &quot;Bank&quot;
++
++					[ $usexml -ne 1 ] &amp;&amp; flush_values 
++					# xml cannot flush here, as add_footer is defined below
++
++				done
++
++			fi
++			
++			[ $usexml -eq 1 ] &amp;&amp; add_footer # RAM
++			flush_values
++		fi
++	}
++
++	function get_physical_ram_size() {
++	# Parameters:
++	#  1  lshw xml memory node file 
++	#     (output from `extr_lshw_node memory`)
++
++		ramnode=&quot;${1}&quot;
++		local ram_size
++
++		ram_size=&quot;$(grep size ${ramnode} | head -n 1 | grep -Eo '[0-9]+')&quot;
++		bc -l &lt;&lt;&lt; scale=1\;$ram_size/1024/1024
++	}
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000004.html">[Osinfo-commit] r616 - in trunk/osinfo: docs lib modules
+</A></li>
+	<LI>Next message: <A HREF="000006.html">[Osinfo-commit] r618 - in trunk/osinfo: modules profiles
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#5">[ date ]</a>
+              <a href="thread.html#5">[ thread ]</a>
+              <a href="subject.html#5">[ subject ]</a>
+              <a href="author.html#5">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

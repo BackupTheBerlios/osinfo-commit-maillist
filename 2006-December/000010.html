@@ -1,0 +1,515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r622 - in trunk/osinfo: debug include lib modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r622%20-%20in%20trunk/osinfo%3A%20debug%20include%20lib%20modules&In-Reply-To=%3C200612031822.kB3IMwed029652%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000011.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r622 - in trunk/osinfo: debug include lib modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r622%20-%20in%20trunk/osinfo%3A%20debug%20include%20lib%20modules&In-Reply-To=%3C200612031822.kB3IMwed029652%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r622 - in trunk/osinfo: debug include lib modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Sun Dec  3 19:22:58 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000011.html">[Osinfo-commit] r623 - in trunk/osinfo: debug modules	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#10">[ date ]</a>
+              <a href="thread.html#10">[ thread ]</a>
+              <a href="subject.html#10">[ subject ]</a>
+              <a href="author.html#10">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-03 19:22:57 +0100 (Sun, 03 Dec 2006)
+New Revision: 622
+
+Added:
+   trunk/osinfo/include/overview.html
+   trunk/osinfo/include/sidebar.html
+Removed:
+   trunk/osinfo/debug/overview.html
+   trunk/osinfo/debug/sidebar.html
+Modified:
+   trunk/osinfo/lib/helper.functions
+   trunk/osinfo/modules/hdd
+Log:
+some fixes to HDD
+
+Deleted: trunk/osinfo/debug/overview.html
+===================================================================
+--- trunk/osinfo/debug/overview.html	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/debug/overview.html	2006-12-03 18:22:57 UTC (rev 622)
+@@ -1,208 +0,0 @@
+-&lt;?xml version=&quot;1.0&quot;?&gt;
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;
+-  &lt;head&gt;
+-    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+-    &lt;title&gt;osinfo&lt;/title&gt;
+-    &lt;style type=&quot;text/css&quot;&gt;
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					&lt;/style&gt;
+-    &lt;script type=&quot;text/javascript&quot;&gt;
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == &quot;none&quot; ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//--&gt;
+-				&lt;/script&gt;
+-  &lt;/head&gt;
+-  &lt;body&gt;
+-	
+-	&lt;h1&gt;client21&lt;/h1&gt;
+-	
+-	
+-	
+-	&lt;h2&gt;Core system&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Hostname&lt;/td&gt;&lt;td&gt;client21&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system&lt;/td&gt;&lt;td&gt;Gentoo Linux 2006.0&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system kernel&lt;/td&gt;&lt;td&gt;Linux 2.6.17-gentoo-r4y&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;System uptime&lt;/td&gt;&lt;td&gt;22 days&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;CPU temperature&lt;/td&gt;&lt;td&gt;44&#176;C&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;M/B temperature&lt;/td&gt;&lt;td&gt;35&#176;C  &lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	&lt;h2&gt;Distribution&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Root dir&lt;/td&gt;&lt;td&gt;/&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Distro ID&lt;/td&gt;&lt;td&gt;Gentoo&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	&lt;h2&gt;CPU&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Vendor&lt;/td&gt;&lt;td&gt;AuthenticAMD&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Model&lt;/td&gt;&lt;td&gt;AMD Athlon(TM) XP 2000+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Frequency&lt;/td&gt;&lt;td&gt;1663.002 MHz&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Architecture&lt;/td&gt;&lt;td&gt;i686&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;CPU temperature&lt;/td&gt;&lt;td&gt;44&#176;C&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Voltage&lt;/td&gt;&lt;td&gt;+1.42 V&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Cache&lt;/td&gt;&lt;td&gt;256 KB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-&lt;/body&gt;
+-&lt;/html&gt;
+-&lt;?xml version=&quot;1.0&quot;?&gt;
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;
+-  &lt;head&gt;
+-    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+-    &lt;title&gt;osinfo&lt;/title&gt;
+-    &lt;style type=&quot;text/css&quot;&gt;
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					&lt;/style&gt;
+-    &lt;script type=&quot;text/javascript&quot;&gt;
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == &quot;none&quot; ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//--&gt;
+-				&lt;/script&gt;
+-  &lt;/head&gt;
+-  &lt;body&gt;
+-	
+-	&lt;h1&gt;client26&lt;/h1&gt;
+-	
+-	
+-	
+-	&lt;h2&gt;Core system&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Hostname&lt;/td&gt;&lt;td&gt;client26&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system&lt;/td&gt;&lt;td&gt;Ubuntu Linux 6.06&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system kernel&lt;/td&gt;&lt;td&gt;Linux 2.6.15-26-686&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;System uptime&lt;/td&gt;&lt;td&gt;4:43&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	&lt;h2&gt;Distribution&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Root dir&lt;/td&gt;&lt;td&gt;/&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Distro ID&lt;/td&gt;&lt;td&gt;Ubuntu&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Release&lt;/td&gt;&lt;td&gt;6.06&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Codename&lt;/td&gt;&lt;td&gt;dapper&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Description&lt;/td&gt;&lt;td&gt;Ubuntu 6.06.1 LTS&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	&lt;h2&gt;CPU&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Vendor&lt;/td&gt;&lt;td&gt;AuthenticAMD&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Model&lt;/td&gt;&lt;td&gt;AMD Athlon(TM) XP 2000+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Frequency&lt;/td&gt;&lt;td&gt;1662.750 MHz&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Architecture&lt;/td&gt;&lt;td&gt;i686&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Cache&lt;/td&gt;&lt;td&gt;256 KB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-&lt;/body&gt;
+-&lt;/html&gt;
+-&lt;?xml version=&quot;1.0&quot;?&gt;
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;
+-  &lt;head&gt;
+-    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+-    &lt;title&gt;osinfo&lt;/title&gt;
+-    &lt;style type=&quot;text/css&quot;&gt;
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					&lt;/style&gt;
+-    &lt;script type=&quot;text/javascript&quot;&gt;
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == &quot;none&quot; ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//--&gt;
+-				&lt;/script&gt;
+-  &lt;/head&gt;
+-  &lt;body&gt;
+-	
+-	&lt;h1&gt;server03.openlab&lt;/h1&gt;
+-	
+-	
+-	
+-	&lt;h2&gt;Core system&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Hostname&lt;/td&gt;&lt;td&gt;server03.openlab&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system&lt;/td&gt;&lt;td&gt;Ubuntu Linux 6.06&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system kernel&lt;/td&gt;&lt;td&gt;Linux 2.6.15-26-386&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;System uptime&lt;/td&gt;&lt;td&gt;1 day&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	&lt;h2&gt;Distribution&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Root dir&lt;/td&gt;&lt;td&gt;/&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Distro ID&lt;/td&gt;&lt;td&gt;Ubuntu&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Release&lt;/td&gt;&lt;td&gt;6.06&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Codename&lt;/td&gt;&lt;td&gt;dapper&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Description&lt;/td&gt;&lt;td&gt;Ubuntu 6.06.1 LTS&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	&lt;h2&gt;CPU&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Vendor&lt;/td&gt;&lt;td&gt;AuthenticAMD&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Model&lt;/td&gt;&lt;td&gt;AMD Athlon(TM) XP 2000+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Frequency&lt;/td&gt;&lt;td&gt;1261.472 MHz&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Architecture&lt;/td&gt;&lt;td&gt;i686&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Cache&lt;/td&gt;&lt;td&gt;256 KB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-&lt;/body&gt;
+-&lt;/html&gt;
+-&lt;?xml version=&quot;1.0&quot;?&gt;
+-&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd</A>&quot;&gt;
+-&lt;html xmlns=&quot;<A HREF="http://www.w3.org/1999/xhtml">http://www.w3.org/1999/xhtml</A>&quot; lang=&quot;en&quot; xml:lang=&quot;en&quot;&gt;
+-  &lt;head&gt;
+-    &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+-    &lt;title&gt;osinfo&lt;/title&gt;
+-    &lt;style type=&quot;text/css&quot;&gt;
+-                    h1          { padding: 10px; padding-width: 100%; background-color: silver }
+-                    h2          { font-size: 20px }
+-                    td, th      { width: 20%; border: 0px solid silver; padding: 0px }
+-                    td:first-child, th:first-child  { width: 20% } 
+-                    table       { width: 70% }
+-
+-					&lt;/style&gt;
+-    &lt;script type=&quot;text/javascript&quot;&gt;
+-				
+-	 			function switchMenu(obj) {
+-					var el = document.getElementById(obj);
+-					if ( el.style.display == &quot;none&quot; ) {
+-						el.style.display = '';
+-					}
+-					else {
+-						el.style.display = 'none';
+-					}
+-				}
+-				//--&gt;
+-				&lt;/script&gt;
+-  &lt;/head&gt;
+-  &lt;body&gt;
+-	
+-	&lt;h1&gt;server05&lt;/h1&gt;
+-	
+-	
+-	
+-	&lt;h2&gt;Core system&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Hostname&lt;/td&gt;&lt;td&gt;server05&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system&lt;/td&gt;&lt;td&gt;Ubuntu Linux 5.10&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Operating system kernel&lt;/td&gt;&lt;td&gt;Linux 2.6.12-9-386&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;System uptime&lt;/td&gt;&lt;td&gt;1 day&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;CPU temperature&lt;/td&gt;&lt;td&gt;46&#176;C&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;M/B temperature&lt;/td&gt;&lt;td&gt;32&#176;C  &lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	&lt;h2&gt;Distribution&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Root dir&lt;/td&gt;&lt;td&gt;/&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Distro ID&lt;/td&gt;&lt;td&gt;Ubuntu&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Release&lt;/td&gt;&lt;td&gt;5.10&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Codename&lt;/td&gt;&lt;td&gt;breezy&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Description&lt;/td&gt;&lt;td&gt;Ubuntu (The Breezy Badger Release)&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	&lt;h2&gt;CPU&lt;/h2&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Vendor&lt;/td&gt;&lt;td&gt;AuthenticAMD&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Model&lt;/td&gt;&lt;td&gt;AMD Athlon(TM) XP 2000+&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Frequency&lt;/td&gt;&lt;td&gt;1667.253 MHz&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Architecture&lt;/td&gt;&lt;td&gt;i686&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;CPU temperature&lt;/td&gt;&lt;td&gt;46&#176;C&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Voltage&lt;/td&gt;&lt;td&gt;+1.42 V&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;table&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Cache&lt;/td&gt;&lt;td&gt;256 KB&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+-&lt;/body&gt;
+-&lt;/html&gt;
+
+Deleted: trunk/osinfo/debug/sidebar.html
+===================================================================
+--- trunk/osinfo/debug/sidebar.html	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/debug/sidebar.html	2006-12-03 18:22:57 UTC (rev 622)
+@@ -1,95 +0,0 @@
+-&lt;html&gt;
+-&lt;head&gt;
+-&lt;/head&gt;
+-	&lt;body bgcolor=&quot;#FFFFFF&quot; link=&quot;#000000&quot; vlink=&quot;#000000&quot; text=&quot;#000000&quot; onResize=&quot;if (navigator.appVersion=='Netscape') history.go(0);&quot;&gt;
+-
+-		&lt;div style=&quot;position:absolute;top:0px;left:0px;width:100%:height:100%;&quot;&gt;
+-		
+-			&lt;! -- overview --&gt;
+-			&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;+3&quot;&gt;
+-				&lt;p align=&quot;center&quot;&gt;
+-					osinfo
+-				&lt;/p&gt;
+-			&lt;/font&gt;
+-		
+-			&lt;hr&gt;
+-
+-			&lt;!-- computers --&gt;
+-			&lt;div style=&quot;position:relative;top:0px;left:10px;right:10px;width:100%:height:95%;&quot;&gt;
+-
+-				&lt;h2&gt;desktops&lt;/h2&gt;
+-				&lt;table width=&quot;97%&quot; border=1 cellpadding=4 cellspacing=5&gt;
+-					&lt;tr valign=&quot;top&quot;&gt;
+-					&lt;td bgcolor=&quot;#FFFFFF&quot;&gt;
+-						&lt;p align=left&gt;
+-						&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;+1&quot;&gt;
+-							&lt;a href=&quot;hosts/client21.html&quot; target=&quot;main&quot;&gt;client21&lt;/a&gt;
+-						&lt;/font&gt;
+-						&lt;/p&gt;
+-
+-						&lt;p align=left&gt;
+-						&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-2&quot;&gt;
+-								Gentoo Linux 2006.0&lt;br&gt;
+-								Intel(R) Pentium(R) 4 CPU 2.80GHz
+-						&lt;/font&gt;
+-						&lt;/p&gt;
+-					&lt;/td&gt;
+-					&lt;/tr&gt;
+-
+-					&lt;tr valign=&quot;top&quot;&gt;
+-					&lt;td bgcolor=&quot;#FFFFFF&quot;&gt;
+-						&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;+1&quot;&gt;
+-							&lt;p align=left&gt;&lt;a href=&quot;planck.html&quot; target=&quot;main&quot;&gt;planck&lt;/a&gt;
+-						&lt;/font&gt;
+-
+-						&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-2&quot;&gt;
+-							&lt;p align=&quot;left&quot;&gt;
+-								Gentoo Linux 2006.1&lt;br&gt;
+-								AMD Athlon(TM) XP 2000+
+-							&lt;/p&gt;
+-						&lt;/font&gt;
+-					&lt;/td&gt;
+-					&lt;/tr&gt;
+-				&lt;/table&gt;
+-
+-
+-				&lt;h2&gt;servers&lt;/h2&gt;
+-				&lt;table width=80 border=0 cellpadding=0 cellspacing=5&gt;
+-				
+-					&lt;tr valign=&quot;top&quot;&gt;
+-					&lt;td bgcolor=&quot;#FFFFFF&quot;&gt;
+-					&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-1&quot;&gt;
+-						&lt;p align=left&gt;&lt;a href=&quot;server05.html&quot; target=&quot;main&quot;&gt;server05&lt;/a&gt;
+-					&lt;/td&gt;
+-					&lt;/tr&gt;
+-
+-					&lt;tr valign=&quot;top&quot;&gt;
+-					&lt;td bgcolor=&quot;#FFFFFF&quot;&gt;
+-						&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-1&quot;&gt;
+-						&lt;p align=left&gt;&lt;a href=&quot;server03.html&quot; target=&quot;main&quot;&gt;server03&lt;/a&gt;
+-					&lt;/td&gt;
+-					&lt;/tr&gt;
+-
+-				&lt;/table&gt;
+-			&lt;/div&gt;
+-
+-			&lt;hr&gt;
+-
+-			&lt;!-- index link and date --&gt;
+-			&lt;div style=&quot;position:relative;bottom:5%;left:10px;right:10px;width:100%;height:10%;&quot;&gt;
+-				&lt;p align=&quot;center&quot;&gt;
+-					&lt;a href=&quot;overview.html&quot; target=&quot;main&quot;&gt;index view&lt;/a&gt;
+-				&lt;/p&gt;
+-
+-				&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-2&quot;&gt;
+-					last update&lt;br&gt;
+-				&lt;/font&gt;
+-
+-				&lt;font color=&quot;#000000&quot; face=&quot;Times New Roman&quot; size=&quot;-1&quot;&gt;
+-					30/sep/2006&lt;br&gt;
+-				&lt;/font&gt;
+-			&lt;/div&gt;
+-
+-		&lt;/div&gt;
+-	&lt;/body&gt;
+-&lt;/html&gt;
+
+Copied: trunk/osinfo/include/overview.html (from rev 621, trunk/osinfo/debug/overview.html)
+
+Copied: trunk/osinfo/include/sidebar.html (from rev 621, trunk/osinfo/debug/sidebar.html)
+
+Modified: trunk/osinfo/lib/helper.functions
+===================================================================
+--- trunk/osinfo/lib/helper.functions	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/lib/helper.functions	2006-12-03 18:22:57 UTC (rev 622)
+@@ -274,6 +274,10 @@
+ 	}
+ fi
+ 
++function hddtemp() { 
++	hddtemp 2&gt;&quot;${error_log}&quot;
++	}
++
+ # make a guess of the operating system
+ SYSTEM=&quot;$(uname -s  | tr 'A-Z' 'a-z' )&quot;
+ 
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2006-11-30 11:52:22 UTC (rev 621)
++++ trunk/osinfo/modules/hdd	2006-12-03 18:22:57 UTC (rev 622)
+@@ -159,10 +159,34 @@
+ 				# HDD DEVICE NODE
+ 				add_header  &quot;\n${drvdev}&quot;
+ 
+-				# HDD TYPE
++				# HDD TYPE and model name
+ 				add_attribute &quot;$hdd_type&quot;
+ 				add_values  &quot;$(echo $hdd_vendor $hdd_model | sed 's/^ *//')&quot;
+ 
++				# bus configuration; verbose
++				if [ $isverbose -ge 1 ]; then
++					add_attribute 'Bus configuration'
++					# case by the last letter in $drvdev
++					case ${drvdev: -1:1} in
++						'a')
++							add_values 'primary master'
++							;;
++						'b')
++							add_values 'primary slave'
++							;;
++						'c')
++							add_values 'secondary master'
++							;;
++						'd')
++							add_values 'secondary slave'
++							;;
++						*)
++							add_values 'unknown'
++							;;
++					esac
++				fi
++
++
+ 				# HDD REPORTED CAPACITY
+ 				add_attribute 'Capacity (reported)'
+ 				add_values  &quot;$hdd_capacity_label&quot;
+@@ -191,12 +215,13 @@
+ 						add_values  &quot;${tcRED}n/a${tSTD}&quot;
+ 					fi
+ 
+-				# ACTIVITY STATE
+-				add_attribute 'State'
+-				add_values &quot;$hdd_state&quot;
++				# ACTIVITY STATE; verbose
++				if [ $isverbose -ge 1 ]; then
++					add_attribute 'State'
++					add_values &quot;$hdd_state&quot;
++				fi
+ 
+-
+-				# more verbose
++				# ATA standard; more verbose
+ 				if [ $isverbose -ge 2 ]; then
+ 					add_attribute   'ATA Standard'
+ 					add_values      &quot;$hdd_ata_standard&quot;
+@@ -209,8 +234,8 @@
+ 				fi
+ 
+ 
+-				# verbose
+-				if [ $isverbose -ge 1 ]; then
++				# SMART capability; more verbose
++				if [ $isverbose -ge 2 ]; then
+ 					# SMART capability
+ 					add_attribute   'S.M.A.R.T.' 
+ 					add_values      &quot;$hdd_smart&quot;
+@@ -251,7 +276,6 @@
+ 				add_nc_header	&quot; Partition%col%mountpoint%col%blocks%col%free%col%filesystem\n&quot;
+ 				add_nc_header	&quot; ---------%col%----------%col%------%col%----%col%----------&quot;
+ 
+-
+ 				for hdd_pt in $(seq 1 1 $partitions_on_drive); do
+ 					# print the device node
+ 					add_attribute &quot;  ${hdd_pt_node[$hdd_pt]}&quot;
+@@ -271,7 +295,7 @@
+ 									   ${hdd_pt_free[$hdd_pt]})&quot;
+ 						#add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
+ 						else
+-							add_values ' '
++							add_values '-'
+ 						fi
+ 
+ 						# fs type
+@@ -580,11 +604,11 @@
+ 					hdd_pt_used[$ID]=&quot;n/a&quot;
+ 				fi
+ 
+-				# set the rest to unknown values for proper columnation
+-				hdd_pt_capacity[$ID]=&quot;n/a&quot;
+-				hdd_pt_free[$ID]=&quot;n/a&quot;
+-				hdd_pt_used_pc[$ID]=&quot;n/a&quot;
+-				hdd_pt_fs_size[$ID]=&quot;n/a&quot;
++				# define the rest to empty values.
++				hdd_pt_capacity[$ID]=&quot;&quot;
++				hdd_pt_free[$ID]=&quot;&quot;
++				hdd_pt_used_pc[$ID]=&quot;&quot;
++				hdd_pt_fs_size[$ID]=&quot;&quot;
+ 
+ 			fi
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000011.html">[Osinfo-commit] r623 - in trunk/osinfo: debug modules	modules/experimental
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#10">[ date ]</a>
+              <a href="thread.html#10">[ thread ]</a>
+              <a href="subject.html#10">[ subject ]</a>
+              <a href="author.html#10">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

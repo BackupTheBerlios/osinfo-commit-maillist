@@ -1,0 +1,433 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r713 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r713%20-%20trunk/osinfo/modules&In-Reply-To=%3C200712270707.lBR77UDW005060%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000100.html">
+   <LINK REL="Next"  HREF="000102.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r713 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r713%20-%20trunk/osinfo/modules&In-Reply-To=%3C200712270707.lBR77UDW005060%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r713 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Thu Dec 27 08:07:30 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000100.html">[Osinfo-commit] r712 - trunk/osinfo/docs
+</A></li>
+        <LI>Next message: <A HREF="000102.html">[Osinfo-commit] r714 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-12-27 08:07:30 +0100 (Thu, 27 Dec 2007)
+New Revision: 713
+
+Modified:
+   trunk/osinfo/modules/applications
+Log:
+fixed indentation in Applications, added Mercurial + SVN
+
+Modified: trunk/osinfo/modules/applications
+===================================================================
+--- trunk/osinfo/modules/applications	2007-12-27 07:06:37 UTC (rev 712)
++++ trunk/osinfo/modules/applications	2007-12-27 07:07:30 UTC (rev 713)
+@@ -1,183 +1,190 @@
+ #!/bin/bash
+-#######################
++#####################################################################
+ # APPLICATIONS
+ #
+ # version information of standard *nix, dev, and dependency packages.
+-# probably should take an additional switch like --X, --server, etc.
++# TODO: take an additional switch like --X, --server, etc.
+ Module_applications() {
+-	local moduleName=&quot;Applications&quot;
+-	module_header &quot;${moduleName}&quot;
++  local moduleName=&quot;Applications&quot;
++  module_header &quot;${moduleName}&quot;
++  
++  local APPLICATIONS app versionstring category cat_print=0
++  local missing_ERRMSG=&quot;if you want to be able to use all modules of ${appname}&quot;
++  
++  
++  ## Define the applications to look for
++  if [ &quot;$SYSTEM&quot; == &quot;linux&quot; ] ; then
++    APPLICATIONS=&quot;Graphical_interface: X kde-config gnome-about xfce4-session \
++                  fluxbox fvwm2 enlightenment \
++            Interpreters: perl python java-config ruby php \
++            Shells: bash csh dsh fish pdsh rrs tcsh zsh \
++            Compilers: gcc gcj icc \
++            System: udevinfo \
++            Userspace_tools: make unsermake awk sed grep ls gzip lspci lshw dmidecode smartctl hdparm hg svn \
++            Servers: apache2 mysql ssh smbd cups-config \
++            Miscellaneous: x11vnc nagios firefox thunderbird mozilla cdrecord&quot;
+ 
+-	local APPLICATIONS app versionstring category cat_print=0
+-	local missing_ERRMSG=&quot;if you want to be able to use all modules of ${appname}&quot;
++    UNTESTED=&quot;Graphical_interface: \
++            Compilers: ccc cxx cfal erlang fpc gforth ghc gnat \
++                        gnat-gcc gnat-gpl gpc icc ifc open-cobol \
++            Tools: mono&quot;
+ 
++            # Shells: ash ccsh dash esh ksh mksh psh rssh sash shish
++            # don't take any version parameters
++            # Xvnc b0rks output
++  
++  elif [ &quot;$(grep -i bsd &lt;&lt;&lt; &quot;$SYSTEM&quot;)&quot; ]; then  
++    APPLICATIONS=&quot;Graphical_interface: X kde-config gnome-about \
++            Shells: bash csh dsh fish pdsh rrs tcsh zsh \
++            Compilers: gcc gcj icc \
++            Tools: awk grep gzip lshw dmidecode lspci lshw smartctl hdparm \
++            Languages: perl python java-config ruby php \
++            Servers: apache2 mysql ssh smbd cups-config \
++            Miscellaneous: x11vnc&quot;  
++  fi
++  
++  
++  ## Write the header for output
++  if [ $usexml -eq 1 ]; then
++    add_attribute &quot;Applications&quot; 'software'
++  fi
++  
++  
++  ## Process all categories
++  for app in $APPLICATIONS; do
++    # if the variable $app is a category definition,
++    if [ $(grep \: &lt;&lt;&lt; $app) ] &amp;&amp; [ $usexml -eq 0 ]; then
+ 
+-	## Define the applications to look for
+-	if [ &quot;$SYSTEM&quot; == &quot;linux&quot; ] ; then
++      category=&quot;$(sed 's/\:// ; s/_/\ /g' &lt;&lt;&lt; $app)&quot;
+ 
+-		APPLICATIONS=&quot;Graphical_interface: X kde-config gnome-about xfce4-session \
+-		              fluxbox fvwm2 enlightenment \
+-			Shells: bash csh dsh fish pdsh rrs tcsh zsh \
+-			Compilers: gcc gcj icc \
+-			System: udevinfo \
+-			Userspace_tools: make unsermake awk sed grep ls gzip lspci lshw dmidecode smartctl hdparm \
+-			Languages: perl python java-config ruby php \
+-			Servers: apache2 mysql ssh smbd cups-config \
+-			Miscellaneous: x11vnc Xvnc nagios firefox thunderbird mozilla cdrecord&quot;
++      # check verbosity level, do not print shells
++      # if verbosity is less than 1
++      if [ $isverbose -lt 1 ] &amp;&amp; [ &quot;$category&quot; == &quot;Shells&quot; ]; then
++        cat_print=0
++      else
++        # print the category to stdout
++        cat_print=1
++        add_header &quot;$category&quot;
++      fi
+ 
+-		UNTESTED=&quot;Graphical_interface: \
+-			Compilers: ccc cxx cfal erlang fpc gforth ghc gnat \
+-			           gnat-gcc gnat-gpl gpc icc ifc open-cobol \
+-			Tools: mono&quot;
++      flush_values
+ 
+-			# Shells: ash ccsh dash esh ksh mksh psh rssh sash shish
+-			# don't take any version parameters
++    # use the subfunction to get the version information
++    elif [ &quot;$(type -p $app)&quot; ] &amp;&amp; [ $cat_print -eq 1 ]; then # it is installed
++      versionstring=&quot;$(get_version $app)&quot;
++      # if the application doesn't tell what it is, echo it
++      if [ &quot;$(grep -i ${app} &lt;&lt;&lt; ${versionstring})&quot; ]; then
++        add_values	&quot;\t${versionstring}\n&quot;
++      else
++        add_values	&quot;\t${versionstring} ($app)\n&quot;
++      fi
++    fi
++  done
++  
++  flush_values
++}
+ 
++###########################################
++# helper functions for applications module
++get_version() {
++  local app=&quot;${1}&quot;
++  case &quot;$app&quot; in
++    'perl')
++      echo  &quot;Perl&quot; $($app --version 2&gt;&amp;1 | grep 'perl, v' | \
++                                  grep -Eo 'v[ A-Za-z0-9.-]*')
++      ;;
++    'python')
++      python -V 2&gt;&amp;1 | head -n 1
++      ;;
++    'X')
++      X -version 2&gt;&amp;1 | grep Revision
++      ;;
++    'kde-config')
++      kde-config -version 2&gt;&amp;1 | grep KDE
++      ;;
++    'gnome-about')
++      gnome-about --version 2&gt;&amp;1 | sed 's/gnome-about//'
++      ;;
++    'xfce4-session')
++      xfce4-session --version | head -n 1 | sed 's/xfce4-session/Xfce4/'
++      ;;
++    'fluxbox')
++      fluxbox -version 2&gt; /dev/null | head -n 1
++      ;;
++    'apache2'|'apache')
++      $app -V | head -n 1 | awk -F': ' {'print $2'}
++      ;;
++    'cups-config')
++      echo  &quot;Cups $($app --version 2&gt;&amp;1 )&quot;
++      ;;
++    'smbd')
++      echo  &quot;Samba $($app -V 2&gt;&amp;1 )&quot;
++      ;;
++    'udevinfo')
++      $app -V 2&gt;&amp;1
++      ;;
++    'awk')
++      # awk is a bit tricky.. it can go into a captive cmd interpreter mode
++      if [ ! &quot;$(awk -V 2&gt; /dev/null)&quot; ]; then
++        awk -W version 2&gt;&amp;1 | head -n 1
++      else
++        awk -V
++      fi
++      ;;
++    'dmidecode')
++      echo  &quot;dmidecode $(dmidecode -V 2&gt; /dev/null )&quot;
++      ;;
++    'java-config')
++      echo &quot;Java $(java-config -f)&quot;
++      ;;
++    'ssh')
++      ssh -V 2&gt;&amp;1 /dev/null
++      ;;
++    'hg')
++      hg version 2&gt; /dev/null | head -n 1
++      ;;
++    'svn')
++      svn --version 2&gt; /dev/null | head -n 1
++      ;;
++    'icc')
++      icc 2&gt;&amp;1 -V | head -n 1
++      ;;
++    'ls')
++      ls --version | head -n 1 | sed 's/ls// ; s#(\|)\|^\ ##g'
++      ;;
++    'pdsh')
++      pdsh -V | head -n 1
++      ;;
++    'firefox')
++      firefox --version 2&gt;/dev/null | head -n 1
++      ;;
++    'Xvnc')
++      Xvnc -version 2&gt;&amp;1
++      ;;
+ 
+-	elif [ &quot;$(grep -i bsd &lt;&lt;&lt; &quot;$SYSTEM&quot;)&quot; ]; then
++    # all the rest
++    *)
++      $app --version 2&gt;&amp;1 | grep '\w' | head -n 1
++      ;;
+ 
+-		APPLICATIONS=&quot;Graphical_interface: X kde-config gnome-about \
+-			Shells: bash csh dsh fish pdsh rrs tcsh zsh \
+-			Compilers: gcc gcj icc \
+-			Tools: awk grep gzip lshw dmidecode lspci lshw smartctl hdparm \
+-			Languages: perl python java-config ruby php \
+-			Servers: apache2 mysql ssh smbd cups-config \
+-			Miscellaneous: x11vnc&quot;
+-
+-	fi
+-
+-
+-	## Write the header for output
+-	if [ $usexml -eq 1 ]; then
+-		add_attribute &quot;Applications&quot; 'software'
+-	fi
+-
+-
+-	## Process all categories
+-	for app in $APPLICATIONS; do
+-		# if the variable $app is a category definition,
+-		if [ $(grep \: &lt;&lt;&lt; $app) ] &amp;&amp; [ $usexml -eq 0 ]; then
+-
+-			category=&quot;$(sed 's/\:// ; s/_/\ /g' &lt;&lt;&lt; $app)&quot;
+-
+-			# check verbosity level, do not print shells
+-			# if verbosity is less than 1
+-			if [ $isverbose -lt 1 ] &amp;&amp; [ &quot;$category&quot; == &quot;Shells&quot; ]; then
+-				cat_print=0
+-			else
+-				# print the category to stdout
+-				cat_print=1
+-				add_header &quot;$category&quot;
+-			fi
+-
+-			flush_values
+-
+-		# use the subfunction to get the version information
+-		elif [ &quot;$(type -p $app)&quot; ] &amp;&amp; [ $cat_print -eq 1 ]; then # it is installed
+-			versionstring=&quot;$(get_version $app)&quot;
+-			# if the application doesn't tell what it is, echo it
+-			if [ &quot;$(grep -i ${app} &lt;&lt;&lt; ${versionstring})&quot; ]; then
+-				add_values	&quot;\t${versionstring}\n&quot;
+-			else
+-				add_values	&quot;\t${versionstring} ($app)\n&quot;
+-			fi
+-		fi
+-	done
+-
+-	flush_values
++    # missing something essential?
++    'lspci')
++      info &quot;please install pciutils ${missing_ERRMSG}&quot;
++      Missing=(&quot;${Missing[@]}&quot; &quot;lspci&quot; )
++      ;;
++    'lshw')
++      info &quot;please install lshw ${missing_ERRMSG}&quot;
++      Missing=(&quot;${Missing[@]}&quot; &quot;lshw&quot; )
++      ;;
++    'smartctl')
++      info &quot;please install smartmontools ${missing_ERRMSG}&quot;
++      Missing=(&quot;${Missing[@]}&quot; &quot;smartmontools&quot; )
++      ;;
++    'dmidecode')
++      info &quot;please install dmidecode ${missing_ERRMSG}&quot;
++      Missing=(&quot;${Missing[@]}&quot; &quot;dmidecode&quot; )
++      ;;
++  esac
+ }
++###########################################
+ 
+-	###########################################
+-	# helper functions for applications module
+-	get_version() {
+-		local app=&quot;${1}&quot;
+-		case &quot;$app&quot; in
+-			'perl')
+-				echo  &quot;Perl&quot; $($app --version 2&gt;&amp;1 | grep 'perl, v' | \
+-							   grep -Eo 'v[ A-Za-z0-9.-]*')
+-				;;
+-			'python')
+-				python -V 2&gt;&amp;1 | head -n 1
+-				;;
+-			'X')
+-				X -version 2&gt;&amp;1 | grep Revision
+-				;;
+-			'kde-config')
+-				kde-config -version 2&gt;&amp;1 | grep KDE
+-				;;
+-			'gnome-about')
+-				gnome-about --version 2&gt;&amp;1 | sed 's/gnome-about//'
+-				;;
+-			'xfce4-session')
+-				xfce4-session --version | head -n 1 | sed 's/xfce4-session/Xfce4/'
+-				;;
+-			'fluxbox')
+-				fluxbox -version 2&gt; /dev/null | head -n 1
+-				;;
+-			'apache2'|'apache')
+-				$app -V | head -n 1 | awk -F': ' {'print $2'}
+-				;;
+-			'cups-config')
+-				echo  &quot;Cups $($app --version 2&gt;&amp;1 )&quot;
+-				;;
+-			'smbd')
+-				echo  &quot;Samba $($app -V 2&gt;&amp;1 )&quot;
+-				;;
+-			'udevinfo')
+-				$app -V 2&gt;&amp;1
+-				;;
+-			'awk')
+-				# awk is a bit tricky.. it can go into a captive cmd interpreter mode
+-				if [ ! &quot;$(awk -V 2&gt; /dev/null)&quot; ]; then
+-					awk -W version 2&gt;&amp;1 | head -n 1
+-				else
+-					awk -V
+-				fi
+-				;;
+-			'dmidecode')
+-				echo  &quot;dmidecode $(dmidecode -V 2&gt; /dev/null )&quot;
+-				;;
+-			'java-config')
+-				echo &quot;Java $(java-config -f)&quot;
+-				;;
+-			'ssh')
+-				ssh -V 2&gt;&amp;1 /dev/null
+-				;;
+-			'icc')
+-				icc 2&gt;&amp;1 -V | head -n 1
+-				;;
+-			'ls')
+-				ls --version | head -n 1 | sed 's/ls// ; s#(\|)\|^\ ##g'
+-				;;
+-			'pdsh')
+-				pdsh -V | head -n 1
+-				;;
+-			'firefox')
+-				firefox --version 2&gt;/dev/null | head -n 1
+-				;;
+-			'Xvnc')
+-				Xvnc -version 2&gt;&amp;1
+-				;;
+-			*)
+-				$app --version 2&gt;&amp;1 | grep '\w' | head -n 1
+-				;;
+-			'lspci')
+-				info &quot;please install pciutils ${missing_ERRMSG}&quot;
+-				Missing=(&quot;${Missing[@]}&quot; &quot;lspci&quot; )
+-				;;
+-			'lshw')
+-				info &quot;please install lshw ${missing_ERRMSG}&quot;
+-				Missing=(&quot;${Missing[@]}&quot; &quot;lshw&quot; )
+-				;;
+-			'smartctl')
+-				info &quot;please install smartmontools ${missing_ERRMSG}&quot;
+-				Missing=(&quot;${Missing[@]}&quot; &quot;smartmontools&quot; )
+-				;;
+-			'dmidecode')
+-				info &quot;please install dmidecode ${missing_ERRMSG}&quot;
+-				Missing=(&quot;${Missing[@]}&quot; &quot;dmidecode&quot; )
+-				;;
+-		esac
+-	}
+-	###########################################
+-
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000100.html">[Osinfo-commit] r712 - trunk/osinfo/docs
+</A></li>
+	<LI>Next message: <A HREF="000102.html">[Osinfo-commit] r714 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#101">[ date ]</a>
+              <a href="thread.html#101">[ thread ]</a>
+              <a href="subject.html#101">[ subject ]</a>
+              <a href="author.html#101">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

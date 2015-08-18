@@ -1,0 +1,243 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r613 - in trunk/osinfo: ebuild modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-November/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r613%20-%20in%20trunk/osinfo%3A%20ebuild%20modules&In-Reply-To=%3C200611271058.kARAw9jY009658%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000000.html">
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r613 - in trunk/osinfo: ebuild modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r613%20-%20in%20trunk/osinfo%3A%20ebuild%20modules&In-Reply-To=%3C200611271058.kARAw9jY009658%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r613 - in trunk/osinfo: ebuild modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Nov 27 11:58:09 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000000.html">[Osinfo-commit] r612 - in trunk/osinfo: lib modules
+</A></li>
+        <LI>Next message: <A HREF="000002.html">[Osinfo-commit] r614 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-11-27 11:58:08 +0100 (Mon, 27 Nov 2006)
+New Revision: 613
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/modules/memory
+   trunk/osinfo/modules/network
+   trunk/osinfo/modules/processor
+Log:
+some fixes to cpu and memory
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-11-27 10:58:08 UTC (rev 613)
+@@ -28,6 +28,7 @@
+ 		sys-apps/coreutils
+ 		sys-apps/grep
+ 		sys-apps/sed
++		sys-devel/bc
+ 		|| (sys-apps/gawk sys-apps/mawk)&quot;
+ 
+ RDEPEND=&quot;${DEPEND}&quot;
+
+Modified: trunk/osinfo/modules/memory
+===================================================================
+--- trunk/osinfo/modules/memory	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/memory	2006-11-27 10:58:08 UTC (rev 613)
+@@ -16,37 +16,66 @@
+ 	local moduleName=&quot;System memory&quot;
+ 	module_header &quot;${moduleName}&quot;
+ 
+-	local ram_size
++	print_physical_ram_info
+ 
+-	if CheckReq lshw; then
++	# meminfo=&quot;/proc/meminfo&quot;
+ 
+-		# reserve a temp file
+-		mem_tmp=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
+-		TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$mem_tmp&quot; )
++	add_attribute     'Available RAM'
++	add_values        &quot;$(get_available_ram)&quot;
+ 
+-		# meminfo or free don't give a proper value, so we use lshw
+-		# meminfo=&quot;/proc/meminfo&quot;
++	if [ $isdebug -ge 1 ]; then
++		print_total_usage
++	fi
+ 
+-		extr_lshw_node memory &gt; $mem_tmp
+ 
+-		ram_size=&quot;$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')&quot;
+-		ram_size=&quot;$(bc -l &lt;&lt;&lt; scale=1\;$ram_size/1024/1024)&quot;
++	flush_values
++}
+ 
+-		add_attribute     'Total RAM'	'ram'
+-		add_values        &quot;$ram_size&quot;
+-		add_value_footer  &quot;MB&quot;
++	function print_physical_ram_info() {
+ 
+-		if [ $isdebug -ge 1 ]; then
+-			print_total_usage
++		if CheckReq lshw; then
++
++			# reserve a temp file
++			mem_tmp=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
++			TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$mem_tmp&quot; )
++
++			extr_lshw_node memory &gt; $mem_tmp
++
++
++			# PRINT
++
++			add_attribute     'Physical RAM'	'ram'
++			add_values        &quot;$(get_physical_ram_size ${mem_tmp})&quot;
++			add_value_footer  &quot;MB&quot;
++
++			add_attribute     'RAM description'
++			add_attribute     'RAM vendor'
++			add_attribute     'RAM serial'
++			add_attribute     'RAM slot'
++			add_attribute     'RAM bits'
++			add_attribute     'RAM speed'
++			
++			flush_values
+ 		fi
+ 
+-	fi
++	}
+ 
+-	flush_values
+-}
+-
+ 	function print_total_usage() {
+ 		add_nc_header &quot;Process%col%PID%col%usage MB%col%usage %%col%forks&quot;
+ 	}
+ 
++	function get_physical_ram_size() {
++	# Parameters:
++	#  1  lshw xml memory node file 
++	#     (output from `extr_lshw_node memory`)
+ 
++		mem_tmp=&quot;${1}&quot;
++		local ram_size
++
++		ram_size=&quot;$(grep size ${mem_tmp} | head -n 1 | grep -Eo '[0-9]+')&quot;
++		bc -l &lt;&lt;&lt; scale=1\;$ram_size/1024/1024
++	}
++
++	function get_available_ram() {
++		free | grep ^Mem | awk {'print $2'}
++	}
+
+Modified: trunk/osinfo/modules/network
+===================================================================
+--- trunk/osinfo/modules/network	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/network	2006-11-27 10:58:08 UTC (rev 613)
+@@ -166,7 +166,7 @@
+ 	function get_device_name() {
+ 		# parameters:
+ 		#  1  output of ifconfig (file)
+-		#  1  output of iwconfig (file)
++		#  2  output of iwconfig (file)
+ 
+ 		# detect IRQ from ifconfig and compare it to lspci
+ 		local irq=&quot;$(grep -o 'Interrupt[[:punct:]][0-9]*' &quot;${1}&quot; | \
+
+Modified: trunk/osinfo/modules/processor
+===================================================================
+--- trunk/osinfo/modules/processor	2006-11-25 19:52:34 UTC (rev 612)
++++ trunk/osinfo/modules/processor	2006-11-27 10:58:08 UTC (rev 613)
+@@ -32,22 +32,19 @@
+ 		for cpunr in $(seq 1 1 $cpu_count); do
+ 			[ $cpu_count -gt 1 ] &amp;&amp; add_header	&quot;CPU  $cpunr&quot;
+ 
+-			add_attribute &quot;CPU Vendor&quot;      &quot;processor_vendor&quot;
++			add_attribute     &quot;CPU Vendor&quot;      &quot;processor_vendor&quot;
+ 			add_values        &quot;$(grep 'vendor' ${cpuinfo} | sed -n &quot;$cpunr{p;q;}&quot; | \
+ 			                     awk -F': ' {'print $2'})&quot;
+ 
+-			add_attribute &quot;CPU Model&quot;       &quot;processor_model&quot;
++			add_attribute     &quot;CPU Model&quot;       &quot;processor_model&quot;
+ 			add_values        &quot;$(get_cpu_model)&quot;
+ 
+-			add_attribute &quot;CPU Frequency&quot;   &quot;processor_speed&quot;
++			add_attribute     &quot;CPU Frequency&quot;   &quot;processor_speed&quot;
+ 			add_values        &quot;$(grep 'cpu MHz' ${cpuinfo} | sed -n &quot;$cpunr{p;q;}&quot; | \
+ 			                     awk -F': ' {'print $2'})&quot;
+ 			add_value_footer  &quot;MHz&quot;
+ 
+-			add_attribute     &quot;Virtualization&quot;   &quot;vmx&quot;
+-			add_values        &quot;$(get_cpu_vmx)&quot;
+ 
+-
+ 			if [ $isverbose -ge 1 ]; then
+ 
+ 				add_attribute &quot;CPU Architecture&quot;	&quot;system_type&quot;
+@@ -60,7 +57,7 @@
+ 					scan_cpu_voltage
+ 				fi
+ 
+-				add_attribute &quot;CPU Cache&quot;
++				add_attribute &quot;CPU L2 Cache&quot;
+ 						local cache_size=&quot;$(grep 'cache' ${cpuinfo} | sed -n &quot;$cpunr{p;q;}&quot; )&quot;
+ 						add_values       &quot;$(grep -Eo '[0-9]+' &lt;&lt;&lt; $cache_size)&quot;
+ 						add_value_footer &quot;$(awk {'print $NF'} &lt;&lt;&lt; $cache_size)&quot;
+@@ -74,6 +71,11 @@
+ 					                     awk -F': ' {'print $2'})&quot;
+ 				fi
+ 
++				add_attribute     &quot;Virtualization&quot;   &quot;vmx&quot;
++				add_values        &quot;$(get_cpu_vmx)&quot;
++
++				flush_values
++
+ 				if	CheckReq_lshw &amp;&amp; CheckReq_root &quot;more information&quot; ; then
+ 
+ 					local cpu_width
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000000.html">[Osinfo-commit] r612 - in trunk/osinfo: lib modules
+</A></li>
+	<LI>Next message: <A HREF="000002.html">[Osinfo-commit] r614 - in trunk/osinfo: lib modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

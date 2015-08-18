@@ -1,0 +1,941 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r701 - trunk/osinfo/html
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2007-March/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r701%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121155.l2CBt5iq011969%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000087.html">
+   <LINK REL="Next"  HREF="000090.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r701 - trunk/osinfo/html</H1>
+    <B>lamikae at mail.berlios.de</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r701%20-%20trunk/osinfo/html&In-Reply-To=%3C200703121155.l2CBt5iq011969%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r701 - trunk/osinfo/html">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Mar 12 12:55:05 CET 2007</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000087.html">[Osinfo-commit] r700 - trunk/osinfo/html
+</A></li>
+        <LI>Next message: <A HREF="000090.html">[Osinfo-commit] r702 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#89">[ date ]</a>
+              <a href="thread.html#89">[ thread ]</a>
+              <a href="subject.html#89">[ subject ]</a>
+              <a href="author.html#89">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2007-03-12 12:54:55 +0100 (Mon, 12 Mar 2007)
+New Revision: 701
+
+Modified:
+   trunk/osinfo/html/index.php
+   trunk/osinfo/html/xml-parseri.php
+Log:
+p?\195?\164ivitys
+
+Modified: trunk/osinfo/html/index.php
+===================================================================
+--- trunk/osinfo/html/index.php	2007-03-12 07:57:29 UTC (rev 700)
++++ trunk/osinfo/html/index.php	2007-03-12 11:54:55 UTC (rev 701)
+@@ -1,7 +1,16 @@
+ &lt;?php
+ 
+-$index = new Index();
++// luodaan Index-olio. Input-parametrit:
+ 
++// $xmlkansio, kansio jossa kaikki xml-tiedostot sijaitsevat
++// $r, divien taustav&#228;rin punaisen arvo
++// $g, divien taustav&#228;rin vihre&#228;n arvo
++// $b, divien taustav&#228;rin sinisen arvo
++// $fade_korkeus, sivuframen alla olevan fade-kuvan korkeus
++// $clienteja_rivilla, index viewin clienttien lukum&#228;&#228;r&#228; rivill&#228;
++
++$index = new Index(&quot;hosts&quot;, 222, 197, 148, 150, 3);
++
+ $index-&gt;tulosta_alkukoodi(true);
+ $index-&gt;nayta_sivuframe();
+ $index-&gt;nayta_paaframe($_GET['target']);
+@@ -9,15 +18,28 @@
+ 
+ class Index
+ {
+-	private $_DivResoluutiot = array(&quot;SivuFrame&quot; =&gt; array('10px', '10px', '20%', '500'),
+-					&quot;P&#228;&#228;Frame&quot; =&gt; array('10px', '10px', '70%', '500'));
+-	private $_xmlkansio = &quot;hosts&quot;;
++	private $_xmlkansio;
+ 	private $_xmlparseri = &quot;xml-parseri.php&quot;;
+ 	private $_parseri;
+-	private $_clientteja_rivilla = 3;
++	private $_clientteja_rivilla;
++	private $_r;
++	private $_g;
++	private $_b;
++	private $_fade_korkeus;
+ 
+-	public function __construct()
+-    	{
++	public function __construct($xmlkansio, $r, $g, $b, $fade_korkeus, $clientteja_rivilla)
++	{
++		// sijoitetaan input-parametrit luokan j&#228;senmuuttujiin
++
++		$this-&gt;_xmlkansio = $xmlkansio;
++		$this-&gt;_r = $r;
++		$this-&gt;_g = $g;
++		$this-&gt;_b = $b;
++		$this-&gt;_fade_korkeus = $fade_korkeus;
++		$this-&gt;_clientteja_rivilla = $clientteja_rivilla;
++
++		// tarkistetaan, xmlparseri on olemassa ja luodaan siit&#228; olio
++
+ 		if(file_exists($this-&gt;_xmlparseri))
+ 		{
+ 			include($this-&gt;_xmlparseri);
+@@ -29,6 +51,8 @@
+ 
+ 	public function tulosta_alkukoodi($tyylit = true)
+ 	{
++		// tekee sivulle alkukoodit
++	
+ 		print &quot;&lt;!DOCTYPE html PUBLIC \&quot;-//W3C//DTD XHTML 1.0 Transitional//EN\&quot; \&quot;<A HREF="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\</A>&quot;&gt;\n\n&quot;;
+ 
+ 		print &quot;&lt;html&gt;\n&quot;;	
+@@ -43,100 +67,42 @@
+ 
+ 	public function tulosta_loppukoodi()
+ 	{
++		// tekee sivulle loppukoodit
++
+ 		print &quot;&lt;/body&gt;\n&quot;;
+ 		print &quot;&lt;/html&gt;&quot;;
+ 	}
+ 	
+ 	private function tulosta_tyyli()
+ 	{
+-		$varit = array(222, 197, 148);
+-		$varisyote = &quot;r=&quot; . $varit[0] . &quot;&amp;g=&quot; . $varit[1] . &quot;&amp;b=&quot; . $varit[2];
++		// m&#228;&#228;ritet&#228;&#228;n ylim&#228;&#228;r&#228;iset tyyliasetukset divien v&#228;rille
+ 
++		$varisyote = &quot;r=&quot; . $this-&gt;_r . &quot;&amp;g=&quot; . $this-&gt;_g . &quot;&amp;b=&quot; . $this-&gt;_b;
++
+ 		print &quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;xmltyyli.css\&quot; /&gt;&quot;;
+ 		print &quot;&lt;style type=\&quot;text/css\&quot;&gt;
+ 
+-		body
+-		{
+-			background-color: #eddcbc;
+-		}
+ 		
+-		div.SivuFrame, div.PaaFrame
+-		{ 
+-			float: left;
+-		}
+-		
+ 		div.SivuFrameSisalto, div.PaaFrame
+ 		{
+-			background-color: rgb(&quot; . $varit[0] . &quot;, &quot; . $varit[1] . &quot;, &quot; . $varit[2] . &quot;);
++			background-color: rgb(&quot; . $this-&gt;_r . &quot;, &quot; . $this-&gt;_g . &quot;, &quot; . $this-&gt;_b . &quot;);
+ 		}
+ 
+-		div.SivuFrame
+-		{
+-			margin-left: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][0] . &quot;;
+-			margin-top: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][1] . &quot;;
+-			margin-bottom: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][1] . &quot;;
+-			width: &quot; . $this-&gt;_DivResoluutiot[SivuFrame][2] . &quot;;
+-			min-height: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][3] . &quot;;
+-			min-width: 200;
+-			height: auto;
+-		}
+-
+-		div.SivuFrameSisalto
+-		{
+-			padding: 10px;
+-		}
+-
+ 		div.SivuFrameFade
+ 		{
+-			background-image: url('fade.php?w=1&amp;h=150&amp;&quot; . $varisyote . &quot;');
++			background-image: url('fade.php?w=1&amp;h=&quot;. $this-&gt;_fade_korkeus . &quot;&amp;&quot; . $varisyote . &quot;');
+ 			background-repeat: repeat-x;
+ 			background-position: top;
+-			height: 150px;
++			height: &quot;. $this-&gt;_fade_korkeus . &quot;px;
+ 		}
+ 
+-		div.PaaFrame
+-		{
+-			border: 1px solid black;
+-			padding: 5px;
+-			padding: 0px 10px 10px 10px;
+-			margin-left: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][0] . &quot;;
+-			margin-top: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
+-			margin-bottom: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][1] . &quot;;
+-			width: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][2] . &quot;;
+-			min-height: &quot; . $this-&gt;_DivResoluutiot[P&#228;&#228;Frame][3] . &quot;;
+-			min-width: 600;
+-			height: auto;
+-			clear: none;
+-		}
+-
+-		p.valitus
+-		{
+-			color: red;
+-		}
+-
+-		ul.hostit
+-		{
+-			padding: 0px;
+-			padding-left: 10px;
+-		}
+-
+-		li.kuvaus
+-		{
+-			font-size: 12px;
+-		}
+-
+-		a:link
+-		{
+-			color: rgb(0,0,255);
+-		}
+-
+-		a:visited
+-		{
+-			color: rgb(0,0,200);
+-		}
+-
+ 		&lt;/style&gt;&quot;;
+ 	}
++
++	// Listaa xml-tiedostokansion sis&#228;ll&#246;n sivu- ja p&#228;&#228;framelle.
++	// Ottaa input-parametrina tiedon, onko kyse valikosta vai index viewist&#228;
++	// $valikko = true --&gt; valikko
++	// $valikko = false --&gt; index view
+ 	
+ 	private function listaa_tiedostot($valikko = false)
+ 	{
+@@ -144,21 +110,30 @@
+ 		{
+ 			$kansio = opendir($this-&gt;_xmlkansio);
+ 
+-			$ul_avattu = false;
++			$xml_array = array();
+ 
+-			$xml_array = array();
+-		
+ 			for($i=0; $tiedosto = readdir($kansio); $i++)
+ 			{
++				// selvitt&#228;&#228; tiedostop&#228;&#228;tteen
++
+ 				$p_array = explode(&quot;.&quot;, $tiedosto);
+ 				$paate = $p_array[sizeof($p_array)-1];
+-		
++
+ 				if($i &gt; 1 &amp;&amp; ($paate == &quot;xml&quot;))
+ 				{
++					// parsii k&#228;sitelt&#228;v&#228;n xml-tiedoston
++
+ 					$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $tiedosto);
+ 
++					// hakee parserista halutut tiedot taulukkoon
++
++					// hakualgoritmi etsii tiedon sen yl&#228;otsikon kautta, joten funktiolle
++					// pit&#228;&#228; antaa kaksi parametria, sen l&#228;hin yl&#228;otsikko ja haettava tieto
++
+ 					if($valikko)
+ 					{
++						// n&#228;m&#228; arvot haetaan valikkoon
++
+ 						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
+ 						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
+ 						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
+@@ -168,6 +143,8 @@
+ 					}
+ 					else
+ 					{
++						// n&#228;m&#228; arvot haetaan index viewiin
++
+ 						$temp_array = array(&quot;tiedosto&quot; =&gt; $tiedosto,
+ 						&quot;hostname&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;),
+ 						&quot;domain&quot; =&gt; $this-&gt;_parseri-&gt;hae_tieto(&quot;computer&quot;, &quot;domain&quot;),
+@@ -182,13 +159,18 @@
+ 						);
+ 					}
+ 
++					// lis&#228;&#228; tiedoston tiedot p&#228;&#228;taulukkoon ja jatkaa tiedostojen l&#228;pik&#228;ymist&#228;
+ 					array_push($xml_array, $temp_array);
+ 				}
+ 			}
+ 
++			// lajittelee koneet domaineittain
++
+ 			$domainit = $this-&gt;lajittele_array($xml_array, &quot;domain&quot;);
+ 			$profilet = array();
+ 
++			// lajittelee koneet (alustavasti) profiileittain
++
+ 			foreach($domainit as $domain =&gt; $arvo)
+ 			{
+ 				$temp_array = array($domain =&gt; $this-&gt;lajittele_array($arvo, &quot;profile&quot;));
+@@ -196,19 +178,27 @@
+ 			}
+ 
+ 			ksort($profilet);
+-			
++
+ 			if($valikko)
+ 			{
+ 				foreach($profilet as $domain =&gt; $profiles)
+ 				{
++					// lajittelee koneet profiileittain
+ 					ksort($profiles);
++
++					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
++
+ 					print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
+-	
++
+ 					foreach($profiles as $profile =&gt; $hostnames)
+ 					{
++						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
++
+ 						print &quot;&lt;ul class=\&quot;hostit\&quot;&gt;&lt;li&gt;Profile: &lt;i&gt;&quot; . $profile . 
+ 							&quot;&lt;/i&gt;&lt;ul class=\&quot;hostit\&quot;&gt;&quot;;
+-	
++
++						// n&#228;ytt&#228;&#228; halutut yksityiskohtaiset konetiedot valikossa
++
+ 						foreach($hostnames as $hostname =&gt; $arvot)
+ 						{
+ 							print &quot;&lt;li&gt;&lt;b&gt;&lt;a href=\&quot;?target=&quot;. $arvot[&quot;tiedosto&quot;] . &quot;\&quot;&gt;&quot; .
+@@ -216,12 +206,14 @@
+ 								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;os&quot;] . &quot;&lt;/li&gt;
+ 								&lt;li class=\&quot;kuvaus\&quot;&gt;&quot; . $arvot[&quot;cpu&quot;] . &quot;&lt;/li&gt;
+ 								&lt;/ul&gt;&lt;/li&gt;&quot;;
+-	
++
+ 						}
+-	
++
++						// sulkee profiilien tagit
+ 						print &quot;&lt;/ul&gt;&lt;/li&gt;&lt;/ul&gt;&quot;;
+ 					}
+-	
++
++					// sulkee domainien tagit
+ 					print &quot;&lt;/li&gt;&lt;/ul&gt;&quot;;
+ 				}
+ 			}
+@@ -229,16 +221,23 @@
+ 			{
+ 				foreach($profilet as $domain =&gt; $profiles)
+ 				{
++					// lajittelee koneet profiileittain
+ 					ksort($profiles);
++
++					// n&#228;ytt&#228;&#228; tiedot valikossa domaineittain
+ 					print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Domain: &lt;i&gt;&quot; . $domain . &quot;&lt;/i&gt;&quot;;
+-	
++
+ 					foreach($profiles as $profile =&gt; $hostnames)
+ 					{
++						// n&#228;ytt&#228;&#228; tiedot valikossa profiileittain
++
+ 						print &quot;&lt;div class=\&quot;kentta2\&quot;&gt;&lt;h3&gt;Profile: &lt;i&gt;&quot; . $profile . 
+ 							&quot;&lt;/i&gt;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&quot;;
+ 
+ 						$laskuri = 0;
+-	
++
++						// n&#228;ytt&#228;&#228; kaikki yksityiskohtaiset konetiedot valikossa
++
+ 						foreach($hostnames as $hostname =&gt; $arvot)
+ 						{
+ 							if($laskuri == 0) 
+@@ -280,6 +279,8 @@
+ 		else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;Directory \&quot;&quot; . $this-&gt;_xmlkansio . &quot;\&quot; does not exist&lt;/p&gt;&quot;;
+ 	}
+ 
++	// lajittelee taulukon halutun arvon mukaan, joka annetaan input-parametriin $nimi
++
+ 	private function lajittele_array($array, $nimi)
+ 	{
+ 		$nimet = array(&quot; &quot;);
+@@ -308,15 +309,17 @@
+ 		return $nimet_lajiteltuna;
+ 	}
+ 
+-	private function array_lisaa_samaan(&amp;$array) 
++	// yleinen taulukon k&#228;sittelyfunktio, joka php:st&#228; itsest&#228;&#228;n puuttuu
++
++	private function array_lisaa_samaan(&amp;$array)
+ 	{
+ 		$argumentit = func_get_args();
+ 	
+-		foreach($argumentit as $argumentti) 
++		foreach($argumentit as $argumentti)
+ 		{
+-			if(is_array($argumentti)) 
++			if(is_array($argumentti))
+ 			{
+-				foreach($argumentti as $avain =&gt; $arvo) 
++				foreach($argumentti as $avain =&gt; $arvo)
+ 				{
+ 					$array[$avain] = $arvo;
+ 					$paluuarvo++;
+@@ -328,6 +331,8 @@
+ 		return $paluuarvo;
+ 	}
+ 
++	// k&#228;y l&#228;pi tiedostokansion ja palauttaa viimeksi muokatun tiedoston p&#228;iv&#228;m&#228;&#228;r&#228;n unixin aika-arvona
++
+ 	private function hae_viimeksi_paivitetty()
+ 	{
+ 		if(file_exists($this-&gt;_xmlkansio))
+@@ -353,6 +358,8 @@
+ 			return $suurin;
+ 		}
+ 	}
++
++	// n&#228;ytt&#228;&#228; sivuframen sis&#228;ll&#246;n
+ 	
+ 	public function nayta_sivuframe()
+ 	{
+@@ -363,15 +370,22 @@
+ 			&lt;p&gt;&lt;a href=\&quot;&quot; . $_SERVER[&quot;SCRIPT_NAME&quot;] . &quot;\&quot;&gt;index view&lt;/a&gt;&lt;/p&gt;
+ 			&lt;hr /&gt;&quot;;
+ 
++		// listaa xml-tiedostokansion sis&#228;ll&#246;n sivuframelle
+ 		$this-&gt;listaa_tiedostot(true);
+ 	
+ 		print &quot;&lt;hr /&gt;&quot;;
+ 
++		$this-&gt;paivitys();
++
++		print &quot;&lt;hr /&gt;&quot;;
++
+ 		print &quot;&lt;p&gt;Last update:&lt;/p&gt;&quot;;
+ 
++		// hakee viimeksi p&#228;ivitetyn tiedoston aika-arvon
+ 		$viimeksi_paivitetty = $this-&gt;hae_viimeksi_paivitetty();
+ 
+ 		if($viimeksi_paivitetty &gt; 0)
++			// n&#228;ytt&#228;&#228; viimeksi p&#228;ivitetyn tiedoston p&#228;iv&#228;yksen ja ajan
+ 			print &quot;&lt;p&gt;&lt;i&gt;&quot; . date(&quot;F d Y H:i:s&quot;, $viimeksi_paivitetty) . &quot;&lt;/i&gt;&lt;/p&gt;&quot;;
+ 	
+ 		print &quot;&lt;/div&gt;&quot;;
+@@ -381,21 +395,29 @@
+ 		print &quot;&lt;/div&gt;&quot;;
+ 	}
+ 	
++	// n&#228;ytt&#228;&#228; p&#228;&#228;framen sis&#228;ll&#246;n
++
+ 	public function nayta_paaframe($sivu = &quot;&quot;)
+ 	{
+ 		print &quot;&lt;div class=\&quot;PaaFrame\&quot;&gt;&quot;;
+ 		
++		// jos osoiterivin target-arvo on m&#228;&#228;ritelty, kokeilee n&#228;ytt&#228;&#228; sivun sis&#228;ll&#246;n p&#228;&#228;frameen
++
+ 		if($sivu != &quot;&quot;)
+ 		{
++			// tarkistaa ensin, ett&#228; tiedosto on olemassa
+ 			if(file_exists($this-&gt;_xmlkansio . &quot;/&quot; . $sivu))
+ 			{
++				// parsii xml-tiedoston l&#228;pi
+ 				$this-&gt;_parseri-&gt;parsi_tiedosto($this-&gt;_xmlkansio . &quot;/&quot; . $sivu);
+-				
++
++				// n&#228;ytt&#228;&#228; xml:st&#228; &quot;osinfo&quot; tagien sis&#228;ll&#228; olevan tiedon
+ 				$this-&gt;_parseri-&gt;hae_arvot(&quot;osinfo&quot;);
+ 			}
+ 			else print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File \&quot;&quot; . $sivu . &quot;\&quot; not found&lt;/p&gt;&quot;;
+ 		}
+ 		else
++			// jos osoiterivin target-arvoa ei ole m&#228;&#228;ritelty, n&#228;ytt&#228;&#228; index viewin
+ 			$this-&gt;nayta_index_view();
+ 
+ 		print &quot;&lt;/div&gt;&quot;;
+@@ -405,8 +427,22 @@
+ 	{
+ 		print &quot;&lt;h3&gt;index view&lt;/h3&gt;&quot;;
+ 
++		// listaa xml-kansion tiedostot p&#228;&#228;framelle
+ 		$this-&gt;listaa_tiedostot(false);
+ 	}
++
++	private function paivitys()
++	{
++		if($_POST['paivitettava_client'])
++			print &quot;&lt;p&gt;-- update &quot; . $_POST['paivitettava_client'] . &quot; --&lt;/p&gt;&quot;;
++
++		print &quot;&lt;form name=\&quot;paivitysformi\&quot; action=\&quot;&quot; . $PHP_SELF . &quot;\&quot; method=\&quot;post\&quot;&gt;
++			&lt;p&gt;Client: 
++				&lt;input type=\&quot;text\&quot; name=\&quot;paivitettava_client\&quot; /&gt;&lt;br /&gt;&lt;br /&gt;
++				&lt;input type=\&quot;submit\&quot; value=\&quot;Update\&quot; /&gt;
++			&lt;/p&gt;
++			&lt;/form&gt;&quot;;
++	}
+ }
+ 
+ ?&gt; 
+\ No newline at end of file
+
+Modified: trunk/osinfo/html/xml-parseri.php
+===================================================================
+--- trunk/osinfo/html/xml-parseri.php	2007-03-12 07:57:29 UTC (rev 700)
++++ trunk/osinfo/html/xml-parseri.php	2007-03-12 11:54:55 UTC (rev 701)
+@@ -2,18 +2,18 @@
+ 
+ class xmlparseri
+ {
+-	private $_parsittava_tiedosto;
+-	private $_tiedoston_sisalto;
+-	private $_tietotaulu = array();
+-	private $_attribuutteja_rivilla = 3;
++	private $_parsittava_tiedosto; // parsittavan tiedoston tiedostonimi
++	private $_tiedoston_sisalto; // parsitun tiedoston sis&#228;lt&#246;
++	private $_tietotaulu = array(); // taulukko, jossa on kaikki xml-tiedostosta otetut tiedot
++	private $_attribuutteja_rivilla = 3; // &quot;laatikko&quot;-n&#228;kym&#228;ss&#228; olevien attribuuttien m&#228;&#228;r&#228; rivill&#228;
+ 
+-	// &quot;koodit&quot;
++	// tagien &quot;koodit&quot; tietotaulussa
+ 	private $_nimi = &quot;--nimi--&quot;;
+ 	private $_parametrit = &quot;--parametrit--&quot;;
+ 	private $_tyyppi = &quot;--tyyppi--&quot;;
+ 	private $_sisalto = &quot;--sisalto--&quot;;
+ 
+-	private $_virheet = array();
++	private $_virheet = array(); // taulukko, jossa on parserin havaitsemat virheet
+ 
+ 	public function __construct()
+ 	{
+@@ -26,26 +26,34 @@
+ 
+ 		if(file_exists($tiedoston_nimi))
+ 		{
++			// sijoittaa parsittavan tiedoston nimi luokan j&#228;senmuuttujaan
+ 			$this-&gt;_parsittava_tiedosto = $tiedoston_nimi;
++
++			// lukee tiedoston sis&#228;ll&#246;n luokan _tiedoston_sisalto -j&#228;senmuuttujaan
+ 			$this-&gt;lue_tiedoston_sisalto();
+-		
++
++			// aloittaa tietotaulun muodostamisen aloittamalla ensimm&#228;isest&#228; merkist&#228;
+ 			$this-&gt;_tietotaulu = $this-&gt;etsi_tagi(&quot;&quot;, 0);
+ 		}
+ 		else
++			// jos parsittavaa tiedostoa ei ole, annetaan siit&#228; k&#228;ytt&#228;j&#228;lle ilmoitus
+ 			print &quot;&lt;p class=\&quot;valitus\&quot;&gt;File &quot; . $tiedoston_nimi . &quot; not found&lt;/p&gt;&quot;;
+ 	}
+ 
++	// public-funktio, jolla n&#228;ytet&#228;&#228;n tiedot halutusta kohdasta
+ 	public function hae_arvot($kanta, $attribuutit = &quot;&quot;)
+ 	{
+ 		$this-&gt;hae_array($this-&gt;_tietotaulu, $kanta, $esitettava_array);
+ 		$this-&gt;esita_tiedot($esitettava_array, $attribuutit);
+ 	}
+ 
++	// funktio, jolla voidaan hakea yksitt&#228;inen tieto ulos
+ 	public function hae_tieto($ryhma, $nimi)
+ 	{
+ 		return $this-&gt;hae_array2($this-&gt;_tietotaulu, $ryhma, $nimi);
+ 	}
+ 
++	// testausk&#228;ytt&#246;&#246;n tarkoitettu funktio, joka n&#228;ytt&#228;&#228; koko tietotaulun rakenteen
+ 	public function nayta_tietotaulu()
+ 	{
+ 		print &quot;&lt;p&gt;--------- KOKO TIETOTAULU:---------&lt;/p&gt;&quot;;
+@@ -54,6 +62,7 @@
+ 		print &quot;&lt;/pre&gt;&quot;;
+ 	}
+ 
++	// lukee tiedston sis&#228;ll&#246;n merkki merkilt&#228; l&#228;pi
+ 	private function lue_tiedoston_sisalto()
+ 	{
+ 		$fp = fopen($this-&gt;_parsittava_tiedosto, &quot;r&quot;);
+@@ -64,17 +73,25 @@
+ 			$this-&gt;_tiedoston_sisalto .= $char;
+ 	}
+ 
++	// funktio, joka k&#228;y l&#228;pi tiedostosta haettua sis&#228;lt&#246;&#228; rekursiivisesti.
++	// $taso-muuttuja oli vain testik&#228;ytt&#246;&#228; varten, mutta on j&#228;tetty paikoilleen jos tarvitsee
++	// tehd&#228; muutoksia.
+ 	private function etsi_tagi($etsittava, $indeksi, $taso = -1)
+ 	{
+ 		$taulu = array();
+ 		$taso++;
+ 
++		// k&#228;y sis&#228;lt&#246;&#228; l&#228;pi indeksist&#228; alkavasta kohdasta
+ 		for($i=$indeksi; $i &lt; strlen($this-&gt;_tiedoston_sisalto); $i++)
+ 		{
++			// tarkistaa, onko aloittavaa tagia olemassa
+ 			if($this-&gt;_tiedoston_sisalto[$i] == &quot;&lt;&quot;)
+ 			{
+ 				$tagi = &quot;&quot;;
+-		
++
++				// jos on tagin aloituskohta on l&#246;ytynyt, luetaan niin kauan kunnes
++				// lopettava tagi l&#246;ytyy, tai xml:n syntaksissa on virheit&#228;
++				// ( tai tiedoston sis&#228;lt&#246; on loppunut )
+ 				for($j=$i+1; $j &lt; strlen($this-&gt;_tiedoston_sisalto); $j++)
+ 				{
+ 					if($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
+@@ -82,45 +99,64 @@
+ 						$tagi .= $this-&gt;_tiedoston_sisalto[$j];
+ 					else break;
+ 				}
+-			
++
++				// vied&#228;&#228;n tagimerkkien sis&#228;lt&#246; tarkistusfunktiolle, joka tunnistaa sen tyypin
+ 				$tietue = $this-&gt;tarkista_tagi($tagi);
+-		
++
++				// tekee haarautumisen tagin tyypist&#228; riippuen
+ 				switch($tietue[$this-&gt;_tyyppi])
+ 				{
+ 				case 1:
++					// tagin tyyppi on xml:n metatietoa, mik&#228; lis&#228;t&#228;&#228;n tietotauluun suoraan
+ 					array_push($taulu, $tietue);
+ 					break;
+ 				case 2:
++					// tagin tyyppi on aloittava tagi, jolloin kutsutaan funktiota rekursiivisesti
++					// ja otetaan paluuarvot talteen
+ 					$paluuarvot = $this-&gt;etsi_tagi($tietue[$this-&gt;_nimi], $j+1, $taso);
+ 					
+ 					if($paluuarvot['indeksi'] &gt; $i)
+ 						$i = $paluuarvot['indeksi'];
+ 
++					// lis&#228;&#228; haettuun taulukkoon alataulukon tiedot
+ 					$this-&gt;array_lisaa_samaan($tietue, $paluuarvot['taulu']);
+ 					$sisalto = &quot;&quot;;
+-			
++
++					// hakee tagien v&#228;lisen tiedon, esim. &quot;value&quot; ja &quot;description&quot; -arvot
+ 					for($j += 1; $j &lt; strlen($this-&gt;_tiedoston_sisalto); $j++)
+ 					{
+ 						$char = ord($this-&gt;_tiedoston_sisalto[$j]);
+ 		
+-						if($char != 10 &amp;&amp; $char != 13 &amp;&amp; $char != 9 &amp;&amp; 				$this-&gt;_tiedoston_sisalto[$j] != &quot;&lt;&quot;)
++						if($char != 10 &amp;&amp; $char != 13 &amp;&amp; $char != 9 &amp;&amp; $this-&gt;_tiedoston_sisalto[$j] != &quot;&lt;&quot;)
+ 							$sisalto .= $this-&gt;_tiedoston_sisalto[$j];
+ 						elseif($this-&gt;_tiedoston_sisalto[$j] == &quot;&lt;&quot;) break;
+ 					}
+-		
++
++					// jos tagien v&#228;lill&#228; on tietoa, lis&#228;t&#228;&#228;n se tietotaulukkoon
+ 					if(!empty($sisalto))
+ 					{
+ 						$temp_array = array($this-&gt;_sisalto =&gt; $sisalto);
+ 						$this-&gt;array_lisaa_samaan($tietue, $temp_array);
+ 					}
+-		
++
++					// lis&#228;&#228; tietotauluun haetun taulukon sis&#228;lt&#246;
+ 					array_push($taulu, $tietue);
+ 					break;
+ 				case 3:
++					// tagin tyyppi on lopettava tagi
+ 					if($etsittava != &quot;&quot;)
+ 					{
++						// jos lopetustagin arvo on sama kuin aloittava tagi,
++						// palautetaan funktiosta taulukko ja indeksi
+ 						if($tietue[$this-&gt;_nimi] == $etsittava)
+ 							return array(&quot;taulu&quot; =&gt; $taulu, &quot;indeksi&quot; =&gt; $i);
++
++						// jos lopetustagin arvo ei ole sama kuin aloittava tagi,
++						// xml-tiedostossa on virhe ja virhesanoma lis&#228;t&#228;&#228;n my&#246;hemp&#228;&#228;
++						// k&#228;sittely&#228; varten
++
++						// parseri kuitenkin toipuu virheest&#228;, ja lis&#228;&#228; oletettavan
++						// lopetuksen itsest&#228;&#228;n
+ 						else
+ 						{
+ 							array_push($this-&gt;_virheet, &quot;found &lt;/&quot; . $tietue[$this-&gt;_nimi] . &quot;&gt;, &quot; . &quot;&lt;/&quot; . $etsittava . &quot;&gt; expected&quot;);
+@@ -133,6 +169,8 @@
+ 		
+ 					break;
+ 				case 4:
++					// tagin tyyppi on jotakin muuta kuin k&#228;sitelt&#228;v&#228;t tyypit, jolloin
++					// sen arvot lis&#228;t&#228;&#228;n suoraan tietotauluun
+ 					array_push($taulu, $tietue);
+ 					break;
+ 				default:
+@@ -154,17 +192,20 @@
+ 		//	   2 = aloitustagi
+ 		//	   3 = lopetustagi
+ 		//	   4 = yksin&#228;inen tagi
+-	
++
++		// tarkistaa, onko tagin tyyppi yksin&#228;inen tagi
+ 		for($i=strlen($tagi)-1; $i&gt;0; $i--)
+ 		{
+ 			if($tagi[$i] == &quot;/&quot; &amp;&amp; $i &gt; 0)
+ 				$parametritagi = true;
+ 		}
+-	
++
++		// tarkistaa, onko tagin tyyppi tiedoston tyyppitagi, ns. metatieto
+ 		if($tagi[0] == &quot;!&quot; || $tagi[0] == &quot;?&quot;)
+ 			$tyyppi = 1;
+ 		else
+ 		{
++			// tarkistaa, onko tagin tyyppi lopettava tagi
+ 			if($tagi[0] == &quot;/&quot;)
+ 			{
+ 				$tyyppi = 3;
+@@ -174,8 +215,11 @@
+ 			}
+ 			else
+ 			{
++				// tarkistaa, onko tagin tyyppi aloittava tagi
+ 				if($parametritagi) $tyyppi = 4;
+ 				else $tyyppi = 2;
++
++				// parsii merkki kerrallaan tagin sis&#228;ll&#246;n ja ottaa mahdolliset attribuutit talteen
+ 		
+ 				for($i=0; $i &lt; strlen($tagi); $i++)
+ 				{
+@@ -231,6 +275,8 @@
+ 				}
+ 			}
+ 		}
++
++		// palauttaa taulukkona tagin nimen ja mahdolliset attribuutit
+ 		
+ 		if(empty($parametrit))
+ 			return array($this-&gt;_tyyppi =&gt; $tyyppi, $this-&gt;_nimi =&gt; $nimi);
+@@ -238,6 +284,8 @@
+ 			return array($this-&gt;_tyyppi =&gt; $tyyppi, $this-&gt;_nimi =&gt; $nimi, $this-&gt;_parametrit =&gt; $parametrit);
+ 	}
+ 
++	// yleinen taulukon k&#228;sittelyfunktio, joka php:st&#228; itsest&#228;&#228;n puuttuu
++
+ 	private function array_lisaa_samaan(&amp;$array)
+ 	{
+ 		$argumentit = func_get_args();
+@@ -258,20 +306,27 @@
+ 		return $paluuarvo;
+ 	}
+ 
++	// n&#228;ytt&#228;&#228; parserin antamat tiedot sivulle
++
+ 	private function esita_tiedot($array, $tarkenne = &quot;&quot;)
+ 	{
++		// hakee koneen nimen ja n&#228;ytt&#228;&#228; sen otsikossa
++
+ 		print &quot;&lt;table style=\&quot;width: 100%\&quot;&gt;
+ 			&lt;tr&gt;
+ 			&lt;td&gt;&lt;h2&gt;&quot; . $this-&gt;parsi_nimi($this-&gt;hae_tieto(&quot;computer&quot;, &quot;hostname&quot;)) . &quot;&lt;/h2&gt;&lt;/td&gt;
+ 			&lt;td&gt;&quot;;
+-	
++
++		// n&#228;ytt&#228;&#228; quick jump -valikon
+ 		$this-&gt;nayta_quick_jump_valikko();
+-	
++
++		// n&#228;ytt&#228;&#228; skriptin versiotiedon ja skannausp&#228;iv&#228;n
+ 		print &quot;&lt;/td&gt;&lt;td style=\&quot;text-align: right\&quot;&gt;&lt;p&gt;Script version: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;script&quot;, &quot;version&quot;) . &quot;&lt;/i&gt;&lt;br /&gt;&quot; .
+ 			&quot;Scanning date: &lt;i&gt;&quot; . $this-&gt;hae_tieto(&quot;scanning&quot;, &quot;date&quot;) . &quot;&lt;/i&gt;&lt;/p&gt;&lt;/td&gt;&quot;;
+ 	
+ 		print &quot;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&quot;;
+-	
++
++		// jos xml-tiedostoa parsiessa on havaittu virheit&#228;, ne n&#228;ytet&#228;&#228;n k&#228;ytt&#228;j&#228;lle
+ 		if(sizeof($this-&gt;_virheet) &gt; 0)
+ 		{
+ 			print &quot;&lt;p class=\&quot;valitus\&quot;&gt;&quot;;
+@@ -282,12 +337,10 @@
+ 			print &quot;&lt;/p&gt;&quot;;
+ 		}
+ 	
+-		$this-&gt;_attribuutti_avattu = false;
+-		$this-&gt;_attribuutti_laskuri = 0;
+-	
+ 		if(is_array($array))
+ 		{
+-			$listatyyppi = false;
++			// jos attribuutit halutaan n&#228;ytt&#228;&#228; &quot;laatikoissa&quot;, $listatyyppi = false;
++			$listatyyppi = true;
+ 	
+ 			// k&#228;y l&#228;pi p&#228;&#228;taulun kannasta l&#228;htien
+ 			foreach($array as $avain =&gt; $arvo)
+@@ -301,22 +354,22 @@
+ 		}
+ 	}
+ 
++	// funktio, joka esitt&#228;&#228; alitiedot annetusta taulukosta
+ 	private function esita_alitiedot($array, $listatyyppi = false, $attribuutti_avattu = false, $tarkenne = &quot;&quot;, $paasy_alitauluihin = false, $attribuuttilaskuri = 0)
+ 	{
+ 		$div_avattu = false;
+ 		$attribuutti_suljettu = false;
+ 		$atrb = false;
+-		$listatyyppi = true;
+-	
++
+ 		foreach($array as $avain =&gt; $arvo)
+-		{	
++		{
+ 			if($tarkenne != &quot;&quot; &amp;&amp; $avain != $this-&gt;_tyyppi &amp;&amp; $arvo == $tarkenne)
+ 				$paasy_alitauluihin = true;
+ 			elseif($tarkenne != &quot;&quot; &amp;&amp; is_array($arvo)) 
+ 				$div = $this-&gt;esita_alitiedot($arvo, $listatyyppi, $attribuutti_avattu, $tarkenne);
+-	
++
+ 			if($paasy_alitauluihin || $tarkenne == &quot;&quot;)
+-			{	
++			{
+ 				if($arvo == &quot;attribute&quot;)
+ 				{
+ 					if(is_array($array))
+@@ -328,16 +381,16 @@
+ 								print &quot;&lt;table class=\&quot;attribuutti\&quot; cellspacing=\&quot;10\&quot;&gt;&lt;tr&gt;&quot;;
+ 								$attribuutti_avattu = true;
+ 							}
+-					
++
+ 							if($attribuuttilaskuri &gt; 0 &amp;&amp; $attribuuttilaskuri % $this-&gt;_attribuutteja_rivilla == 0)
+ 								print &quot;&lt;/tr&gt;&lt;tr&gt;&quot;;
+-							
++
+ 							print &quot;&lt;td valign=\&quot;top\&quot; class=\&quot;attribuutti_td\&quot; style=\&quot;width: &quot; . round(100 / $this-&gt;_attribuutteja_rivilla, 1) . &quot;%\&quot;&gt;&quot;;
+-			
++
+ 							$this-&gt;esita_attribuutit($array, $array);
+-	
++
+ 							$attribuuttilaskuri++;
+-			
++
+ 							print &quot;&lt;/td&gt;&quot;;
+ 			
+ 							break;
+@@ -349,13 +402,13 @@
+ 								print &quot;&lt;table class=\&quot;lista_attribuutti\&quot;&gt;&quot;;
+ 								$attribuutti_avattu = true;
+ 							}
+-	
++
+ 							print &quot;&lt;tr&gt;&quot;;
+-			
++
+ 							$this-&gt;esita_attribuutit($array, $array, $listatyyppi);
+-			
++
+ 							print &quot;&lt;/tr&gt;&quot;;
+-			
++
+ 							break;
+ 						}
+ 					}
+@@ -413,6 +466,7 @@
+ 		else return false;
+ 	}
+ 
++	// n&#228;ytt&#228;&#228; attribuutin sis&#228;lt&#228;m&#228;n datan
+ 	private function esita_attribuutit(&amp;$palautus_array, $array, $listatyyppi = false)
+ 	{
+ 		$description_str = &quot;&quot;;
+@@ -450,7 +504,8 @@
+ 			}
+ 		}
+ 	}
+-
++	
++	// esitt&#228;&#228; attribute-tagin sis&#228;tiedot
+ 	private function esita_sisatiedot($listatyyppi, $eka_kentta = false, $arvot)
+ 	{
+ 		if($listatyyppi)
+@@ -493,6 +548,7 @@
+ 		}
+ 	}
+ 
++	// hakee attribute-tagin sis&#228;tiedot ja antaa ne paluuarvoina takaisin
+ 	private function hae_sisatiedot($array, $avain)
+ 	{
+ 		$description = &quot;&quot;;
+@@ -524,6 +580,8 @@
+ 		return $palautus;
+ 	}
+ 
++	// sulkee avatun attribuutin, kun sellainen havaitaan loppuvan.
++	// funktio generoi tyhj&#228;t &lt;td&gt;-tagit, jotta taulukko pysyy oikean XHTML-syntaksin mukaisena
+ 	private function sulje_attribuutti($listatyyppi = false, $attribuuttilaskuri = 0)
+ 	{
+ 		if(!$listatyyppi)
+@@ -551,6 +609,8 @@
+ 		}
+ 	}
+ 
++	// parsii n&#228;ytett&#228;v&#228;n nimen parempaan muotoon. t&#228;ss&#228; muuttaa _ -merkin v&#228;lily&#246;nniksi ja muuttaa
++	// ensimm&#228;isen kirjaimen isoksi
+ 	private function parsi_nimi($nimi)
+ 	{
+ 		$palautus = &quot;&quot;;
+@@ -564,6 +624,8 @@
+ 		return ucfirst($palautus);
+ 	}
+ 
++	// hakee halutun tiedon kohdasta, jossa $etsittava_nimi on haettavan tiedon l&#228;hin yl&#228;otsikko ja
++	// $etsittava_arvo haettavan tiedon nimi
+ 	private function hae_array2($array, $etsittava_nimi, $etsittava_arvo)
+ 	{
+ 		$haettava_paikallistettu = false;
+@@ -616,6 +678,7 @@
+ 		}
+ 	}
+ 
++	// hakee tietotaulusta kaikki p&#228;&#228;otsikot ja palauttaa ne taulukkona
+ 	private function hae_paataulut()
+ 	{
+ 		$taulut = array();
+@@ -631,9 +694,14 @@
+ 		return $taulut;
+ 	}
+ 
++	// n&#228;ytt&#228;&#228; pikahyppyvalikon, josta p&#228;&#228;st&#228;&#228;n nopesti siirtym&#228;&#228;n haluttuun p&#228;&#228;otsikkoon
+ 	private function nayta_quick_jump_valikko()
+ 	{
++
++		// hakee p&#228;&#228;taulut
+ 		$taulut = $this-&gt;hae_paataulut();
++
++		// generoi sivulle javascriptin, jolla hyppy totetutetaan
+ 			
+ 		print &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;
+ 			&lt;!--
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000087.html">[Osinfo-commit] r700 - trunk/osinfo/html
+</A></li>
+	<LI>Next message: <A HREF="000090.html">[Osinfo-commit] r702 - trunk/osinfo/html
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#89">[ date ]</a>
+              <a href="thread.html#89">[ thread ]</a>
+              <a href="subject.html#89">[ subject ]</a>
+              <a href="author.html#89">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,321 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2006-December/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r657%20-%20in%20trunk/osinfo%3A%20.%20ebuild%20lib&In-Reply-To=%3C200612181000.kBIA0sJp005663%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000044.html">
+   <LINK REL="Next"  HREF="000046.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r657%20-%20in%20trunk/osinfo%3A%20.%20ebuild%20lib&In-Reply-To=%3C200612181000.kBIA0sJp005663%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r657 - in trunk/osinfo: . ebuild lib">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Mon Dec 18 11:00:54 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000044.html">[Osinfo-commit] r656 - trunk/osinfo/ebuild
+</A></li>
+        <LI>Next message: <A HREF="000046.html">[Osinfo-commit] r658 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2006-12-18 11:00:53 +0100 (Mon, 18 Dec 2006)
+New Revision: 657
+
+Modified:
+   trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+   trunk/osinfo/lib/PRINT_Help
+   trunk/osinfo/lib/PRINT_Usage
+   trunk/osinfo/lib/cmdline
+   trunk/osinfo/lib/global_variables
+   trunk/osinfo/sources
+Log:
+cleaned up the variables file - added default TERM=xterm - updated ebuild
+
+Modified: trunk/osinfo/ebuild/osinfo-0.3.0.ebuild
+===================================================================
+--- trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/ebuild/osinfo-0.3.0.ebuild	2006-12-18 10:00:53 UTC (rev 657)
+@@ -11,9 +11,10 @@
+ LICENSE=&quot;BSD&quot;
+ SLOT=&quot;0&quot;
+ KEYWORDS=&quot;~x86 ~amd64 ~x86-fbsd&quot;
+-IUSE=&quot;xsl devices hdd ddc dvb&quot;
++IUSE=&quot;xsl devices hdd tcp&quot; #add later: dvb ddc
+ 
+-DEPEND=&quot;xsl? (dev-libs/libxslt)
++DEPEND=&quot;&quot;
++RDEPEND=&quot;xsl? (dev-libs/libxslt)
+ 		devices? (sys-apps/lshw
+ 		          sys-apps/pciutils
+ 		          sys-apps/usbutils)
+@@ -29,49 +30,31 @@
+ 		&gt;=sys-apps/grep-2.5.1
+ 		sys-apps/sed
+ 		sys-devel/bc
++		tcp? || (net-analyzer/netcat net-analyzer/netcat6
++		net-analyzer/gnu-netcat)
+ 		|| (sys-apps/gawk sys-apps/mawk)&quot;
+ 
+-RDEPEND=&quot;${DEPEND}&quot;
+ 
+-src_unpack() {
+-	mkdir -p ${S} # S is our source dir, where we copy our source files to
+-
+-	# does not work yet..
+-	tar xjf ${DISTDIR}/${A} -C ${S}
+-
+-#	cp ${FILESDIR}/osinfo.gz ${S}
+-#	gzip -d ${S}/osinfo.gz
+-
+-}
+-
+-
+-# src_compile() {}
+-
+ src_install() {
+-	
+-	mkdir -p ${D}/usr/bin		# D is like a virtual / where we install our stuff, before emerge merge it with the real /
+-	cp osinfo/osinfo ${D}/usr/bin
+ 
+-	doman osinfo/osinfo.1
++	S=&quot;${WORKDIR}/${PN}&quot;
++	dobin ${S}/osinfo
++	doman ${S}/osinfo.1
+ 
+-	#if use doc; then
+-	#	mkdir -p ${D}/usr/share/doc/${P}
+-	#	cp ${FILESDIR}/readme.gz ${D}/usr/share/doc/${P}/
+-	#fi
+ }
+ 
+ pkg_postinst() {
+-	einfo
+-	einfo &quot;Osinfo is still beta; you can help be addressing bugs at&quot;
+-	einfo &quot;the osinfo mailinglist: <A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
+-	einfo
+-	einfo &quot;Osinfo has many nice features that are not obvious at first.&quot;
+-	einfo &quot;You can create an HTML document of the computers in your&quot;
+-	einfo &quot;LAN, run osinfo in daemon mode on a box with Apache server.&quot;
+-	einfo &quot;Send the xml sheet to the daemon with the --tcpsend option.&quot;
+-	einfo
+-	einfo &quot;You can freely add more modules to osinfo. Check the source&quot;
+-	einfo &quot;code inside the tarball. Thank you for interest.&quot;
+-	einfo 
++	elog
++	elog &quot;Osinfo is still beta; you can help be addressing bugs at&quot;
++	elog &quot;the osinfo mailinglist: <A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
++	elog
++	elog &quot;Osinfo has many nice features that are not obvious at first.&quot;
++	elog &quot;You can create an HTML document of the computers in your&quot;
++	elog &quot;LAN, and run osinfo in daemon mode on a box with Apache server.&quot;
++	elog &quot;Send the xml sheet to the daemon with the --tcpsend option.&quot;
++	elog
++	elog &quot;You can freely add more modules to osinfo. Check the source&quot;
++	elog &quot;code inside the tarball. Thank you for interest.&quot;
++	elog 
+ }
+ 
+
+Modified: trunk/osinfo/lib/PRINT_Help
+===================================================================
+--- trunk/osinfo/lib/PRINT_Help	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/PRINT_Help	2006-12-18 10:00:53 UTC (rev 657)
+@@ -27,7 +27,5 @@
+ 
+ 	if [ &quot;$1&quot; ]; then
+ 		exit $1
+-	else
+-		exit 0
+ 	fi
+ }
+
+Modified: trunk/osinfo/lib/PRINT_Usage
+===================================================================
+--- trunk/osinfo/lib/PRINT_Usage	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/PRINT_Usage	2006-12-18 10:00:53 UTC (rev 657)
+@@ -17,11 +17,10 @@
+ 	fi
+ 	echo -e &quot;        all     - list information from all modules&quot;
+ 	echo
+-#	echo 'If arguments is &quot;all&quot; then list information from all modules'
+-	echo &quot;    ${tcGREEN}PROFILES${tSTD}:&quot;
+-	echo -e &quot;        desktop - limit output to standard desktop essentials&quot;
+-	echo -e &quot;        server  - server essentials&quot;
+-	echo -e &quot;        laptop  - laptop essentials&quot;
++#	echo &quot;    ${tcGREEN}PROFILES${tSTD}:&quot;
++#	echo -e &quot;        desktop - limit output to standard desktop essentials&quot;
++#	echo -e &quot;        server  - server essentials&quot;
++#	echo -e &quot;        laptop  - laptop essentials&quot;
+ 	echo
+ #	echo &quot;See --help for the full list of options.&quot;
+ }
+
+Modified: trunk/osinfo/lib/cmdline
+===================================================================
+--- trunk/osinfo/lib/cmdline	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/cmdline	2006-12-18 10:00:53 UTC (rev 657)
+@@ -5,6 +5,8 @@
+ 			case &quot;$1&quot; in
+ 				'--help'|'-help'|'--usage'|'-usage'|'-h'|'')
+ 					PRINT_Help
++					PRINT_Debug
++					exit 0
+ 					;;
+ 
+ 				'--profile')
+@@ -192,6 +194,7 @@
+ 					cat index.xml
+ 					exit 0
+ 					;;
++
+ 				*)
+ 					module_cmds=&quot;$module_cmds $1&quot;
+ 					shift 1;
+
+Modified: trunk/osinfo/lib/global_variables
+===================================================================
+--- trunk/osinfo/lib/global_variables	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/lib/global_variables	2006-12-18 10:00:53 UTC (rev 657)
+@@ -1,37 +1,45 @@
+-#############################################################
++### VARIABLES ###############################################
++## send bugs and feedback here:
++bugreport_email=&quot;<A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
++
++## output defaults
++PROFILES=&quot;desktop server laptop&quot;
++#profile=&quot;desktop&quot;    # default profile is desktop
++profile=&quot;undefined&quot;
++#OUTPUT_MODES=&quot;stdout xml kdialog&quot;  # this list is not used (yet)
++output_mode=&quot;stdout&quot; # default output mode is stdout
++makehtml=0 # by default, do not make html
++usexml=0 # by default, no not make xml 
++tcpsend=0 # by default, no not send via tcp
++
+ ## GLOBAL USERSPACE VARIABLES
+ isverbose=0
+ isdebug=0
+ usekdialog=0
+ lanforce=0
+-usexml=0
+-makehtml=0
+ fake=0
+ dev_code=0
+ quiet=0
+ tcpdaemon=0
+-tcpsend=0
+ no_fancy=0
+ 
++## chroot / virtual stuff
+ prefix=&quot;/&quot;  # The root dir. Using a variable allows info on chrooted systems
+-PROFILES=&quot;desktop server laptop&quot;
+-#profile=&quot;desktop&quot;    # default profile is desktop
+-profile=&quot;undefined&quot;
+-#OUTPUT_MODES=&quot;stdout xml kdialog&quot;  # this list is not used (yet)
+-output_mode=&quot;stdout&quot; # default output mode is stdout
+ 
++## Xorg log file ##
++## this is used by the experimental &quot;video&quot; module
++[ ! &quot;$XORG_LOG&quot; ] &amp;&amp; [ -e &quot;/var/log/Xorg.0.log&quot; ] &amp;&amp; XORG_LOG=&quot;/var/log/Xorg.0.log&quot;
+ 
++### temp file handling ###
++# allocate a universal temp file
++osinfo_tmp=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
++TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$osinfo_tmp&quot;)
++
+ # Keeps track of open headers, and closes them in the correct order upon flush_values.
+ OpenHeaders=()
+ TempFiles=()
+ Modules=()
+ 
+-
+-### XORG LOG FILE ###
+-
+-[ ! &quot;$XORG_LOG&quot; ] &amp;&amp; [ -e &quot;/var/log/Xorg.0.log&quot; ] &amp;&amp; XORG_LOG=&quot;/var/log/Xorg.0.log&quot;
+-
+-
+ ### DAEMON MODE VARIABLES ###
+ 
+ # if the conf file is not available..
+@@ -50,22 +58,13 @@
+ xsltdir=&quot;${rundir}/xslt&quot;
+ 
+ 
++### MISCELLANEOUS VARIABLES ###
+ 
+ # Before we break path hash some binaries so the script can find them (if they exist).
+ #hash kdialog &amp;&gt;/dev/null
+ 
+ # PATH here allows normal users to run ifconfig and lsmod
+-export PATH=$PATH:/bin/:/sbin/:/usr/bin/:/usr/sbin/
++PATH=$PATH:/bin/:/sbin/:/usr/bin/:/usr/sbin/
++TERM=xterm
+ 
+-# LC_ALL makes is possible to print to stdout, due to support for '' :)
+-#[[ ! &quot;$LC_ALL&quot; ]] &amp;&amp; export LC_ALL=&quot;en_GB&quot;
+-
+-
+-bugreport_email=&quot;<A HREF="https://lists.berlios.de/mailman/listinfo/osinfo-commit">osinfo at lists.berlios.de</A>&quot;
+-
+-# allocate a universal temp file
+-osinfo_tmp=&quot;$(mktemp /tmp/osinfo.XXXXXX)&quot;
+-TempFiles=(&quot;${TempFiles[@]}&quot; &quot;$osinfo_tmp&quot;)
+-
+-
+ #############################################################
+
+Modified: trunk/osinfo/sources
+===================================================================
+--- trunk/osinfo/sources	2006-12-08 18:20:44 UTC (rev 656)
++++ trunk/osinfo/sources	2006-12-18 10:00:53 UTC (rev 657)
+@@ -10,6 +10,7 @@
+ source lib/PRINT_Usage            # usage; if no parameters are given
+ source lib/PRINT_Version          # print --version
+ source lib/PRINT_UnknownOS
++source lib/PRINT_*
+ 
+ source lib/xml.functions          # xml tag codes
+ source lib/xslt.functions         # xslt generation
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000044.html">[Osinfo-commit] r656 - trunk/osinfo/ebuild
+</A></li>
+	<LI>Next message: <A HREF="000046.html">[Osinfo-commit] r658 - trunk/osinfo/lib
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#45">[ date ]</a>
+              <a href="thread.html#45">[ thread ]</a>
+              <a href="subject.html#45">[ subject ]</a>
+              <a href="author.html#45">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Osinfo-commit] r724 - trunk/osinfo/modules
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/osinfo-commit/2008-August/index.html" >
+   <LINK REL="made" HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r724%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291601.m7TG1Oq2006798%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000110.html">
+   <LINK REL="Next"  HREF="000112.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Osinfo-commit] r724 - trunk/osinfo/modules</H1>
+    <B>lamikae at BerliOS</B> 
+    <A HREF="mailto:osinfo-commit%40lists.berlios.de?Subject=Re%3A%20%5BOsinfo-commit%5D%20r724%20-%20trunk/osinfo/modules&In-Reply-To=%3C200808291601.m7TG1Oq2006798%40sheep.berlios.de%3E"
+       TITLE="[Osinfo-commit] r724 - trunk/osinfo/modules">lamikae at mail.berlios.de
+       </A><BR>
+    <I>Fri Aug 29 18:01:24 CEST 2008</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000110.html">[Osinfo-commit] r723 - trunk/osinfo/modules
+</A></li>
+        <LI>Next message: <A HREF="000112.html">[Osinfo-commit] r725 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: lamikae
+Date: 2008-08-29 18:01:24 +0200 (Fri, 29 Aug 2008)
+New Revision: 724
+
+Modified:
+   trunk/osinfo/modules/hdd
+Log:
+display a message if the partition table is empty
+
+Modified: trunk/osinfo/modules/hdd
+===================================================================
+--- trunk/osinfo/modules/hdd	2008-08-29 15:42:35 UTC (rev 723)
++++ trunk/osinfo/modules/hdd	2008-08-29 16:01:24 UTC (rev 724)
+@@ -287,60 +287,63 @@
+ 
+ 
+       ## PARTITION DATA
+-      add_header	'' # adds a space into stdout, does not affect xml
+-      add_nc_header \
+-        &quot; Partition%col%label%col%mountpoint%col%blocks%col%free%col%filesystem\n&quot;
+-      add_nc_header \
+-        &quot; ---------%col%-----%col%----------%col%------%col%----%col%----------&quot;
++      if [ $partitions_on_drive -le 0 ]; then
++        add_attribute '-- The partition table is empty --'
++      else
++        add_header	'' # adds a space into stdout, does not affect xml
++        add_nc_header \
++          &quot; Partition%col%label%col%mountpoint%col%blocks%col%free%col%filesystem\n&quot;
++        add_nc_header \
++          &quot; ---------%col%-----%col%----------%col%------%col%----%col%----------&quot;
++  
++        for hdd_pt in $(seq 1 1 $partitions_on_drive); do
++          # print the device node
++          add_attribute &quot;  ${hdd_pt_node[$hdd_pt]}&quot;
++  
++          # volume label
++          label=$(tune2fs -l ${hdd_pt_node[$hdd_pt]} 2&gt;/dev/null | \
++            awk -F': ' /volume\ name/{'print $2'})
++          [[ $label == '' ]] &amp;&amp; label='n/a'
++          add_values &quot;$label&quot;
++  
++          # print info of mounted drives
++          if [ &quot;${hdd_pt_mp[$hdd_pt]}&quot; ]; then #mount point exists
++  
++            # mount point
++            add_values    &quot;${hdd_pt_mp[$hdd_pt]}&quot;
++  
++            # blocks
++            add_values    &quot;$(hdd_human_readable ${hdd_pt_blocks[$hdd_pt]})&quot;
++            # free
++            if [ &quot;${hdd_pt_free[$hdd_pt]}&quot; != &quot;&quot; ]; then
++            add_values    &quot;$(hdd_human_readable ${hdd_pt_free[$hdd_pt]})&quot;
++            #add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
++            else
++              add_values '-'
++            fi
+ 
+-      for hdd_pt in $(seq 1 1 $partitions_on_drive); do
+-        # print the device node
+-        add_attribute &quot;  ${hdd_pt_node[$hdd_pt]}&quot;
++            # fs type
++            add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
+ 
+-        # volume label
+-        label=$(tune2fs -l ${hdd_pt_node[$hdd_pt]} 2&gt;/dev/null | \
+-          awk -F': ' /volume\ name/{'print $2'})
+-        [[ $label == '' ]] &amp;&amp; label='n/a'
+-        add_values &quot;$label&quot;
+-
+-        # print info of mounted drives
+-        if [ &quot;${hdd_pt_mp[$hdd_pt]}&quot; ]; then #mount point exists
+-
+-          # mount point
+-          add_values    &quot;${hdd_pt_mp[$hdd_pt]}&quot;
+-
+-          # blocks
+-          add_values    &quot;$(hdd_human_readable ${hdd_pt_blocks[$hdd_pt]})&quot;
+-          # free
+-          if [ &quot;${hdd_pt_free[$hdd_pt]}&quot; != &quot;&quot; ]; then
+-          add_values    &quot;$(hdd_human_readable ${hdd_pt_free[$hdd_pt]})&quot;
+-          #add_values    &quot;${hdd_pt_free_pc[$hdd_pt]})&quot;
+           else
+-            add_values '-'
+-          fi
+ 
+-          # fs type
+-          add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
++            # mount point
++            add_values    &quot; &quot;
+ 
+-        else
++            # blocks
++            add_values    &quot;$(hdd_human_readable ${hdd_pt_blocks[$hdd_pt]})&quot;
+ 
+-          # mount point
+-          add_values    &quot; &quot;
++            # free would come here
++            add_values    ' '
+ 
+-          # blocks
+-          add_values    &quot;$(hdd_human_readable ${hdd_pt_blocks[$hdd_pt]})&quot;
++            # fs type
++            add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
+ 
+-          # free would come here
+-          add_values    ' '
++          fi
++        done
+ 
+-          # fs type
+-          add_values    &quot;${hdd_pt_fs[$hdd_pt]}&quot;
+-
+-        fi
+-
+-      done
+-
+-      flush_values
++        flush_values
++      fi
+       ;;
+ 
+     'xml')	# XML OUTPUT
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000110.html">[Osinfo-commit] r723 - trunk/osinfo/modules
+</A></li>
+	<LI>Next message: <A HREF="000112.html">[Osinfo-commit] r725 - trunk/osinfo/modules
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#111">[ date ]</a>
+              <a href="thread.html#111">[ thread ]</a>
+              <a href="subject.html#111">[ subject ]</a>
+              <a href="author.html#111">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/osinfo-commit">More information about the Osinfo-commit
+mailing list</a><br>
+</body></html>
